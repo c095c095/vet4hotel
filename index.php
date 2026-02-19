@@ -20,7 +20,8 @@ require_once 'cores/init.php';
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Outfit:wght@700&family=Sarabun:wght@400;600;700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="<?php echo assets('index.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assets('output.css'); ?>">
+    <script src="https://cdn.jsdelivr.net/npm/theme-change@2.0.2/index.js"></script>
 </head>
 
 <body>
@@ -28,16 +29,16 @@ require_once 'cores/init.php';
 
     <main class="min-vh-100">
         <?php
-            if (file_exists($page_file)) {
-                include $page_file;
-            } else {
-                echo "<div class='container mt-5'>";
-                echo "<div class='alert alert-danger text-center'>";
-                echo "<h3>พบข้อผิดพลาด 404</h3>";
-                echo "<p>ไม่พบไฟล์: <strong>" . htmlspecialchars($page_file) . "</strong> ในระบบ</p>";
-                echo "</div>";
-                echo "</div>";
-            }
+        if (file_exists($page_file)) {
+            include $page_file;
+        } else {
+            echo "<div class='container mt-5'>";
+            echo "<div class='alert alert-danger text-center'>";
+            echo "<h3>พบข้อผิดพลาด 404</h3>";
+            echo "<p>ไม่พบไฟล์: <strong>" . htmlspecialchars($page_file) . "</strong> ในระบบ</p>";
+            echo "</div>";
+            echo "</div>";
+        }
         ?>
     </main>
 
