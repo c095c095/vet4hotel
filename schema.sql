@@ -3,6 +3,35 @@ START TRANSACTION;
 SET time_zone = "+07:00";
 
 -- ==========================================
+-- 0. LOOKUP TABLES (สำหรับข้อมูลที่งอกเพิ่มได้เรื่อยๆ)
+-- ==========================================
+
+-- ประเภทประวัติสุขภาพ (โรคประจำตัว, อาการแพ้, ยาที่กินอยู่ ฯลฯ)
+CREATE TABLE `medical_record_types` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `is_active` tinyint(1) DEFAULT 1,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ประเภทการอัปเดตสถานะรายวัน (อาหาร, เข้าห้องน้ำ, เล่น, รูปถ่ายทั่วไป, ปัญหาสุขภาพ ฯลฯ)
+CREATE TABLE `daily_update_types` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `icon_class` varchar(50) DEFAULT NULL,
+  `is_active` tinyint(1) DEFAULT 1,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ประเภทงานดูแลรายวัน (ป้อนยา, ให้อาหาร, ดูแลพิเศษ ฯลฯ)
+CREATE TABLE `care_task_types` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `is_active` tinyint(1) DEFAULT 1,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ==========================================
 -- 1. SYSTEM USERS & CUSTOMERS
 -- ==========================================
 
@@ -21,7 +50,7 @@ CREATE TABLE `employees` (
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- ลูกค้า (เพิ่ม Contact ฉุกเฉิน)
+-- ลูกค้า
 CREATE TABLE `customers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `email` varchar(100) NOT NULL,
@@ -102,11 +131,12 @@ CREATE TABLE `pet_vaccinations` (
 CREATE TABLE `pet_medical_records` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `pet_id` int(11) NOT NULL,
-  `record_type` enum('allergy', 'medication', 'chronic_disease', 'surgery', 'other') NOT NULL,
+  `record_type_id` int(11) NOT NULL,
   `description` text NOT NULL,
   `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`pet_id`) REFERENCES `pets`(`id`) ON DELETE CASCADE
+  FOREIGN KEY (`pet_id`) REFERENCES `pets`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`record_type_id`) REFERENCES `medical_record_types`(`id`) ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ==========================================
@@ -161,6 +191,7 @@ CREATE TABLE `rooms` (
   `room_number` varchar(20) NOT NULL,
   `floor_level` varchar(10) DEFAULT '1',
   `status` enum('active', 'maintenance', 'out_of_service') DEFAULT 'active',
+  `cctv_url` varchar(255) DEFAULT NULL, -- สำหรับฟีเจอร์ดูกล้องวงจรปิดส่วนตัว
   `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
@@ -168,8 +199,20 @@ CREATE TABLE `rooms` (
   FOREIGN KEY (`room_type_id`) REFERENCES `room_types`(`id`) ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- ตารางสำหรับตั้งราคา Peak Season (Dynamic Pricing)
+CREATE TABLE `seasonal_pricings` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `season_name` varchar(100) NOT NULL, -- เช่น Songkran 2026, New Year 2026
+  `start_date` date NOT NULL,
+  `end_date` date NOT NULL,
+  `price_multiplier_percent` decimal(5,2) NOT NULL, -- เช่น 15.00 คือบวกเพิ่ม 15%
+  `is_active` tinyint(1) DEFAULT 1,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 -- ==========================================
--- 4. BOOKINGS & SERVICES (TRANSACTIONS)
+-- 4. BOOKINGS, SERVICES & TASKS
 -- ==========================================
 
 -- การจองหลัก (Cart/Header)
@@ -244,14 +287,33 @@ CREATE TABLE `daily_updates` (
   `booking_item_id` int(11) NOT NULL,
   `pet_id` int(11) NOT NULL,
   `employee_id` int(11) NOT NULL,
-  `update_type` enum('meal', 'potty', 'playtime', 'general_photo', 'health_issue') NOT NULL,
+  `update_type_id` int(11) NOT NULL,
   `message` text,
   `image_url` varchar(255) DEFAULT NULL,
   `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`booking_item_id`) REFERENCES `booking_items`(`id`) ON DELETE CASCADE,
   FOREIGN KEY (`pet_id`) REFERENCES `pets`(`id`) ON DELETE CASCADE,
-  FOREIGN KEY (`employee_id`) REFERENCES `employees`(`id`) ON DELETE RESTRICT
+  FOREIGN KEY (`employee_id`) REFERENCES `employees`(`id`) ON DELETE RESTRICT,
+  FOREIGN KEY (`update_type_id`) REFERENCES `daily_update_types`(`id`) ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ตารางแดชบอร์ด To-do list (Daily Care & Meds) ให้พนักงานกดติ๊กถูก
+CREATE TABLE `daily_care_tasks` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `booking_item_id` int(11) NOT NULL,
+  `pet_id` int(11) NOT NULL,
+  `task_date` date NOT NULL, -- วันที่ต้องทำ (สร้างอัตโนมัติตามวันเข้าพัก)
+  `task_type_id` int(11) NOT NULL,
+  `description` varchar(255) NOT NULL, -- เช่น "ป้อนยาแก้แพ้ 1 เม็ดหลังอาหารเช้า"
+  `status` enum('pending', 'completed') DEFAULT 'pending',
+  `completed_at` timestamp NULL DEFAULT NULL,
+  `completed_by_employee_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`booking_item_id`) REFERENCES `booking_items`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`pet_id`) REFERENCES `pets`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`completed_by_employee_id`) REFERENCES `employees`(`id`) ON DELETE SET NULL,
+  FOREIGN KEY (`task_type_id`) REFERENCES `care_task_types`(`id`) ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ==========================================
