@@ -9,7 +9,7 @@ require_once 'cores/init.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo SITE_NAME; ?> | <?php echo $currentPage['title']; ?></title>
+    <title><?php echo $currentPage['title']; ?> | <?php echo SITE_NAME; ?></title>
     <link rel="icon" type="image/png" href="<?php echo assets('favicon/favicon-96x96.png'); ?>" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="<?php echo assets('favicon/favicon.svg'); ?>" />
     <link rel="shortcut icon" href="<?php echo assets('favicon/favicon.ico'); ?>" />
