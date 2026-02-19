@@ -69,7 +69,7 @@ $user_menu_items = [
         <!-- Right-side auth section -->
         <div class="flex-none flex items-center gap-2">
             <?php if ($is_logged_in): ?>
-                
+
                 <!-- ── Mobile: Profile drawer trigger ── -->
                 <label for="profile-drawer" class="btn btn-ghost btn-circle avatar placeholder online lg:hidden">
                     <div class="bg-primary text-primary-content rounded-full w-10 flex items-center justify-center">
@@ -95,7 +95,8 @@ $user_menu_items = [
                         <li>
                             <a href="?page=profile" class="flex items-center gap-3 px-1 py-2 rounded-lg hover:bg-base-200">
                                 <div class="avatar placeholder">
-                                    <div class="bg-primary text-primary-content rounded-full w-10 flex items-center justify-center">
+                                    <div
+                                        class="bg-primary text-primary-content rounded-full w-10 flex items-center justify-center">
                                         <span class="text-sm font-bold">
                                             <?php echo mb_substr($customer_name, 0, 1); ?>
                                         </span>
@@ -156,7 +157,7 @@ $user_menu_items = [
                 <span class="font-bold text-lg tracking-tight">
                     <span class="text-primary">VET4</span> Hotel
                 </span>
-                
+
                 <label for="mobile-drawer" class="btn btn-ghost btn-sm btn-circle">
                     <i data-lucide="x" class="size-4"></i>
                 </label>
@@ -185,67 +186,68 @@ $user_menu_items = [
 <!-- MOBILE PROFILE BOTTOM SHEET                                       -->
 <!-- ═══════════════════════════════════════════════════════════════════ -->
 <?php if ($is_logged_in): ?>
-<input type="checkbox" id="profile-drawer" class="modal-toggle" />
-<div class="modal modal-bottom lg:hidden">
-    <div class="modal-box rounded-t-3xl rounded-b-none max-h-[85vh] p-0">
-        
-        <!-- Drag handle indicator -->
-        <div class="flex justify-center pt-3 pb-2">
-            <div class="w-12 h-1.5 bg-base-300 rounded-full"></div>
-        </div>
+    <input type="checkbox" id="profile-drawer" class="modal-toggle" />
+    <div class="modal modal-bottom lg:hidden">
+        <div class="modal-box rounded-t-3xl rounded-b-none max-h-[85vh] p-0">
 
-        <!-- Header with user info -->
-        <div class="px-5 pb-4 border-b border-base-200">
-            <div class="flex items-center justify-between mb-4">
-                <span class="font-bold text-lg tracking-tight">บัญชีของฉัน</span>
-                <label for="profile-drawer" class="btn btn-ghost btn-sm btn-circle">
-                    <i data-lucide="x" class="size-4"></i>
-                </label>
+            <!-- Drag handle indicator -->
+            <div class="flex justify-center pt-3 pb-2">
+                <div class="w-12 h-1.5 bg-base-300 rounded-full"></div>
             </div>
-            
-            <!-- User info -->
-            <a href="?page=profile" class="flex items-center gap-3 p-3 rounded-xl bg-base-200/50 hover:bg-base-200 transition-colors">
-                <div class="avatar placeholder">
-                    <div class="bg-primary text-primary-content rounded-full w-12 flex items-center justify-center">
-                        <span class="text-lg font-bold">
-                            <?php echo mb_substr($customer_name, 0, 1); ?>
-                        </span>
-                    </div>
-                </div>
-                <div class="flex-1">
-                    <p class="font-semibold text-primary">
-                        <?php echo htmlspecialchars($customer_name); ?>
-                    </p>
-                    <p class="text-xs text-base-content/60">ดูโปรไฟล์</p>
-                </div>
-                <i data-lucide="chevron-right" class="size-4 text-base-content/40"></i>
-            </a>
-        </div>
 
-        <!-- User menu links -->
-        <ul class="menu px-3 py-4 gap-1 w-full">
-            <?php foreach ($user_menu_items as $item): ?>
-                <?php $is_active = ($current_page === $item['page']); ?>
-                <li>
-                    <a href="?page=<?php echo $item['page']; ?>" class="rounded-xl text-base font-medium transition-all duration-200
+            <!-- Header with user info -->
+            <div class="px-5 pb-4 border-b border-base-200">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="font-bold text-lg tracking-tight">บัญชีของฉัน</span>
+                    <label for="profile-drawer" class="btn btn-ghost btn-sm btn-circle">
+                        <i data-lucide="x" class="size-4"></i>
+                    </label>
+                </div>
+
+                <!-- User info -->
+                <a href="?page=profile"
+                    class="flex items-center gap-3 p-3 rounded-xl bg-base-200/50 hover:bg-base-200 transition-colors">
+                    <div class="avatar placeholder">
+                        <div class="bg-primary text-primary-content rounded-full w-12 flex items-center justify-center">
+                            <span class="text-lg font-bold">
+                                <?php echo mb_substr($customer_name, 0, 1); ?>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-semibold text-primary">
+                            <?php echo htmlspecialchars($customer_name); ?>
+                        </p>
+                        <p class="text-xs text-base-content/60">ดูโปรไฟล์</p>
+                    </div>
+                    <i data-lucide="chevron-right" class="size-4 text-base-content/40"></i>
+                </a>
+            </div>
+
+            <!-- User menu links -->
+            <ul class="menu px-3 py-4 gap-1 w-full">
+                <?php foreach ($user_menu_items as $item): ?>
+                    <?php $is_active = ($current_page === $item['page']); ?>
+                    <li>
+                        <a href="?page=<?php echo $item['page']; ?>" class="rounded-xl text-base font-medium transition-all duration-200
                               <?php echo $is_active
                                   ? 'bg-primary/10 text-primary font-semibold'
                                   : 'hover:bg-base-200'; ?>">
-                        <i data-lucide="<?php echo $item['icon']; ?>" class="size-5"></i>
-                        <?php echo $item['label']; ?>
-                    </a>
-                </li>
-            <?php endforeach; ?>
-        </ul>
+                            <i data-lucide="<?php echo $item['icon']; ?>" class="size-5"></i>
+                            <?php echo $item['label']; ?>
+                        </a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
 
-        <!-- Logout button -->
-        <div class="p-4 border-t border-base-200 pb-safe">
-            <a href="?page=logout" class="btn btn-outline w-full gap-2 rounded-xl">
-                <i data-lucide="log-out" class="size-5"></i>
-                ออกจากระบบ
-            </a>
+            <!-- Logout button -->
+            <div class="p-4 border-t border-base-200 pb-safe">
+                <a href="?page=logout" class="btn btn-outline w-full gap-2 rounded-xl">
+                    <i data-lucide="log-out" class="size-5"></i>
+                    ออกจากระบบ
+                </a>
+            </div>
         </div>
+        <label class="modal-backdrop" for="profile-drawer"></label>
     </div>
-    <label class="modal-backdrop" for="profile-drawer"></label>
-</div>
 <?php endif; ?>
