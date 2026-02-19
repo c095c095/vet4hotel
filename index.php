@@ -1,8 +1,4 @@
-<?php
-
-require_once 'cores/init.php';
-
-?>
+<?php require_once 'cores/init.php'; ?>
 <!DOCTYPE html>
 <html lang="th">
 
@@ -26,7 +22,6 @@ require_once 'cores/init.php';
 
 <body>
     <?php include 'navbar.php'; ?>
-
     <main class="min-vh-100">
         <?php
         if (file_exists($page_file)) {
@@ -41,8 +36,11 @@ require_once 'cores/init.php';
         }
         ?>
     </main>
-
     <?php include 'footer.php'; ?>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        lucide.createIcons();
+    </script>
 </body>
 
 </html>

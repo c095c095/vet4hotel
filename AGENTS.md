@@ -10,7 +10,8 @@
 - **Database:** MySQL / MariaDB (รันผ่าน XAMPP)
 - **Database Driver:** บังคับใช้ **PDO (PHP Data Objects)** พร้อม Prepared Statements เพื่อป้องกัน SQL Injection
 - **Frontend Framework:** - **Tailwind CSS v4** (Engine หลัก)
-- **DaisyUI** (Component Plugin)
+- **DaisyUI:** (Component Plugin)
+- **Icons:** Lucide Icons (เรียกใช้ผ่าน CDN และรัน lucide.createIcons() ใน index.php แล้ว)
 - **Architecture:** ใช้ระบบ Front Controller (`index.php` เป็นตัวจัดการ Route) และแยกส่วน Logic กับ UI ออกจากกันอย่างชัดเจน
 - **Compilation Command:** `.\tailwindcss-windows-x64.exe -i .\assets\input.css -o .\assets\output.css --watch`
 
