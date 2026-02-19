@@ -21,11 +21,9 @@ require_once 'cores/init.php';
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Outfit:wght@700&family=Sarabun:wght@400;600;700&display=swap"
         rel="stylesheet">
 
-    <!-- Bootstrap & Custom CSS -->
-    <link rel="stylesheet" href="<?php echo assets('css/bootstrap.min.css'); ?>">
-    <link rel="stylesheet" href="<?php echo assets('css/index.css'); ?>">
-    <script src="<?php echo assets('js/bootstrap.bundle.min.js'); ?>"></script>
-    <link rel="stylesheet" href="<?php echo assets('bootstrap-icons-1.13.1/bootstrap-icons.min.css'); ?>">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="<?php echo assets('index.css'); ?>">
 </head>
 
 <body>
