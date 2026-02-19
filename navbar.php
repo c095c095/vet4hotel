@@ -21,7 +21,7 @@ $user_menu_items = [
 <!-- ═══════════════════════════════════════════════════════════════════ -->
 <!-- NAVBAR — Sticky top navbar with glassmorphism                     -->
 <!-- ═══════════════════════════════════════════════════════════════════ -->
-<div class="bg-base-100/80 backdrop-blur-lg border-b border-base-200 sticky top-0 z-50 shadow-sm">
+<div class="bg-base-100 border-b border-base-200 sticky top-0 z-50 shadow-sm">
     <nav class="navbar container mx-auto px-4 lg:px-8">
         <!-- Mobile hamburger -->
         <div class="flex-none lg:hidden">
