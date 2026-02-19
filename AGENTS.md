@@ -2,15 +2,17 @@
 
 ## 1. About the Project
 
-โปรเจกต์นี้คือ "ระบบบริหารจัดการโรงแรมสัตว์เลี้ยง (Pet Hotel Management System)" ทำหน้าที่จัดการการจองห้องพัก บริการเสริม การดูแลรายวัน (Daily Care) และระบบจัดการฝั่งพนักงาน/ผู้ดูแลระบบ
+ระบบบริหารจัดการโรงแรมสัตว์เลี้ยง (Pet Hotel Management System) ครอบคลุมการจองห้องพัก, บริการเสริม, การดูแลรายวัน (Daily Care Tasks), และระบบรายงานสถานะสัตว์เลี้ยงแบบ Real-time สำหรับเจ้าของ
 
 ## 2. Tech Stack
 
 - **Backend:** Pure PHP (Native/Vanilla PHP) ไม่ใช้ Framework ใดๆ
 - **Database:** MySQL / MariaDB (รันผ่าน XAMPP)
 - **Database Driver:** บังคับใช้ **PDO (PHP Data Objects)** พร้อม Prepared Statements เพื่อป้องกัน SQL Injection
-- **Frontend:** HTML5, CSS3, JavaScript (Vanilla/jQuery), Bootstrap (หรือ Tailwind)
+- **Frontend Framework:** - **Tailwind CSS v4** (Engine หลัก)
+- **DaisyUI** (Component Plugin)
 - **Architecture:** ใช้ระบบ Front Controller (`index.php` เป็นตัวจัดการ Route) และแยกส่วน Logic กับ UI ออกจากกันอย่างชัดเจน
+- **Compilation Command:** `.\tailwindcss-windows-x64.exe -i .\assets\input.css -o .\assets\output.css --watch`
 
 ## 3. Directory Structure (Best Practice)
 
@@ -18,12 +20,15 @@
 
 ```text
 /
-├── index.php             # Front Controller จัดการ Routing ทั้งหมด
-├── /pages                # เก็บไฟล์ UI / Views ของหน้าเว็บ (HTML + PHP นิดหน่อย)
-├── /cores                # เก็บไฟล์ Logic ล้วนๆ (Process Forms, DB Operations)
-├── /includes             # เก็บไฟล์ Component ที่ใช้ซ้ำ (header.php, footer.php, navbar.php)
-├── /assets               # CSS, JS, Images (เช่น /assets/css/style.css)
-└── /admin                # โฟลเดอร์แยกสำหรับระบบหลังบ้าน (พนักงาน/ผู้ดูแลระบบ)
+├── index.php                       # Front Controller จัดการ Routing ทั้งหมด
+├── tailwindcss-windows-x64.exe     # Tailwind Binary
+├── /pages                          # เก็บไฟล์ UI / Views ของหน้าเว็บ (HTML + PHP นิดหน่อย)
+├── /cores                          # เก็บไฟล์ Logic ล้วนๆ (Business Logic & Database Operations)
+├── /includes                       # เก็บไฟล์ Component ที่ใช้ซ้ำ (header.php, footer.php, navbar.php)
+├── /assets                         # CSS, JS, Images (เช่น /assets/css/style.css)
+│   ├── input.css                   # Tailwind Source + DaisyUI Config
+│   └── output.css                  # Compiled CSS (ใช้จริงในหน้าเว็บ)
+└── /admin                          # โฟลเดอร์แยกสำหรับระบบหลังบ้าน (พนักงาน/ผู้ดูแลระบบ)
 
 ```
 
@@ -113,8 +118,12 @@ $pages = [
 ## 7. Coding Guidelines for AI
 
 1. **No Frameworks:** ใช้ PHP Native ล้วนๆ
-2. **Security First:** - ใช้ `PDO` ควบคู่กับ `prepare()` และ `execute()` เสมอ
+2. **Security:** บังคับใช้ **PDO Prepared Statements** ทุกครั้ง ห้ามต่อ String ใน Query เด็ดขาด
+3. **Security First:** - ใช้ `PDO` ควบคู่กับ `prepare()` และ `execute()` เสมอ
    - ทำ Password Hashing ด้วย `password_hash()`
    - ก่อนโหลดไฟล์ใน `$pages` ที่ `auth_required => true` ต้องเช็ค `$_SESSION['customer_id']` เสมอ
-3. **File Separation:** ไฟล์ใน `/pages` ควรเน้น HTML/UI และรับค่าตัวแปรมาแสดงผล ส่วนการ Insert/Update/Delete Database ให้โยน (POST) ไปที่ไฟล์ใน `/cores` แล้วค่อย redirect กลับมา
-4. **Timezone:** ระบบตั้งค่าเป็น `+07:00` (ประเทศไทย)
+4. **File Separation:** ไฟล์ใน `/pages` ควรเน้น HTML/UI และรับค่าตัวแปรมาแสดงผล ส่วนการ Insert/Update/Delete Database ให้โยน (POST) ไปที่ไฟล์ใน `/cores` แล้วค่อย redirect กลับมา
+5. **DaisyUI Usage:** พยายามใช้ Component สำเร็จรูปจาก DaisyUI (เช่น `card`, `modal`, `steps`, `timeline`) เพื่อความรวดเร็วและดีไซน์ที่สม่ำเสมอ
+6. **Primary Palette:** ใช้ Class `btn-primary`, `text-primary`, `bg-primary` เพื่อคุมโทนสีม่วงของแบรนด์
+7. **Timezone:** ระบบตั้งค่าเป็น `+07:00` (ประเทศไทย)
+8. **Logic Separation:** ห้ามเขียน Logic ประมวลผลหนักๆ ในไฟล์ `/pages` ให้เขียนใน `/cores` แล้วเรียกใช้หรือส่งค่าผ่าน `$_SESSION` หรือ Redirect เท่านั้น
