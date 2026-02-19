@@ -9,7 +9,7 @@ require_once 'cores/init.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $currentPage['title']; ?> | <?php echo SITE_NAME; ?></title>
+    <title><?php echo $page_title; ?></title>
     <link rel="icon" type="image/png" href="<?php echo assets('favicon/favicon-96x96.png'); ?>" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="<?php echo assets('favicon/favicon.svg'); ?>" />
     <link rel="shortcut icon" href="<?php echo assets('favicon/favicon.ico'); ?>" />
@@ -31,8 +31,19 @@ require_once 'cores/init.php';
 <body>
     <?php include 'navbar.php'; ?>
 
-    <main>
-        <?php include $currentPage['file']; ?>
+    <main class="min-vh-100">
+        <?php
+            if (file_exists($page_file)) {
+                include $page_file;
+            } else {
+                echo "<div class='container mt-5'>";
+                echo "<div class='alert alert-danger text-center'>";
+                echo "<h3>พบข้อผิดพลาด 404</h3>";
+                echo "<p>ไม่พบไฟล์: <strong>" . htmlspecialchars($page_file) . "</strong> ในระบบ</p>";
+                echo "</div>";
+                echo "</div>";
+            }
+        ?>
     </main>
 
     <?php include 'footer.php'; ?>

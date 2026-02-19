@@ -5,13 +5,22 @@ date_default_timezone_set("Asia/Bangkok");
 
 require_once 'config.php';
 require_once 'routes.php';
-require_once 'db.php';
+require_once 'database.php';
 require_once 'functions.php';
 
-$p = isset($_GET['page']) ? $_GET['page'] : 'home';
+$current_page = isset($_GET['page']) ? trim($_GET['page']) : 'home';
 
-if (!array_key_exists($p, $pages)) {
-    $p = '404';
+if (!array_key_exists($current_page, $pages)) {
+    $current_page = '404';
 }
 
-$currentPage = $pages[$p];
+if ($pages[$current_page]['auth_required'] === true) {
+    if (!isset($_SESSION['customer_id'])) {
+        $_SESSION['error_msg'] = "กรุณาเข้าสู่ระบบก่อนเข้าใช้งานหน้านี้";
+        header("Location: index.php?page=login");
+        exit();
+    }
+}
+
+$page_title = $pages[$current_page]['title'] . " | " . SITE_NAME;
+$page_file = $pages[$current_page]['file'];
