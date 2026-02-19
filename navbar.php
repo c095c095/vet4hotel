@@ -61,37 +61,37 @@ $nav_items = [
 
         <!-- Right-side auth section -->
         <div class="flex-none flex items-center gap-2">
-
+            <?php $is_logged_in = true; $customer_name = "น้องหมา"; ?>
             <?php if ($is_logged_in): ?>
                 <!-- ── Logged-in: Profile dropdown ── -->
                 <div class="dropdown dropdown-end">
                     <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar placeholder online">
-                        <div class="bg-primary text-primary-content rounded-full w-10">
+                        <div class="bg-primary text-primary-content rounded-full w-10 flex items-center justify-center">
                             <span class="text-sm font-bold">
                                 <?php echo mb_substr($customer_name, 0, 1); ?>
                             </span>
                         </div>
                     </div>
                     <ul tabindex="0"
-                        class="dropdown-content menu bg-base-100 rounded-box z-60 mt-3 w-60 p-2 shadow-xl border border-base-200 space-y-1">
+                        class="dropdown-content menu bg-base-100 rounded-box z-60 mt-3 w-72 p-3 shadow-xl border border-base-200 space-y-1">
 
                         <!-- User info header -->
-                        <li class="menu-title">
-                            <div class="flex items-center gap-3 px-1 py-2">
+                        <li>
+                            <a href="?page=profile" class="flex items-center gap-3 px-1 py-2 rounded-lg hover:bg-base-200">
                                 <div class="avatar placeholder">
-                                    <div class="bg-primary text-primary-content rounded-full w-10">
+                                    <div class="bg-primary text-primary-content rounded-full w-10 flex items-center justify-center">
                                         <span class="text-sm font-bold">
                                             <?php echo mb_substr($customer_name, 0, 1); ?>
                                         </span>
                                     </div>
                                 </div>
                                 <div>
-                                    <p class="font-semibold text-base-content text-sm">
+                                    <p class="font-semibold text-primary text-sm">
                                         <?php echo htmlspecialchars($customer_name); ?>
                                     </p>
                                     <p class="text-xs text-base-content/60">สมาชิก</p>
                                 </div>
-                            </div>
+                            </a>
                         </li>
 
                         <div class="divider my-0"></div>
@@ -118,7 +118,7 @@ $nav_items = [
                         <div class="divider my-0"></div>
 
                         <li>
-                            <a href="?page=logout" class="flex items-center gap-2 rounded-lg text-error hover:bg-error/10">
+                            <a href="?page=logout" class="flex items-center gap-2 rounded-lg">
                                 <i data-lucide="log-out" class="size-4"></i>
                                 ออกจากระบบ
                             </a>
@@ -171,40 +171,6 @@ $nav_items = [
                     </li>
                 <?php endforeach; ?>
             </ul>
-
-            <!-- Drawer footer — auth section -->
-            <div class="border-t border-base-200 p-4 space-y-2">
-                <?php if ($is_logged_in): ?>
-                    <!-- User info -->
-                    <div class="flex items-center gap-3 px-2 pb-3">
-                        <div class="avatar placeholder">
-                            <div class="bg-primary text-primary-content rounded-full w-10">
-                                <span class="text-sm font-bold">
-                                    <?php echo mb_substr($customer_name, 0, 1); ?>
-                                </span>
-                            </div>
-                        </div>
-                        <div>
-                            <p class="font-semibold text-sm"><?php echo htmlspecialchars($customer_name); ?></p>
-                            <p class="text-xs text-base-content/50">สมาชิก</p>
-                        </div>
-                    </div>
-
-                    <a href="?page=profile" class="btn btn-ghost btn-block btn-sm justify-start gap-2">
-                        <i data-lucide="user" class="size-4"></i> ข้อมูลส่วนตัว
-                    </a>
-                    <a href="?page=my_pets" class="btn btn-ghost btn-block btn-sm justify-start gap-2">
-                        <i data-lucide="paw-print" class="size-4"></i> สัตว์เลี้ยงของฉัน
-                    </a>
-                    <a href="?page=booking_history" class="btn btn-ghost btn-block btn-sm justify-start gap-2">
-                        <i data-lucide="calendar-clock" class="size-4"></i> ประวัติการจอง
-                    </a>
-                    <div class="divider my-1"></div>
-                    <a href="?page=logout" class="btn btn-error btn-outline btn-block btn-sm justify-start gap-2">
-                        <i data-lucide="log-out" class="size-4"></i> ออกจากระบบ
-                    </a>
-                <?php endif; ?>
-            </div>
         </aside>
     </div>
 </div>
