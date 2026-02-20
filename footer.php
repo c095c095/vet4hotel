@@ -76,8 +76,7 @@
                     <?php echo date('Y'); ?>
                     <?php echo SITE_NAME; ?>. สงวนลิขสิทธิ์ทุกประการ.
                 </p>
-                <p>พัฒนาด้วย <i data-lucide="heart" class="size-3 inline text-red-400"></i> เพื่อสัตว์เลี้ยงที่คุณรัก
-                </p>
+                <p>Made with <i data-lucide="heart" class="size-3 inline text-red-400"></i> ChatGPT&Gemini</p>
             </div>
         </div>
     </div>
