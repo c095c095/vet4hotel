@@ -1,0 +1,220 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" version="29.5.1">
+  <diagram name="หน้า-1" id="6WkTi1KmWliyjyWzNXzj">
+    <mxGraphModel dx="3565" dy="1878" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-47" parent="1" style="whiteSpace=wrap;strokeWidth=2;verticalAlign=top;" value="Cancellation" vertex="1">
+          <mxGeometry height="120" width="673" x="515.5" y="1260" as="geometry" />
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-48" parent="OXrjOf42aJ88FUUFgi4H-47" style="rounded=1;whiteSpace=wrap;arcSize=50;strokeWidth=2;" value="👤 Cancel / ลูกค้ายกเลิก" vertex="1">
+          <mxGeometry height="35.03142857142857" width="163.61" x="38" y="42.73285714285714" as="geometry" />
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-49" parent="OXrjOf42aJ88FUUFgi4H-47" style="rounded=1;whiteSpace=wrap;arcSize=50;strokeWidth=2;" value="👨‍💼 Process Refund / คืนเงิน" vertex="1">
+          <mxGeometry height="35.03142857142857" width="187" x="238" y="42.73285714285714" as="geometry" />
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-50" parent="OXrjOf42aJ88FUUFgi4H-47" style="rounded=1;whiteSpace=wrap;arcSize=50;strokeWidth=2;" value="💻 Update Log / บันทึกระบบ" vertex="1">
+          <mxGeometry height="35.52857142857143" width="177" x="458" y="42.23571428571429" as="geometry" />
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-51" edge="1" parent="OXrjOf42aJ88FUUFgi4H-47" source="OXrjOf42aJ88FUUFgi4H-48" style="curved=1;startArrow=none;endArrow=block;exitX=1;exitY=0.5;entryX=0;entryY=0.5;rounded=0;entryDx=0;entryDy=0;exitDx=0;exitDy=0;" target="OXrjOf42aJ88FUUFgi4H-49" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-52" edge="1" parent="OXrjOf42aJ88FUUFgi4H-47" source="OXrjOf42aJ88FUUFgi4H-49" style="curved=1;startArrow=none;endArrow=block;exitX=1;exitY=0.5;entryX=0;entryY=0.5;rounded=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" target="OXrjOf42aJ88FUUFgi4H-50" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-53" parent="1" style="whiteSpace=wrap;strokeWidth=2;verticalAlign=top;" value="4 Post-Stay" vertex="1">
+          <mxGeometry height="480" width="301" x="1490" y="362" as="geometry" />
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-54" parent="OXrjOf42aJ88FUUFgi4H-53" style="rounded=1;whiteSpace=wrap;arcSize=50;strokeWidth=2;" value="👨‍💼 Check-out / รับกลับ" vertex="1">
+          <mxGeometry height="39" width="185" x="66" y="46" as="geometry" />
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-55" parent="OXrjOf42aJ88FUUFgi4H-53" style="rounded=1;whiteSpace=wrap;arcSize=50;strokeWidth=2;" value="👤 Write Review / รีวิว" vertex="1">
+          <mxGeometry height="39" width="182" x="67" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-56" parent="OXrjOf42aJ88FUUFgi4H-53" style="rounded=1;whiteSpace=wrap;arcSize=50;strokeWidth=2;" value="👨‍💼 Approve Review / ตรวจรีวิว" vertex="1">
+          <mxGeometry height="63" width="231" x="43" y="274" as="geometry" />
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-57" parent="OXrjOf42aJ88FUUFgi4H-53" style="rounded=1;whiteSpace=wrap;arcSize=50;strokeWidth=2;" value="💻 Publish / โชว์บนเว็บ" vertex="1">
+          <mxGeometry height="39" width="189" x="64" y="412" as="geometry" />
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-58" edge="1" parent="OXrjOf42aJ88FUUFgi4H-53" source="OXrjOf42aJ88FUUFgi4H-54" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=0.99;entryX=0.5;entryY=-0.01;rounded=0;" target="OXrjOf42aJ88FUUFgi4H-55" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-59" edge="1" parent="OXrjOf42aJ88FUUFgi4H-53" source="OXrjOf42aJ88FUUFgi4H-55" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=0.99;entryX=0.5;entryY=-0.01;rounded=0;" target="OXrjOf42aJ88FUUFgi4H-56" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-60" edge="1" parent="OXrjOf42aJ88FUUFgi4H-53" source="OXrjOf42aJ88FUUFgi4H-56" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=0.99;entryX=0.5;entryY=-0.01;rounded=0;" target="OXrjOf42aJ88FUUFgi4H-57" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-61" parent="1" style="whiteSpace=wrap;strokeWidth=2;verticalAlign=top;" value="3 Pet Stay (🌟)" vertex="1">
+          <mxGeometry height="618" width="301" x="1100" y="362" as="geometry" />
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-62" parent="OXrjOf42aJ88FUUFgi4H-61" style="rounded=1;whiteSpace=wrap;arcSize=50;strokeWidth=2;" value="👨‍💼 Check-in / รับเข้าพัก" vertex="1">
+          <mxGeometry height="39" width="189" x="64" y="46" as="geometry" />
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-63" parent="OXrjOf42aJ88FUUFgi4H-61" style="rounded=1;whiteSpace=wrap;arcSize=50;strokeWidth=2;" value="💻 Create Tasks / สร้าง To-do" vertex="1">
+          <mxGeometry height="63" width="231" x="43" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-64" parent="OXrjOf42aJ88FUUFgi4H-61" style="rounded=1;whiteSpace=wrap;arcSize=50;strokeWidth=2;" value="👨‍💼 Perform Task / ทำงานดูแล" vertex="1">
+          <mxGeometry height="63" width="231" x="43" y="298" as="geometry" />
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-65" parent="OXrjOf42aJ88FUUFgi4H-61" style="rounded=1;whiteSpace=wrap;arcSize=50;strokeWidth=2;" value="👨‍💼 Send Update / ส่งรายงาน" vertex="1">
+          <mxGeometry height="39" width="224" x="47" y="436" as="geometry" />
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-66" parent="OXrjOf42aJ88FUUFgi4H-61" style="rounded=1;whiteSpace=wrap;arcSize=50;strokeWidth=2;" value="👤 View Update / ลูกค้าดูรูป" vertex="1">
+          <mxGeometry height="39" width="221" x="48" y="550" as="geometry" />
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-67" edge="1" parent="OXrjOf42aJ88FUUFgi4H-61" source="OXrjOf42aJ88FUUFgi4H-62" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=0.99;entryX=0.5;entryY=-0.01;rounded=0;" target="OXrjOf42aJ88FUUFgi4H-63" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-68" edge="1" parent="OXrjOf42aJ88FUUFgi4H-61" source="OXrjOf42aJ88FUUFgi4H-63" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=0.99;entryX=0.5;entryY=-0.01;rounded=0;" target="OXrjOf42aJ88FUUFgi4H-64" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-69" edge="1" parent="OXrjOf42aJ88FUUFgi4H-61" source="OXrjOf42aJ88FUUFgi4H-64" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=0.99;entryX=0.5;entryY=-0.01;rounded=0;" target="OXrjOf42aJ88FUUFgi4H-65" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-70" edge="1" parent="OXrjOf42aJ88FUUFgi4H-61" source="OXrjOf42aJ88FUUFgi4H-65" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=0.99;entryX=0.5;entryY=-0.01;rounded=0;" target="OXrjOf42aJ88FUUFgi4H-66" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-71" parent="1" style="whiteSpace=wrap;strokeWidth=2;verticalAlign=top;" value="2 Booking &amp; Payment" vertex="1">
+          <mxGeometry height="858" width="310" x="700" y="362" as="geometry" />
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-72" parent="1" style="whiteSpace=wrap;strokeWidth=2;verticalAlign=top;" value="1 Pre-Booking" vertex="1">
+          <mxGeometry height="743" width="605" x="20" y="362" as="geometry" />
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-73" parent="OXrjOf42aJ88FUUFgi4H-72" style="rounded=1;whiteSpace=wrap;arcSize=50;strokeWidth=2;" value="👤 Register / สมัครสมาชิก" vertex="1">
+          <mxGeometry height="39" width="207" x="207" y="46" as="geometry" />
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-74" parent="OXrjOf42aJ88FUUFgi4H-72" style="rounded=1;whiteSpace=wrap;arcSize=50;strokeWidth=2;" value="Add Pet Info / เพิ่มสัตว์เลี้ยง" vertex="1">
+          <mxGeometry height="39" width="216" x="202" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-75" parent="OXrjOf42aJ88FUUFgi4H-72" style="rhombus;strokeWidth=2;whiteSpace=wrap;" value="💻 Check Vaccine / ตรวจวัคซีน" vertex="1">
+          <mxGeometry height="278" width="278" x="172" y="274" as="geometry" />
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-76" parent="OXrjOf42aJ88FUUFgi4H-72" style="rounded=1;whiteSpace=wrap;arcSize=50;strokeWidth=2;" value="⚠️ Update Vaccine / ให้ระบุใหม่" vertex="1">
+          <mxGeometry height="63" width="231" x="55" y="651" as="geometry" />
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-77" parent="OXrjOf42aJ88FUUFgi4H-72" style="rounded=1;whiteSpace=wrap;arcSize=50;strokeWidth=2;" value="Health Record / บันทึกสุขภาพ" vertex="1">
+          <mxGeometry height="63" width="231" x="336" y="651" as="geometry" />
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-78" edge="1" parent="OXrjOf42aJ88FUUFgi4H-72" source="OXrjOf42aJ88FUUFgi4H-73" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=0.99;entryX=0.5;entryY=-0.01;rounded=0;" target="OXrjOf42aJ88FUUFgi4H-74" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-79" edge="1" parent="OXrjOf42aJ88FUUFgi4H-72" source="OXrjOf42aJ88FUUFgi4H-74" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=0.99;entryX=0.5;entryY=0;rounded=0;" target="OXrjOf42aJ88FUUFgi4H-75" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-80" edge="1" parent="OXrjOf42aJ88FUUFgi4H-72" source="OXrjOf42aJ88FUUFgi4H-75" style="curved=1;startArrow=none;endArrow=block;exitX=0.13;exitY=1;entryX=0.5;entryY=-0.01;rounded=0;" target="OXrjOf42aJ88FUUFgi4H-76" value="หมดอายุ">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="170" y="601" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-81" edge="1" parent="OXrjOf42aJ88FUUFgi4H-72" source="OXrjOf42aJ88FUUFgi4H-75" style="curved=1;startArrow=none;endArrow=block;exitX=0.87;exitY=1;entryX=0.5;entryY=-0.01;rounded=0;" target="OXrjOf42aJ88FUUFgi4H-77" value="ผ่าน">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="451" y="601" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-102" edge="1" parent="1" source="OXrjOf42aJ88FUUFgi4H-82" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="OXrjOf42aJ88FUUFgi4H-83">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-82" parent="1" style="rounded=1;whiteSpace=wrap;arcSize=50;strokeWidth=2;" value="👤 Search Room / ค้นหาห้อง" vertex="1">
+          <mxGeometry height="39" width="224" x="740" y="442" as="geometry" />
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-104" edge="1" parent="1" source="OXrjOf42aJ88FUUFgi4H-83" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="OXrjOf42aJ88FUUFgi4H-84">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-83" parent="1" style="rounded=1;whiteSpace=wrap;arcSize=50;strokeWidth=2;" value="Select Room / เลือกห้อง" vertex="1">
+          <mxGeometry height="39" width="193" x="755.5" y="532" as="geometry" />
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-105" edge="1" parent="1" source="OXrjOf42aJ88FUUFgi4H-84" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="OXrjOf42aJ88FUUFgi4H-85">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-84" parent="1" style="rounded=1;whiteSpace=wrap;arcSize=50;strokeWidth=2;" value="Add Service / บริการเสริม" vertex="1">
+          <mxGeometry height="39" width="199" x="752.5" y="626.5" as="geometry" />
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-106" edge="1" parent="1" source="OXrjOf42aJ88FUUFgi4H-85" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="OXrjOf42aJ88FUUFgi4H-86">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-85" parent="1" style="rounded=1;whiteSpace=wrap;arcSize=50;strokeWidth=2;" value="Enter Promo / ใส่โค้ดลด" vertex="1">
+          <mxGeometry height="39" width="195" x="754.5" y="720" as="geometry" />
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-107" edge="1" parent="1" source="OXrjOf42aJ88FUUFgi4H-86" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="OXrjOf42aJ88FUUFgi4H-87">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-86" parent="1" style="rounded=1;whiteSpace=wrap;arcSize=50;strokeWidth=2;" value="💻 Calc Total / คำนวณยอด" vertex="1">
+          <mxGeometry height="39" width="217" x="743.5" y="820" as="geometry" />
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-108" edge="1" parent="1" source="OXrjOf42aJ88FUUFgi4H-87" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="OXrjOf42aJ88FUUFgi4H-88">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-87" parent="1" style="rounded=1;whiteSpace=wrap;arcSize=50;strokeWidth=2;" value="👤 Upload Slip / แนบสลิป" vertex="1">
+          <mxGeometry height="39" width="206" x="749" y="910" as="geometry" />
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-110" edge="1" parent="1" source="OXrjOf42aJ88FUUFgi4H-88" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=1;entryDx=0;entryDy=0;" target="OXrjOf42aJ88FUUFgi4H-87">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-111" connectable="0" parent="OXrjOf42aJ88FUUFgi4H-110" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="ไม่ผ่าน" vertex="1">
+          <mxGeometry relative="1" x="-0.1715" y="-1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-88" parent="1" style="rounded=1;whiteSpace=wrap;arcSize=50;strokeWidth=2;" value="👨‍💼 Verify Slip / ตรวจสลิป" vertex="1">
+          <mxGeometry height="39" width="202" x="751" y="1010" as="geometry" />
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-89" parent="1" style="rounded=1;whiteSpace=wrap;arcSize=50;strokeWidth=2;" value="💻 Confirm Booking / ยืนยัน" vertex="1">
+          <mxGeometry height="63" width="231" x="736.5" y="1120" as="geometry" />
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-97" edge="1" parent="1" source="OXrjOf42aJ88FUUFgi4H-88" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;entryDx=0;entryDy=0;exitDx=0;exitDy=0;" target="OXrjOf42aJ88FUUFgi4H-89" value="ผ่าน">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-98" edge="1" parent="1" source="OXrjOf42aJ88FUUFgi4H-72" style="curved=1;startArrow=none;endArrow=block;strokeWidth=3;rounded=0;entryX=0.032;entryY=0.433;entryDx=0;entryDy=0;entryPerimeter=0;" target="OXrjOf42aJ88FUUFgi4H-71" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-99" edge="1" parent="1" source="OXrjOf42aJ88FUUFgi4H-71" style="curved=1;startArrow=none;endArrow=block;strokeWidth=3;rounded=0;entryX=0;entryY=0.693;entryDx=0;entryDy=0;entryPerimeter=0;" target="OXrjOf42aJ88FUUFgi4H-61" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-100" edge="1" parent="1" source="OXrjOf42aJ88FUUFgi4H-61" style="curved=1;startArrow=none;endArrow=block;strokeWidth=3;exitX=1;exitY=0.5;entryX=-0.001;entryY=0.644;rounded=0;entryDx=0;entryDy=0;entryPerimeter=0;" target="OXrjOf42aJ88FUUFgi4H-53" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="OXrjOf42aJ88FUUFgi4H-101" edge="1" parent="1" source="OXrjOf42aJ88FUUFgi4H-89" style="curved=1;dashed=1;dashPattern=2 3;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;entryDx=0;entryDy=0;exitDx=0;exitDy=0;" target="OXrjOf42aJ88FUUFgi4H-47" value="ลูกค้ายกเลิก">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -81,6 +81,16 @@ CREATE TABLE `species` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- ประเภทวัคซีน
+CREATE TABLE `vaccine_types` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `species_id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `is_active` tinyint(1) DEFAULT 1,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`species_id`) REFERENCES `species`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 -- สายพันธุ์
 CREATE TABLE `breeds` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -117,14 +127,15 @@ CREATE TABLE `pets` (
 CREATE TABLE `pet_vaccinations` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `pet_id` int(11) NOT NULL,
-  `vaccine_name` varchar(100) NOT NULL,
+  `vaccine_type_id` int(11) NOT NULL, -- เปลี่ยนจาก varchar มาใช้ Lookup
   `administered_date` date DEFAULT NULL,
   `expiry_date` date NOT NULL, -- [CRITICAL] ใช้เช็คตอนกดจอง
   `document_url` varchar(255) DEFAULT NULL, -- รูปถ่ายสมุดวัคซีน
   `is_verified` tinyint(1) DEFAULT 0, -- พนักงานตรวจหรือยัง
   `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`pet_id`) REFERENCES `pets`(`id`) ON DELETE CASCADE
+  FOREIGN KEY (`pet_id`) REFERENCES `pets`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`vaccine_type_id`) REFERENCES `vaccine_types`(`id`) ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ประวัติสุขภาพอื่นๆ (โรคประจำตัว, อาการแพ้)
@@ -194,6 +205,7 @@ CREATE TABLE `rooms` (
   `cctv_url` varchar(255) DEFAULT NULL, -- สำหรับฟีเจอร์ดูกล้องวงจรปิดส่วนตัว
   `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `room_number` (`room_number`),
   FOREIGN KEY (`room_type_id`) REFERENCES `room_types`(`id`) ON DELETE RESTRICT
@@ -212,22 +224,45 @@ CREATE TABLE `seasonal_pricings` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ==========================================
--- 4. BOOKINGS, SERVICES & TASKS
+-- 4. BOOKINGS, PROMOTION, SERVICES & TASKS
 -- ==========================================
+
+-- โปรโมชันและส่วนลด (สำหรับหน้าเว็บและเช็คตอนจอง)
+CREATE TABLE `promotions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `code` varchar(50) NOT NULL, -- เช่น 'VET2026'
+  `title` varchar(100) NOT NULL, -- ชื่อแคมเปญ เช่น 'โปรปีใหม่ลด 10%'
+  `discount_type` enum('percentage', 'fixed_amount') NOT NULL, -- ประเภทส่วนลด
+  `discount_value` decimal(10,2) NOT NULL, -- มูลค่าส่วนลด (เช่น 10.00 สำหรับ 10% หรือ 500.00 สำหรับ 500 บาท)
+  `max_discount_amount` decimal(10,2) DEFAULT NULL, -- ลดสูงสุดไม่เกินกี่บาท (ใช้กรณีลดเป็น %)
+  `min_booking_amount` decimal(10,2) DEFAULT 0.00, -- ยอดจองขั้นต่ำที่ใช้โค้ดนี้ได้
+  `usage_limit` int(11) DEFAULT NULL, -- โควต้าจำนวนครั้งที่ใช้ได้ (NULL = ไม่จำกัด)
+  `used_count` int(11) DEFAULT 0, -- สถิติว่าถูกใช้ไปแล้วกี่ครั้ง
+  `start_date` datetime NOT NULL, -- วันเริ่มโปร
+  `end_date` datetime NOT NULL, -- วันจบโปร
+  `is_active` tinyint(1) DEFAULT 1,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `code` (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- การจองหลัก (Cart/Header)
 CREATE TABLE `bookings` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `booking_ref` varchar(20) NOT NULL, -- e.g., BK-20231024-001 (สำหรับให้ลูกค้าดู)
   `customer_id` int(11) NOT NULL,
-  `total_amount` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `subtotal_amount` decimal(10,2) NOT NULL DEFAULT 0.00, -- ยอดรวมทั้งหมดก่อนหักส่วนลด (ค่าห้อง + บริการเสริม)
+  `promotion_id` int(11) DEFAULT NULL, -- โค้ดส่วนลดที่ใช้
+  `discount_amount` decimal(10,2) NOT NULL DEFAULT 0.00, -- ยอดที่ลดไปกี่บาท
+  `net_amount` decimal(10,2) NOT NULL DEFAULT 0.00, -- ยอดสุทธิที่ลูกค้าต้องจ่าย (subtotal - discount)
   `status` enum('pending_payment', 'confirmed', 'checked_in', 'checked_out', 'cancelled') DEFAULT 'pending_payment',
   `special_requests` text DEFAULT NULL,
   `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `booking_ref` (`booking_ref`),
-  FOREIGN KEY (`customer_id`) REFERENCES `customers`(`id`) ON DELETE RESTRICT
+  FOREIGN KEY (`customer_id`) REFERENCES `customers`(`id`) ON DELETE RESTRICT,
+  FOREIGN KEY (`promotion_id`) REFERENCES `promotions`(`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- รายละเอียดการจองระดับห้องพัก (1 การจอง มีได้หลายห้อง)
@@ -262,6 +297,7 @@ CREATE TABLE `services` (
   `price` decimal(10,2) NOT NULL,
   `charge_type` enum('per_stay', 'per_night', 'per_pet') DEFAULT 'per_stay',
   `is_active` tinyint(1) DEFAULT 1,
+  `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -279,6 +315,24 @@ CREATE TABLE `booking_services` (
   FOREIGN KEY (`booking_id`) REFERENCES `bookings`(`id`) ON DELETE CASCADE,
   FOREIGN KEY (`service_id`) REFERENCES `services`(`id`) ON DELETE RESTRICT,
   FOREIGN KEY (`pet_id`) REFERENCES `pets`(`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Pet Transportation (Pet Taxi)
+CREATE TABLE `pet_transportation` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `booking_id` int(11) NOT NULL,
+  `transport_type` enum('pickup', 'dropoff', 'roundtrip') NOT NULL,
+  `address` text NOT NULL,
+  `distance_km` decimal(5,2) DEFAULT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `scheduled_datetime` datetime NOT NULL,
+  `driver_name` varchar(100) DEFAULT NULL,
+  `driver_phone` varchar(20) DEFAULT NULL,
+  `status` enum('pending', 'assigned', 'in_transit', 'completed', 'cancelled') DEFAULT 'pending',
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`booking_id`) REFERENCES `bookings`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ตารางอัปเดตสถานะรายวัน (จุดขายของโปรเจกต์)
@@ -317,7 +371,7 @@ CREATE TABLE `daily_care_tasks` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ==========================================
--- 5. BILLING & PAYMENTS
+-- 5. BILLING & PAYMENTS & REFUNDS
 -- ==========================================
 
 -- ช่องทางการรับชำระเงินของโรงแรม
@@ -349,6 +403,24 @@ CREATE TABLE `payments` (
   FOREIGN KEY (`verified_by_employee_id`) REFERENCES `employees`(`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- Refunds สำหรับจัดการการคืนเงิน/Credit Note
+CREATE TABLE `refunds` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `payment_id` int(11) NOT NULL,
+  `booking_id` int(11) NOT NULL,
+  `refund_amount` decimal(10,2) NOT NULL,
+  `refund_type` enum('cash', 'credit_note') NOT NULL,
+  `reason` text DEFAULT NULL,
+  `status` enum('pending', 'processed', 'failed') DEFAULT 'pending',
+  `processed_by_employee_id` int(11) DEFAULT NULL,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`payment_id`) REFERENCES `payments`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`booking_id`) REFERENCES `bookings`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`processed_by_employee_id`) REFERENCES `employees`(`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 -- ==========================================
 -- 6. FRONTEND CMS
 -- ==========================================
@@ -363,6 +435,21 @@ CREATE TABLE `banners` (
   `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Reviews สำหรับหน้าเว็บและวัด KPI พนักงาน
+CREATE TABLE `reviews` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `booking_id` int(11) NOT NULL,
+  `customer_id` int(11) NOT NULL,
+  `rating` int(1) NOT NULL CHECK (`rating` >= 1 AND `rating` <= 5),
+  `comment` text DEFAULT NULL,
+  `is_published` tinyint(1) DEFAULT 0, -- แอดมินต้องตรวจสอบก่อน (0 = ซ่อน, 1 = โชว์)
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `booking_id` (`booking_id`),
+  FOREIGN KEY (`booking_id`) REFERENCES `bookings`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`customer_id`) REFERENCES `customers`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 COMMIT;
