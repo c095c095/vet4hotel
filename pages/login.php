@@ -4,11 +4,19 @@
 // Clean, trust-building authentication interface
 // ═══════════════════════════════════════════════════════════
 
-// If user is already logged in, redirect them (optional if session exists)
+// If user is already logged in, redirect them
 if (isset($_SESSION['customer_id'])) {
     header("Location: ?page=profile");
     exit();
+} elseif (isset($_SESSION['employee_id'])) {
+    header("Location: admin/");
+    exit();
 }
+
+$error = $_SESSION['error_msg'] ?? '';
+unset($_SESSION['error_msg']);
+$success = $_SESSION['success_msg'] ?? '';
+unset($_SESSION['success_msg']);
 ?>
 
 <section
@@ -32,7 +40,7 @@ if (isset($_SESSION['customer_id'])) {
             <i data-lucide="arrow-left" class="size-4"></i>
             กลับสู่หน้าหลัก
         </a>
-        <div class="bg-base-100 rounded-3xl shadow-xl overflow-hidden border border-base-200">
+        <div class="md:bg-base-100 md:rounded-3xl md:shadow-xl overflow-hidden md:border md:border-base-200">
             <div class="grid grid-cols-1 md:grid-cols-2">
 
                 <!-- Left: Illustration / Image -->
@@ -59,21 +67,21 @@ if (isset($_SESSION['customer_id'])) {
                         <p class="text-base-content/60 text-sm mt-2">กรุณาเข้าสู่ระบบเพื่อจัดการบัญชีของคุณ</p>
                     </div>
 
-                    <?php if (isset($_GET['error'])): ?>
+                    <?php if (!empty($error) || isset($_GET['error'])): ?>
                         <div class="alert alert-error text-sm rounded-xl mb-6 py-3">
                             <i data-lucide="alert-circle" class="size-4"></i>
-                            <span>อีเมลหรือรหัสผ่านไม่ถูกต้อง</span>
+                            <span><?php echo htmlspecialchars($error ?: ($_GET['error'] ?? 'เกิดข้อผิดพลาด')); ?></span>
                         </div>
                     <?php endif; ?>
 
-                    <?php if (isset($_GET['registered'])): ?>
+                    <?php if (!empty($success) || isset($_GET['registered'])): ?>
                         <div class="alert alert-success text-sm rounded-xl mb-6 py-3">
                             <i data-lucide="check-circle" class="size-4"></i>
-                            <span>สมัครสมาชิกสำเร็จ กรุณาเข้าสู่ระบบ</span>
+                            <span><?php echo htmlspecialchars($success ?: 'สมัครสมาชิกสำเร็จ กรุณาเข้าสู่ระบบ'); ?></span>
                         </div>
                     <?php endif; ?>
 
-                    <form action="?page=login" method="POST" class="space-y-5">
+                    <form action="?action=login" method="POST" class="space-y-5">
                         <!-- Email Input -->
                         <div class="form-control">
                             <label class="label pt-0" for="email">
@@ -83,7 +91,8 @@ if (isset($_SESSION['customer_id'])) {
                                 class="input input-bordered flex items-center gap-3 rounded-xl focus-within:outline-primary/50 focus-within:border-primary transition-colors bg-base-100/50">
                                 <i data-lucide="mail" class="size-4 text-base-content/40"></i>
                                 <input type="email" id="email" name="email" class="grow" placeholder="your@email.com"
-                                    required autocomplete="email" />
+                                    required autocomplete="email"
+                                    value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>" />
                             </label>
                         </div>
 

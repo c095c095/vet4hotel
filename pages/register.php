@@ -9,6 +9,12 @@ if (isset($_SESSION['customer_id'])) {
     header("Location: ?page=profile");
     exit();
 }
+
+$error = $_SESSION['error_msg'] ?? '';
+unset($_SESSION['error_msg']);
+
+$form_data = $_SESSION['form_data'] ?? [];
+unset($_SESSION['form_data']);
 ?>
 
 <section
@@ -31,7 +37,7 @@ if (isset($_SESSION['customer_id'])) {
             กลับสู่หน้าล็อกอิน
         </a>
         <div
-            class="bg-base-100 rounded-3xl shadow-xl border border-base-200 p-8 sm:p-10 lg:p-12 flex flex-col justify-center">
+            class="md:bg-base-100 md:rounded-3xl md:shadow-xl md:border md:border-base-200 p-8 sm:p-10 lg:p-12 flex flex-col justify-center">
             <div class="text-center mb-8">
                 <div
                     class="inline-flex items-center justify-center w-12 h-12 bg-primary/10 text-primary rounded-xl mb-4">
@@ -42,16 +48,16 @@ if (isset($_SESSION['customer_id'])) {
                     กรอกข้อมูลด้านล่างเพื่อเริ่มต้นการใช้งานระบบโรงแรมสัตว์เลี้ยง</p>
             </div>
 
-            <?php if (isset($_GET['error'])): ?>
+            <?php if (!empty($error) || isset($_GET['error'])): ?>
                 <div class="alert alert-error text-sm rounded-xl mb-6 py-3">
                     <i data-lucide="alert-circle" class="size-4"></i>
                     <span>
-                        <?php echo htmlspecialchars($_GET['error'] ?? 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง'); ?>
+                        <?php echo htmlspecialchars($error ?: ($_GET['error'] ?? 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง')); ?>
                     </span>
                 </div>
             <?php endif; ?>
 
-            <form action="?page=register" method="POST" class="space-y-4">
+            <form action="?action=register" method="POST" class="space-y-4">
                 <!-- Name Row -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div class="form-control">
@@ -63,7 +69,7 @@ if (isset($_SESSION['customer_id'])) {
                             class="input input-bordered flex items-center gap-3 rounded-xl focus-within:outline-primary/50 focus-within:border-primary transition-colors bg-base-100/50">
                             <i data-lucide="user" class="size-4 text-base-content/40"></i>
                             <input type="text" id="first_name" name="first_name" class="grow" placeholder="ชื่อ"
-                                required />
+                                value="<?php echo htmlspecialchars($form_data['first_name'] ?? ''); ?>" required />
                         </label>
                     </div>
                     <div class="form-control">
@@ -74,7 +80,7 @@ if (isset($_SESSION['customer_id'])) {
                         <label
                             class="input input-bordered flex items-center gap-3 rounded-xl focus-within:outline-primary/50 focus-within:border-primary transition-colors bg-base-100/50">
                             <input type="text" id="last_name" name="last_name" class="grow" placeholder="นามสกุล"
-                                required />
+                                value="<?php echo htmlspecialchars($form_data['last_name'] ?? ''); ?>" required />
                         </label>
                     </div>
                 </div>
@@ -89,7 +95,8 @@ if (isset($_SESSION['customer_id'])) {
                         class="input input-bordered flex items-center gap-3 rounded-xl focus-within:outline-primary/50 focus-within:border-primary transition-colors bg-base-100/50">
                         <i data-lucide="phone" class="size-4 text-base-content/40"></i>
                         <input type="tel" id="phone" name="phone" class="grow" placeholder="08xxxxxxxx" required
-                            pattern="[0-9]{9,10}" title="กรุณากรอกเบอร์โทรศัพท์ 9-10 หลัก" />
+                            pattern="[0-9]{9,10}" title="กรุณากรอกเบอร์โทรศัพท์ 9-10 หลัก"
+                            value="<?php echo htmlspecialchars($form_data['phone'] ?? ''); ?>" />
                     </label>
                 </div>
 
@@ -103,7 +110,7 @@ if (isset($_SESSION['customer_id'])) {
                         class="input input-bordered flex items-center gap-3 rounded-xl focus-within:outline-primary/50 focus-within:border-primary transition-colors bg-base-100/50">
                         <i data-lucide="mail" class="size-4 text-base-content/40"></i>
                         <input type="email" id="email" name="email" class="grow" placeholder="your@email.com" required
-                            autocomplete="email" />
+                            autocomplete="email" value="<?php echo htmlspecialchars($form_data['email'] ?? ''); ?>" />
                     </label>
                 </div>
 
@@ -148,8 +155,9 @@ if (isset($_SESSION['customer_id'])) {
                 <!-- Terms Checkbox -->
                 <div class="form-control mt-4">
                     <label class="label cursor-pointer justify-start gap-3 ps-0 items-start">
-                        <input type="checkbox" required class="checkbox checkbox-sm checkbox-primary mt-1 rounded-md" />
-                        <span class="label-text text-base-content/70 leading-relaxed">
+                        <input type="checkbox" required
+                            class="checkbox checkbox-sm checkbox-primary mt-1 shrink-0 rounded-md" />
+                        <span class="label-text text-base-content/70 leading-relaxed text-wrap break-words">
                             ฉันยอมรับ <a href="#" class="text-primary hover:underline">เงื่อนไขการให้บริการ</a>
                             และ <a href="#" class="text-primary hover:underline">นโยบายความเป็นส่วนตัว</a> ของ
                             VET4 Hotel

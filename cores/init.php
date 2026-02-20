@@ -8,6 +8,16 @@ require_once 'routes.php';
 require_once 'database.php';
 require_once 'functions.php';
 
+// Action Routing (Handle Form Submissions via index.php?action=...)
+if (isset($_GET['action'])) {
+    $action = trim($_GET['action']);
+    $action_file = __DIR__ . '/process_' . $action . '.php';
+    if (file_exists($action_file)) {
+        require_once $action_file;
+        exit();
+    }
+}
+
 $current_page = isset($_GET['page']) ? trim($_GET['page']) : 'home';
 
 if (!array_key_exists($current_page, $pages)) {

@@ -21,7 +21,9 @@
 </head>
 
 <body>
-    <?php include 'navbar.php'; ?>
+    <?php if (!in_array($current_page, ['login', 'register'])): ?>
+        <?php include 'navbar.php'; ?>
+    <?php endif; ?>
     <main class="min-vh-100">
         <?php
         if (file_exists($page_file)) {
@@ -36,7 +38,9 @@
         }
         ?>
     </main>
-    <?php include 'footer.php'; ?>
+    <?php if (!in_array($current_page, ['login', 'register'])): ?>
+        <?php include 'footer.php'; ?>
+    <?php endif; ?>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
         lucide.createIcons();
