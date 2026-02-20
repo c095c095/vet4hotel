@@ -1,6 +1,6 @@
 <?php
 $is_logged_in = isset($_SESSION['customer_id']);
-$customer_name = $is_logged_in ? ($_SESSION['customer_name'] ?? 'ผู้ใช้') : '';
+$customer_name = $is_logged_in ? ($_SESSION['user_name'] ?? 'ผู้ใช้') : '';
 
 // Navigation items
 $nav_items = [
