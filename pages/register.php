@@ -157,7 +157,7 @@ unset($_SESSION['form_data']);
                     <label class="label cursor-pointer justify-start gap-3 ps-0 items-start">
                         <input type="checkbox" required
                             class="checkbox checkbox-sm checkbox-primary mt-1 shrink-0 rounded-md" />
-                        <span class="label-text text-base-content/70 leading-relaxed text-wrap break-words">
+                        <span class="label-text text-base-content/70 leading-relaxed text-wrap wrap-break-word">
                             ฉันยอมรับ <a href="#" class="text-primary hover:underline">เงื่อนไขการให้บริการ</a>
                             และ <a href="#" class="text-primary hover:underline">นโยบายความเป็นส่วนตัว</a> ของ
                             VET4 Hotel
