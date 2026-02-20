@@ -9,7 +9,7 @@
 <section class="py-16 md:py-24 bg-base-100">
     <div class="container mx-auto px-4 lg:px-8">
         <!-- Intro & Unique Selling Points -->
-        <div class="text-center mb-12 md:mb-16 relative min-h-[160px]">
+        <div class="text-center mb-12 md:mb-16 relative min-h-40">
             <h1 class="text-3xl md:text-4xl font-bold text-base-content mb-4">
                 โรงแรมสัตว์เลี้ยงที่ดูแลครบทุกด้าน <span class="text-primary">เพื่อความสุขของน้อง ๆ และเจ้าของ</span>
             </h1>
