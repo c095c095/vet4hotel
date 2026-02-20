@@ -545,12 +545,6 @@ $daily_timeline = [
 
         <div class="container mx-auto px-4 lg:px-8 relative z-10">
             <div class="max-w-3xl mx-auto text-center">
-                <div
-                    class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-5 py-2 mb-6 border border-white/20">
-                    <i data-lucide="map-pin" class="size-4 text-amber-300"></i>
-                    <span class="text-white/90 text-sm font-medium">ยินดีต้อนรับทุกท่านค่ะ</span>
-                </div>
-
                 <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 leading-snug">
                     มาเยี่ยมชมก่อนจองได้เลยค่ะ<br>
                     <span class="text-amber-300">เราพร้อมพาชมทุกวัน</span>
