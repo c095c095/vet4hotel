@@ -96,7 +96,7 @@ $daily_timeline = [
             </div>
 
             <!-- Main headline -->
-            <h1 class="animate-fade-in-up text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6"
+            <h1 class="animate-fade-in-up text-3xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6"
                 style="animation-delay: 0.15s;">
                 เพราะเขาคือ<span class="text-amber-300">ครอบครัว</span><br>
                 ให้เราเป็น<span class="text-amber-300">บ้านหลังที่สอง</span>
@@ -174,7 +174,7 @@ $daily_timeline = [
                     เรื่องราวความผูกพันกว่า 39 ปี
                 </div>
                 <h2 class="text-3xl md:text-4xl font-bold text-base-content mb-6 leading-snug">
-                    ไม่ใช่แค่ <span class="text-primary">"คลินิกหรือที่ฝากเลี้ยง"</span><br>
+                    ไม่ใช่แค่ <span class="text-primary">"คลินิกหรือที่ฝากเลี้ยง"</span><br class="hidden md:block">
                     แต่คือพื้นที่ปลอดภัยที่สร้างด้วยหัวใจ
                 </h2>
                 <div class="space-y-4 text-base-content/70 text-base leading-relaxed">

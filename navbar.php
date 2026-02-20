@@ -68,6 +68,7 @@ $user_menu_items = [
 
         <!-- Right-side auth section -->
         <div class="flex-none flex items-center gap-2">
+            <?php $is_logged_in = true; $customer_name = "ก้าน"; ?>
             <?php if ($is_logged_in): ?>
 
                 <!-- ── Mobile: Profile drawer trigger ── -->
