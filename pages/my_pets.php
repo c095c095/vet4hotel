@@ -129,12 +129,12 @@ function calculateAge($dob) {
                             <?php endif; ?>
                             <hr class="border-base-200 my-2">
                             <div class="card-actions justify-end mt-4">
+                                <button onclick="openEditPetModal(<?php echo $pet['id']; ?>)" class="btn btn-outline btn-primary btn-sm gap-2">
+                                    <i data-lucide="edit-3" class="size-4"></i> แก้ไข
+                                </button>
                                 <button onclick="document.getElementById('pet_details_modal_<?php echo $pet['id']; ?>').checked = true" class="btn btn-ghost btn-sm gap-2">
                                     <i data-lucide="eye" class="size-4"></i> รายละเอียด
                                 </button>
-                                <a href="?page=edit_pet&id=<?php echo $pet['id']; ?>" class="btn btn-outline btn-primary btn-sm gap-2 rounded-lg">
-                                    <i data-lucide="edit-3" class="size-4"></i> แก้ไข
-                                </a>
                             </div>
                         </div>
                     </div>
@@ -208,7 +208,7 @@ function calculateAge($dob) {
                                 </div>
                                 <div class="divider my-4"></div>
                                 <div class="flex justify-end gap-2">
-                                    <label for="pet_details_modal_<?php echo $pet['id']; ?>" class="btn  w-full rounded-xl">ปิด</label>
+                                    <label for="pet_details_modal_<?php echo $pet['id']; ?>" class="btn  w-full">ปิด</label>
                                 </div>
                             </div>
                         </div>
@@ -225,7 +225,7 @@ function calculateAge($dob) {
                 <p class="text-base-content/60 max-w-md mx-auto mb-8">
                     เพิ่มข้อมูลสัตว์เลี้ยงของคุณตอนนี้ เพื่อเริ่มจองห้องพักและรับการอัปเดตประจำวันจากเรา
                 </p>
-                <a href="?page=add_pet" class="btn btn-primary rounded-xl px-8">
+                <a href="?page=add_pet" class="btn btn-primary px-8">
                     <i data-lucide="plus" class="size-5"></i>
                     เพิ่มสัตว์เลี้ยงตัวแรก
                 </a>
@@ -237,7 +237,7 @@ function calculateAge($dob) {
 <!-- Modal: Add Pet (Mobile Bottom / Desktop Middle, styled like navbar modal, header fixed top, actions fixed bottom) -->
 <input type="checkbox" id="add_pet_modal" class="modal-toggle" />
 <div class="modal modal-bottom sm:modal-middle">
-    <div class="modal-box rounded-t-3xl rounded-b-none max-h-[85vh] md:max-h-screen p-0 sm:rounded-2xl sm:p-8 max-w-lg flex flex-col">
+    <div class="modal-box rounded-t-3xl rounded-b-none max-h-[85vh] md:max-h-screen p-0 sm:rounded-2xl sm:p-8 flex flex-col w-11/12 max-w-5xl">
         <!-- Drag handle indicator (mobile only) -->
         <div class="flex justify-center pt-3 pb-2 sm:hidden">
             <div class="w-12 h-1.5 bg-base-300 rounded-full"></div>
@@ -253,65 +253,79 @@ function calculateAge($dob) {
         </div>
         <!-- Scrollable form body -->
         <form method="POST" action="cores/process_pet.php" autocomplete="off" class="px-5 sm:px-0 pb-4 flex-1 overflow-y-auto">
-            <div class="form-control mb-4">
-                <label class="label font-medium text-base-content">ชื่อสัตว์เลี้ยง <span class="text-error">*</span></label>
-                <input type="text" name="name" class="input input-bordered w-full" required>
-            </div>
-            <div class="form-control mb-4">
-                <label class="label font-medium text-base-content">ชนิดสัตว์ <span class="text-error">*</span></label>
-                <select name="species_id" class="select select-bordered w-full" required onchange="filterBreeds(this.value)">
-                    <option value="">-- เลือกชนิดสัตว์ --</option>
-                    <?php foreach ($species_list as $sp): ?>
-                        <option value="<?php echo $sp['id']; ?>"><?php echo htmlspecialchars($sp['name']); ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            <div class="form-control mb-4">
-                <label class="label font-medium text-base-content">สายพันธุ์</label>
-                <select name="breed_id" class="select select-bordered w-full" id="breed_select">
-                    <option value="">-- เลือกสายพันธุ์ --</option>
-                    <?php foreach ($breeds_list as $br): ?>
-                        <option value="<?php echo $br['id']; ?>" data-species="<?php echo $br['species_id']; ?>">
-                            <?php echo htmlspecialchars($br['name']); ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            <div class="form-control mb-4">
-                <label class="label font-medium text-base-content">เพศ <span class="text-error">*</span></label>
-                <select name="gender" class="select select-bordered w-full" required>
-                    <option value="male">ตัวผู้</option>
-                    <option value="female">ตัวเมีย</option>
-                    <option value="spayed">ทำหมันแล้ว (เมีย)</option>
-                    <option value="neutered">ทำหมันแล้ว (ผู้)</option>
-                    <option value="unknown">ไม่ระบุ</option>
-                </select>
-            </div>
-            <div class="form-control mb-4">
-                <label class="label font-medium text-base-content">วันเกิด</label>
-                <input type="date" name="dob" class="input input-bordered w-full">
-            </div>
-            <div class="form-control mb-4">
-                <label class="label font-medium text-base-content">น้ำหนัก</label>
-                <div class="flex items-center gap-2">
-                    <input type="number" name="weight_kg" class="input input-bordered w-full" min="0" step="0.01" placeholder="น้ำหนัก" required>
-                    <span class="text-base-content/60 text-sm">kg</span>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-4">
+                    <div class="form-control">
+                        <label class="label font-medium text-base-content">ชื่อสัตว์เลี้ยง <span class="text-error">*</span></label>
+                        <input type="text" name="name" class="input input-bordered w-full" required>
+                    </div>
+                    <div class="form-control">
+                        <label class="label font-medium text-base-content">ชนิดสัตว์ <span class="text-error">*</span></label>
+                        <select name="species_id" class="select select-bordered w-full" required onchange="filterBreeds(this.value)">
+                            <option value="">-- เลือกชนิดสัตว์ --</option>
+                            <?php foreach ($species_list as $sp): ?>
+                                <option value="<?php echo $sp['id']; ?>"><?php echo htmlspecialchars($sp['name']); ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="form-control">
+                        <label class="label font-medium text-base-content">สายพันธุ์</label>
+                        <select name="breed_id" class="select select-bordered w-full" id="breed_select">
+                            <option value="">-- เลือกสายพันธุ์ --</option>
+                            <?php foreach ($breeds_list as $br): ?>
+                                <option value="<?php echo $br['id']; ?>" data-species="<?php echo $br['species_id']; ?>">
+                                    <?php echo htmlspecialchars($br['name']); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="form-control">
+                        <label class="label font-medium text-base-content">เพศ <span class="text-error">*</span></label>
+                        <select name="gender" class="select select-bordered w-full" required>
+                            <option value="male">ตัวผู้</option>
+                            <option value="female">ตัวเมีย</option>
+                            <option value="spayed">ทำหมันแล้ว (เมีย)</option>
+                            <option value="neutered">ทำหมันแล้ว (ผู้)</option>
+                            <option value="unknown">ไม่ระบุ</option>
+                        </select>
+                    </div>
+                    <div class="form-control">
+                        <label class="label font-medium text-base-content">วันเกิด</label>
+                        <input type="date" name="dob" class="input input-bordered w-full">
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <div class="form-control">
+                        <label class="label font-medium text-base-content">น้ำหนัก</label>
+                        <div class="flex items-center gap-2">
+                            <input type="number" name="weight_kg" class="input input-bordered w-full" min="0" step="0.01" placeholder="น้ำหนัก">
+                            <span class="text-base-content/60 text-sm">kg</span>
+                        </div>
+                    </div>
+                    <div class="form-control">
+                        <label class="label font-medium text-base-content">ชื่อคลินิก/สัตวแพทย์ประจำตัว</label>
+                        <input type="text" name="vet_name" class="input input-bordered w-full" placeholder="ชื่อคลินิก/สัตวแพทย์">
+                    </div>
+                    <div class="form-control">
+                        <label class="label font-medium text-base-content">เบอร์คลินิก/สัตวแพทย์</label>
+                        <input type="text" name="vet_phone" class="input input-bordered w-full" placeholder="เบอร์โทรศัพท์">
+                    </div>
+                    <div class="form-control">
+                        <label class="label font-medium text-base-content">หมายเหตุพฤติกรรม</label>
+                        <textarea name="behavior_note" class="textarea textarea-bordered w-full" placeholder="เช่น กลัวฟ้าร้อง, ไม่ชอบอาบน้ำ"></textarea>
+                    </div>
+                    <div class="form-control">
+                        <label class="label cursor-pointer flex items-center gap-2">
+                            <input type="checkbox" name="is_aggressive" class="checkbox checkbox-error text-white" />
+                            <span class="text-error font-semibold">ดุ/กัด (แจ้งเตือนพนักงาน)</span>
+                        </label>
+                    </div>
                 </div>
             </div>
-            <div class="form-control mb-4">
-                <label class="label font-medium text-base-content">หมายเหตุพฤติกรรม</label>
-                <textarea name="behavior_note" class="textarea textarea-bordered w-full" placeholder="เช่น กลัวฟ้าร้อง, ไม่ชอบอาบน้ำ"></textarea>
-            </div>
-            <div class="form-control mb-4">
-                <label class="label cursor-pointer flex items-center gap-2">
-                    <input type="checkbox" name="is_aggressive" class="checkbox checkbox-error text-white" />
-                    <span class="text-error font-semibold">ดุ/กัด (แจ้งเตือนพนักงาน)</span>
-                </label>
-            </div>
 
-            <div class="flex justify-end gap-2">
-                <label for="add_pet_modal" class="btn btn-outline rounded-xl">ยกเลิก</label>
-                <button type="submit" form="pet-form" class="btn btn-primary rounded-xl gap-2 font-semibold">
+            <div class="flex justify-end gap-2 mt-6">
+                <label for="add_pet_modal" class="btn btn-outline">ยกเลิก</label>
+                <button type="submit" form="pet-form" class="btn btn-primary gap-2 font-semibold">
                     <i data-lucide="check" class="size-4"></i>
                     เพิ่มสัตว์เลี้ยง
                 </button>
@@ -335,3 +349,142 @@ function calculateAge($dob) {
         breedSelect.value = '';
     }
 </script>
+
+<!-- Edit Pet Modal (Mobile Bottom / Desktop Middle, styled like navbar modal) -->
+<input type="checkbox" id="edit_pet_modal" class="modal-toggle" />
+<div class="modal modal-bottom sm:modal-middle">
+    <div class="modal-box rounded-t-3xl rounded-b-none max-h-[85vh] md:max-h-screen p-0 sm:rounded-2xl sm:p-8 flex flex-col w-11/12 max-w-5xl">
+        <!-- Drag handle indicator (mobile only) -->
+        <div class="flex justify-center pt-3 pb-2 sm:hidden">
+            <div class="w-12 h-1.5 bg-base-300 rounded-full"></div>
+        </div>
+        <!-- Fixed header -->
+        <div class="px-5 sm:px-0 border-b border-base-200 bg-base-100 sticky top-0 z-20">
+            <div class="flex items-center justify-between py-4">
+                <span class="font-bold text-lg tracking-tight text-primary">แก้ไขข้อมูลสัตว์เลี้ยง</span>
+                <label for="edit_pet_modal" class="btn btn-ghost btn-sm btn-circle">
+                    <i data-lucide="x" class="size-4"></i>
+                </label>
+            </div>
+        </div>
+        <!-- Scrollable form body -->
+        <form method="POST" action="cores/process_pet.php" autocomplete="off" class="px-5 sm:px-0 pb-4 flex-1 overflow-y-auto" id="edit_pet_form">
+            <input type="hidden" name="pet_id" id="edit_pet_id">
+            <input type="hidden" name="action" value="edit">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-4">
+                    <div class="form-control">
+                        <label class="label font-medium text-base-content">ชื่อสัตว์เลี้ยง <span class="text-error">*</span></label>
+                        <input type="text" name="name" id="edit_name" class="input input-bordered w-full" required>
+                    </div>
+                    <div class="form-control">
+                        <label class="label font-medium text-base-content">ชนิดสัตว์ <span class="text-error">*</span></label>
+                        <select name="species_id" id="edit_species_id" class="select select-bordered w-full" required onchange="filterEditBreeds(this.value)">
+                            <option value="">-- เลือกชนิดสัตว์ --</option>
+                            <?php foreach ($species_list as $sp): ?>
+                                <option value="<?php echo $sp['id']; ?>"><?php echo htmlspecialchars($sp['name']); ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="form-control">
+                        <label class="label font-medium text-base-content">สายพันธุ์</label>
+                        <select name="breed_id" id="edit_breed_id" class="select select-bordered w-full">
+                            <option value="">-- เลือกสายพันธุ์ --</option>
+                            <?php foreach ($breeds_list as $br): ?>
+                                <option value="<?php echo $br['id']; ?>" data-species="<?php echo $br['species_id']; ?>">
+                                    <?php echo htmlspecialchars($br['name']); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="form-control">
+                        <label class="label font-medium text-base-content">เพศ <span class="text-error">*</span></label>
+                        <select name="gender" id="edit_gender" class="select select-bordered w-full" required>
+                            <option value="male">ตัวผู้</option>
+                            <option value="female">ตัวเมีย</option>
+                            <option value="spayed">ทำหมันแล้ว (เมีย)</option>
+                            <option value="neutered">ทำหมันแล้ว (ผู้)</option>
+                            <option value="unknown">ไม่ระบุ</option>
+                        </select>
+                    </div>
+                    <div class="form-control">
+                        <label class="label font-medium text-base-content">วันเกิด</label>
+                        <input type="date" name="dob" id="edit_dob" class="input input-bordered w-full">
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <div class="form-control">
+                        <label class="label font-medium text-base-content">น้ำหนัก</label>
+                        <div class="flex items-center gap-2">
+                            <input type="number" name="weight_kg" id="edit_weight_kg" class="input input-bordered w-full" min="0" step="0.01" placeholder="น้ำหนัก">
+                            <span class="text-base-content/60 text-sm">kg</span>
+                        </div>
+                    </div>
+                    <div class="form-control">
+                        <label class="label font-medium text-base-content">ชื่อคลินิก/สัตวแพทย์ประจำตัว</label>
+                        <input type="text" name="vet_name" id="edit_vet_name" class="input input-bordered w-full" placeholder="ชื่อคลินิก/สัตวแพทย์">
+                    </div>
+                    <div class="form-control">
+                        <label class="label font-medium text-base-content">เบอร์คลินิก/สัตวแพทย์</label>
+                        <input type="text" name="vet_phone" id="edit_vet_phone" class="input input-bordered w-full" placeholder="เบอร์โทรศัพท์">
+                    </div>
+                    <div class="form-control">
+                        <label class="label font-medium text-base-content">หมายเหตุพฤติกรรม</label>
+                        <textarea name="behavior_note" id="edit_behavior_note" class="textarea textarea-bordered w-full" placeholder="เช่น กลัวฟ้าร้อง, ไม่ชอบอาบน้ำ"></textarea>
+                    </div>
+                    <div class="form-control">
+                        <label class="label cursor-pointer flex items-center gap-2">
+                            <input type="checkbox" name="is_aggressive" id="edit_is_aggressive" class="checkbox checkbox-error text-white" />
+                            <span class="text-error font-semibold">ดุ/กัด (แจ้งเตือนพนักงาน)</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="flex justify-end gap-2 mt-6">
+                <label for="edit_pet_modal" class="btn btn-outline">ยกเลิก</label>
+                <button type="submit" class="btn btn-primary gap-2 font-semibold">
+                    <i data-lucide="check" class="size-4"></i>
+                    บันทึกการแก้ไข
+                </button>
+            </div>
+        </form>
+    </div>
+    <label class="modal-backdrop" for="edit_pet_modal"></label>
+</div>
+
+<script>
+    // Dynamic breed filter for edit modal
+    function filterEditBreeds(speciesId) {
+        const breedSelect = document.getElementById('edit_breed_id');
+        Array.from(breedSelect.options).forEach(opt => {
+            if (!opt.value) {
+                opt.style.display = '';
+                return;
+            }
+            opt.style.display = (opt.getAttribute('data-species') === speciesId) ? '' : 'none';
+        });
+        breedSelect.value = '';
+    }
+
+    // Open edit modal and fill form
+    function openEditPetModal(petId) {
+        <?php echo 'const pets = ' . json_encode($pets) . ';'; ?>
+        const pet = pets.find(p => p.id == petId);
+        if (!pet) return;
+        document.getElementById('edit_pet_id').value = pet.id;
+        document.getElementById('edit_name').value = pet.name || '';
+        document.getElementById('edit_species_id').value = pet.species_id || '';
+        filterEditBreeds(pet.species_id);
+        document.getElementById('edit_breed_id').value = pet.breed_id || '';
+        document.getElementById('edit_gender').value = pet.gender || '';
+        document.getElementById('edit_dob').value = pet.dob || '';
+        document.getElementById('edit_weight_kg').value = pet.weight_kg || '';
+        document.getElementById('edit_behavior_note').value = pet.behavior_note || '';
+        document.getElementById('edit_is_aggressive').checked = pet.is_aggressive == 1;
+        document.getElementById('edit_vet_name').value = pet.vet_name || '';
+        document.getElementById('edit_vet_phone').value = pet.vet_phone || '';
+        document.getElementById('edit_pet_modal').checked = true;
+    }
+</script>
+
+</section>
