@@ -146,8 +146,9 @@ function estimate_total($room_types, $selected_room_type, $check_in_date, $check
                                 </div>
                             </div>
                             <div class="mt-8 flex justify-end">
-                                <button type="submit" class="btn btn-primary gap-2">ถัดไป <i data-lucide="arrow-right"
-                                        class="size-4"></i></button>
+                                <button type="submit" id="next-step-1" class="btn btn-primary gap-2" disabled>
+                                    ถัดไป <i data-lucide="arrow-right" class="size-4"></i>
+                                </button>
                             </div>
                         </div>
 
@@ -196,7 +197,8 @@ function estimate_total($room_types, $selected_room_type, $check_in_date, $check
                                                 <div class="mt-1 text-primary font-semibold">
                                                     ฿<?php echo number_format($rt['base_price_per_night']); ?>/คืน</div>
                                                 <div class="badge badge-outline badge-success mt-1">ว่าง
-                                                    <?php echo ($rt['available_rooms'] - $cart_count); ?> ห้อง</div>
+                                                    <?php echo ($rt['available_rooms'] - $cart_count); ?> ห้อง
+                                                </div>
                                             </div>
                                         </div>
                                     </label>
@@ -251,8 +253,9 @@ function estimate_total($room_types, $selected_room_type, $check_in_date, $check
                                 <?php
                                 } else {
                                     ?>
-                                <button type="submit" class="btn btn-primary gap-2">ถัดไป <i data-lucide="arrow-right"
-                                        class="size-4"></i></button>
+                                <button type="submit" id="next-step-2" class="btn btn-primary gap-2" disabled>
+                                    ถัดไป <i data-lucide="arrow-right" class="size-4"></i>
+                                </button>
                                 <?php
                                 }
                                 ?>
@@ -354,6 +357,43 @@ function estimate_total($room_types, $selected_room_type, $check_in_date, $check
 </section>
 
 <script>
+    // Logic สำหรับ Step 1
+    const nextStep1 = document.getElementById('next-step-1');
+    const checkInInput = document.getElementById('check_in_date');
+    const checkOutInput = document.getElementById('check_out_date');
+
+    if (nextStep1 && checkInInput && checkOutInput) {
+        const validateStep1 = () => {
+            // เปิดปุ่มถ้ามีการเลือกทั้งวันเช็คอินและเช็คเอาท์
+            nextStep1.disabled = !(checkInInput.value && checkOutInput.value);
+        };
+        checkInInput.addEventListener('change', validateStep1);
+        checkOutInput.addEventListener('change', validateStep1);
+        validateStep1(); // รันครั้งแรกเผื่อมีค่าจาก Session
+    }
+
+    // Logic สำหรับ Step 2
+    const nextStep2 = document.getElementById('next-step-2');
+    if (nextStep2) {
+        const validateStep2 = () => {
+            const isRoomSelected = !!document.querySelector('input[name="room_type_id"]:checked');
+            const isPetSelected = !!document.querySelector('input[name="pet_ids[]"]:checked');
+
+            // เปิดปุ่มถ้าเลือกทั้งห้องพัก (Radio) และสัตว์เลี้ยงอย่างน้อย 1 ตัว (Checkbox)
+            nextStep2.disabled = !(isRoomSelected && isPetSelected);
+        };
+
+        // ใช้ Event Delegation หรือดึง element มาผูก event
+        document.querySelectorAll('input[name="room_type_id"]').forEach(r => {
+            r.addEventListener('change', validateStep2);
+        });
+        document.querySelectorAll('input[name="pet_ids[]"]').forEach(c => {
+            c.addEventListener('change', validateStep2);
+        });
+
+        validateStep2(); // รันครั้งแรกเผื่อมีค่าจาก Session
+    }
+
     // จำกัดจำนวน checkbox สัตว์เลี้ยงตาม max_pets ของห้อง และจำนวนห้องที่เลือกในตะกร้า
     document.addEventListener('DOMContentLoaded', function () {
         const petCheckboxes = document.querySelectorAll('input[type="checkbox"][name="pet_ids[]"]');
