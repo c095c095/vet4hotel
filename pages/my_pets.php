@@ -1,0 +1,337 @@
+<?php
+// ═══════════════════════════════════════════════════════════
+// MY PETS PAGE — VET4 HOTEL (Mobile First + DaisyUI modal-bottom)
+// ═══════════════════════════════════════════════════════════
+
+if (!isset($_SESSION['customer_id'])) {
+    header("Location: ?page=login");
+    exit();
+}
+
+$current_customer_id = $_SESSION['customer_id'];
+
+// ดึง Master Data สำหรับ Modal
+$species_list = $pdo->query("SELECT * FROM species ORDER BY name ASC")->fetchAll(PDO::FETCH_ASSOC);
+$breeds_list = $pdo->query("SELECT * FROM breeds ORDER BY name ASC")->fetchAll(PDO::FETCH_ASSOC);
+
+$pets = [];
+try {
+    $stmt = $pdo->prepare("
+        SELECT 
+            p.*, 
+            s.name AS species_name, 
+            b.name AS breed_name,
+            (SELECT MIN(expiry_date) FROM pet_vaccinations WHERE pet_id = p.id AND expiry_date >= CURDATE()) AS next_vaccine_date
+        FROM pets p
+        INNER JOIN species s ON p.species_id = s.id
+        LEFT JOIN breeds b ON p.breed_id = b.id
+        WHERE p.customer_id = ? AND p.deleted_at IS NULL
+        ORDER BY p.created_at DESC
+    ");
+    $stmt->execute([$current_customer_id]);
+    $pets = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    $pets = [];
+}
+
+// ฟังก์ชันช่วยคำนวณอายุ
+function calculateAge($dob) {
+    if (!$dob) return "ไม่ระบุ";
+    $birthDate = new DateTime($dob);
+    $today = new DateTime('today');
+    $y = $today->diff($birthDate)->y;
+    $m = $today->diff($birthDate)->m;
+    if ($y > 0) return "$y ปี $m เดือน";
+    return "$m เดือน";
+}
+?>
+
+<section class="relative min-h-[80vh] bg-base-100 overflow-hidden">
+    <div class="absolute inset-0 overflow-hidden pointer-events-none z-0" aria-hidden="true">
+        <div class="floating-paw absolute top-[10%] left-[8%] opacity-10 text-primary">
+            <i data-lucide="paw-print" class="size-16"></i>
+        </div>
+        <div class="floating-paw absolute bottom-[20%] right-[10%] opacity-10 text-primary">
+            <i data-lucide="dog" class="size-20"></i>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 lg:px-8 relative z-10 py-12 w-full">
+        <div class="flex flex-col md:flex-row justify-between items-center mb-12 gap-6">
+            <div class="text-center md:text-left">
+                <h1 class="text-3xl md:text-4xl font-bold text-base-content">สัตว์เลี้ยงของฉัน</h1>
+            </div>
+            <button onclick="document.getElementById('add_pet_modal').checked = true" class="btn btn-primary btn-lg gap-2 shadow-lg shadow-primary/20">
+                <i data-lucide="plus-circle" class="size-6"></i>
+                เพิ่มสัตว์เลี้ยงใหม่
+            </button>
+        </div>
+
+        <?php if (!empty($pets)): ?>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <?php foreach ($pets as $pet): ?>
+                    <!-- Card -->
+                    <div class="card bg-base-100 shadow-xl border border-base-200 hover:shadow-2xl transition-all duration-300 group overflow-hidden">
+                        <div class="h-48 bg-linear-to-br from-primary/5 to-primary/20 flex items-center justify-center relative">
+                            <?php if ($pet['is_aggressive']): ?>
+                                <div class="absolute top-4 left-4 badge badge-error gap-1 p-3 shadow-md">
+                                    <i data-lucide="alert-triangle" class="size-3"></i> ดุ/กัด
+                                </div>
+                            <?php endif; ?>
+                            <div class="p-8 bg-base-100 rounded-full shadow-inner group-hover:scale-110 transition-transform duration-500">
+                                <?php if ($pet['species_id'] == 1): ?>
+                                    <i data-lucide="dog" class="size-16 text-primary"></i>
+                                <?php elseif ($pet['species_id'] == 2): ?>
+                                    <i data-lucide="cat" class="size-16 text-secondary"></i>
+                                <?php else: ?>
+                                    <i data-lucide="paw-print" class="size-16 text-accent"></i>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <div class="card-body p-6">
+                            <div class="flex justify-between items-start mb-2">
+                                <h2 class="card-title text-2xl font-bold text-base-content">
+                                    <?php echo htmlspecialchars($pet['name']); ?>
+                                </h2>
+                                <div class="badge badge-outline opacity-70"><?php echo htmlspecialchars($pet['species_name']); ?></div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3 my-4">
+                                <div class="flex items-center gap-2 text-sm text-base-content/70">
+                                    <i data-lucide="info" class="size-4 text-primary"></i>
+                                    <span><?php echo htmlspecialchars($pet['breed_name'] ?? 'ไม่ระบุสายพันธุ์'); ?></span>
+                                </div>
+                                <div class="flex items-center gap-2 text-sm text-base-content/70">
+                                    <i data-lucide="calendar" class="size-4 text-primary"></i>
+                                    <span>อายุ <?php echo calculateAge($pet['dob']); ?></span>
+                                </div>
+                                <div class="flex items-center gap-2 text-sm text-base-content/70">
+                                    <i data-lucide="weight" class="size-4 text-primary"></i>
+                                    <span><?php echo number_format($pet['weight_kg'], 1); ?> กก.</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-sm text-base-content/70">
+                                    <?php if($pet['gender'] == 'male'): ?>
+                                        <i data-lucide="mars" class="size-4 text-blue-500"></i> ตัวผู้
+                                    <?php else: ?>
+                                        <i data-lucide="venus" class="size-4 text-pink-500"></i> ตัวเมีย
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                            <?php if ($pet['next_vaccine_date']): ?>
+                                <div class="alert alert-sm bg-success/10 border-success/20 text-success-content flex gap-2 py-2 mb-4">
+                                    <i data-lucide="check-circle" class="size-4"></i>
+                                    <span class="text-xs font-medium">วัคซีนครบถ้วน</span>
+                                </div>
+                            <?php else: ?>
+                                <div class="alert alert-sm bg-warning/10 border-warning/20 text-warning-content flex gap-2 py-2 mb-4">
+                                    <i data-lucide="alert-circle" class="size-4"></i>
+                                    <span class="text-xs font-medium">ยังไม่เพิ่มข้อมูลวัคซีน</span>
+                                </div>
+                            <?php endif; ?>
+                            <hr class="border-base-200 my-2">
+                            <div class="card-actions justify-end mt-4">
+                                <button onclick="document.getElementById('pet_details_modal_<?php echo $pet['id']; ?>').checked = true" class="btn btn-ghost btn-sm gap-2">
+                                    <i data-lucide="eye" class="size-4"></i> รายละเอียด
+                                </button>
+                                <a href="?page=edit_pet&id=<?php echo $pet['id']; ?>" class="btn btn-outline btn-primary btn-sm gap-2 rounded-lg">
+                                    <i data-lucide="edit-3" class="size-4"></i> แก้ไข
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Detail Modal (Mobile Bottom / Desktop Middle, styled like navbar modal) -->
+                    <input type="checkbox" id="pet_details_modal_<?php echo $pet['id']; ?>" class="modal-toggle" />
+                    <div class="modal modal-bottom sm:modal-middle">
+                        <div class="modal-box rounded-t-3xl rounded-b-none max-h-[85vh] p-0 sm:rounded-2xl sm:p-8 max-w-lg">
+                            <!-- Drag handle indicator (mobile only) -->
+                            <div class="flex justify-center pt-3 pb-2 sm:hidden">
+                                <div class="w-12 h-1.5 bg-base-300 rounded-full"></div>
+                            </div>
+                            <div class="px-5 sm:px-0 pb-4 border-b border-base-200">
+                                <div class="flex items-center justify-between mb-4">
+                                    <span class="font-bold text-lg tracking-tight">ข้อมูลสัตว์เลี้ยง</span>
+                                    <label for="pet_details_modal_<?php echo $pet['id']; ?>" class="btn btn-ghost btn-sm btn-circle">
+                                        <i data-lucide="x" class="size-4"></i>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="px-5 sm:px-0 pb-4">
+                                <div class="flex items-center gap-4 mb-6">
+                                    <div class="avatar">
+                                        <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center overflow-hidden">
+                                            <?php if ($pet['species_id'] == 1): ?>
+                                                <i data-lucide="dog" class="size-10 text-primary"></i>
+                                            <?php elseif ($pet['species_id'] == 2): ?>
+                                                <i data-lucide="cat" class="size-10 text-secondary"></i>
+                                            <?php else: ?>
+                                                <i data-lucide="paw-print" class="size-10 text-accent"></i>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="text-xl font-bold text-base-content mb-1"><?php echo htmlspecialchars($pet['name']); ?></div>
+                                        <div class="badge badge-primary badge-lg"><?php echo htmlspecialchars($pet['species_name']); ?></div>
+                                    </div>
+                                </div>
+                                <div class="space-y-3 mb-4">
+                                    <div class="flex items-center gap-2 text-base-content/70">
+                                        <i data-lucide="info" class="size-4"></i>
+                                        <span>สายพันธุ์: <?php echo htmlspecialchars($pet['breed_name'] ?? 'ไม่ระบุ'); ?></span>
+                                    </div>
+                                    <div class="flex items-center gap-2 text-base-content/70">
+                                        <i data-lucide="calendar" class="size-4"></i>
+                                        <span>วันเกิด: <?php echo $pet['dob'] ? htmlspecialchars($pet['dob']) : 'ไม่ระบุ'; ?></span>
+                                    </div>
+                                    <div class="flex items-center gap-2 text-base-content/70">
+                                        <i data-lucide="weight" class="size-4"></i>
+                                        <span>น้ำหนัก: <?php echo number_format($pet['weight_kg'], 1); ?> กก.</span>
+                                    </div>
+                                    <div class="flex items-center gap-2 text-base-content/70">
+                                        <?php if($pet['gender'] == 'male'): ?>
+                                            <i data-lucide="mars" class="size-4 text-blue-500"></i> ตัวผู้
+                                        <?php else: ?>
+                                            <i data-lucide="venus" class="size-4 text-pink-500"></i> ตัวเมีย
+                                        <?php endif; ?>
+                                    </div>
+                                    <?php if ($pet['behavior_note']): ?>
+                                        <div class="flex items-center gap-2 text-base-content/70">
+                                            <i data-lucide="alert-circle" class="size-4 text-warning"></i>
+                                            <span>หมายเหตุ: <?php echo htmlspecialchars($pet['behavior_note']); ?></span>
+                                        </div>
+                                    <?php endif; ?>
+                                    <?php if ($pet['is_aggressive']): ?>
+                                        <div class="flex items-center gap-2 text-error font-semibold">
+                                            <i data-lucide="alert-triangle" class="size-4"></i>
+                                            <span>พฤติกรรมดุร้าย / กัด</span>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="divider my-4"></div>
+                                <div class="flex justify-end gap-2">
+                                    <label for="pet_details_modal_<?php echo $pet['id']; ?>" class="btn  w-full rounded-xl">ปิด</label>
+                                </div>
+                            </div>
+                        </div>
+                        <label class="modal-backdrop" for="pet_details_modal_<?php echo $pet['id']; ?>"></label>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php else: ?>
+            <div class="text-center py-20 bg-base-200/50 rounded-3xl border-2 border-dashed border-base-300">
+                <div class="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i data-lucide="paw-print" class="size-12 text-primary/40"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-base-content mb-2">ยังไม่มีข้อมูลสัตว์เลี้ยง</h3>
+                <p class="text-base-content/60 max-w-md mx-auto mb-8">
+                    เพิ่มข้อมูลสัตว์เลี้ยงของคุณตอนนี้ เพื่อเริ่มจองห้องพักและรับการอัปเดตประจำวันจากเรา
+                </p>
+                <a href="?page=add_pet" class="btn btn-primary rounded-xl px-8">
+                    <i data-lucide="plus" class="size-5"></i>
+                    เพิ่มสัตว์เลี้ยงตัวแรก
+                </a>
+            </div>
+        <?php endif; ?>
+    </div>
+</section>
+
+<!-- Modal: Add Pet (Mobile Bottom / Desktop Middle, styled like navbar modal, header fixed top, actions fixed bottom) -->
+<input type="checkbox" id="add_pet_modal" class="modal-toggle" />
+<div class="modal modal-bottom sm:modal-middle">
+    <div class="modal-box rounded-t-3xl rounded-b-none max-h-[85vh] md:max-h-screen p-0 sm:rounded-2xl sm:p-8 max-w-lg flex flex-col">
+        <!-- Drag handle indicator (mobile only) -->
+        <div class="flex justify-center pt-3 pb-2 sm:hidden">
+            <div class="w-12 h-1.5 bg-base-300 rounded-full"></div>
+        </div>
+        <!-- Fixed header -->
+        <div class="px-5 sm:px-0 border-b border-base-200 bg-base-100 sticky top-0 z-20">
+            <div class="flex items-center justify-between py-4">
+                <span class="font-bold text-lg tracking-tight text-primary">เพิ่มสัตว์เลี้ยงใหม่</span>
+                <label for="add_pet_modal" class="btn btn-ghost btn-sm btn-circle">
+                    <i data-lucide="x" class="size-4"></i>
+                </label>
+            </div>
+        </div>
+        <!-- Scrollable form body -->
+        <form method="POST" action="cores/process_pet.php" autocomplete="off" class="px-5 sm:px-0 pb-4 flex-1 overflow-y-auto">
+            <div class="form-control mb-4">
+                <label class="label font-medium text-base-content">ชื่อสัตว์เลี้ยง <span class="text-error">*</span></label>
+                <input type="text" name="name" class="input input-bordered w-full" required>
+            </div>
+            <div class="form-control mb-4">
+                <label class="label font-medium text-base-content">ชนิดสัตว์ <span class="text-error">*</span></label>
+                <select name="species_id" class="select select-bordered w-full" required onchange="filterBreeds(this.value)">
+                    <option value="">-- เลือกชนิดสัตว์ --</option>
+                    <?php foreach ($species_list as $sp): ?>
+                        <option value="<?php echo $sp['id']; ?>"><?php echo htmlspecialchars($sp['name']); ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="form-control mb-4">
+                <label class="label font-medium text-base-content">สายพันธุ์</label>
+                <select name="breed_id" class="select select-bordered w-full" id="breed_select">
+                    <option value="">-- เลือกสายพันธุ์ --</option>
+                    <?php foreach ($breeds_list as $br): ?>
+                        <option value="<?php echo $br['id']; ?>" data-species="<?php echo $br['species_id']; ?>">
+                            <?php echo htmlspecialchars($br['name']); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="form-control mb-4">
+                <label class="label font-medium text-base-content">เพศ <span class="text-error">*</span></label>
+                <select name="gender" class="select select-bordered w-full" required>
+                    <option value="male">ตัวผู้</option>
+                    <option value="female">ตัวเมีย</option>
+                    <option value="spayed">ทำหมันแล้ว (เมีย)</option>
+                    <option value="neutered">ทำหมันแล้ว (ผู้)</option>
+                    <option value="unknown">ไม่ระบุ</option>
+                </select>
+            </div>
+            <div class="form-control mb-4">
+                <label class="label font-medium text-base-content">วันเกิด</label>
+                <input type="date" name="dob" class="input input-bordered w-full">
+            </div>
+            <div class="form-control mb-4">
+                <label class="label font-medium text-base-content">น้ำหนัก</label>
+                <div class="flex items-center gap-2">
+                    <input type="number" name="weight_kg" class="input input-bordered w-full" min="0" step="0.01" placeholder="น้ำหนัก" required>
+                    <span class="text-base-content/60 text-sm">kg</span>
+                </div>
+            </div>
+            <div class="form-control mb-4">
+                <label class="label font-medium text-base-content">หมายเหตุพฤติกรรม</label>
+                <textarea name="behavior_note" class="textarea textarea-bordered w-full" placeholder="เช่น กลัวฟ้าร้อง, ไม่ชอบอาบน้ำ"></textarea>
+            </div>
+            <div class="form-control mb-4">
+                <label class="label cursor-pointer flex items-center gap-2">
+                    <input type="checkbox" name="is_aggressive" class="checkbox checkbox-error text-white" />
+                    <span class="text-error font-semibold">ดุ/กัด (แจ้งเตือนพนักงาน)</span>
+                </label>
+            </div>
+
+            <div class="flex justify-end gap-2">
+                <label for="add_pet_modal" class="btn btn-outline rounded-xl">ยกเลิก</label>
+                <button type="submit" form="pet-form" class="btn btn-primary rounded-xl gap-2 font-semibold">
+                    <i data-lucide="check" class="size-4"></i>
+                    เพิ่มสัตว์เลี้ยง
+                </button>
+            </div>
+        </form>
+    </div>
+    <label class="modal-backdrop" for="add_pet_modal"></label>
+</div>
+
+<script>
+    // Dynamic breed filter
+    function filterBreeds(speciesId) {
+        const breedSelect = document.getElementById('breed_select');
+        Array.from(breedSelect.options).forEach(opt => {
+            if (!opt.value) {
+                opt.style.display = '';
+                return;
+            }
+            opt.style.display = (opt.getAttribute('data-species') === speciesId) ? '' : 'none';
+        });
+        breedSelect.value = '';
+    }
+</script>
