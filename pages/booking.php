@@ -53,6 +53,28 @@ $selected_services = (array) @$form['service_ids'];
 $check_in_date = @$form['check_in_date'];
 $check_out_date = @$form['check_out_date'];
 
+if ($step === 2) {
+    if (!$check_in_date || !$check_out_date) {
+        $_SESSION['booking_error'] = 'กรุณาเลือกวันที่เข้าพักและวันที่เช็คเอาท์';
+        echo "<script>window.location.href='?page=booking&step=1';</script>";
+        exit();
+    }
+}
+
+if ($step === 3 || $step === 4) {
+    if (!$selected_room_type) {
+        $_SESSION['booking_error'] = 'กรุณาเลือกประเภทห้องพัก';
+        echo "<script>window.location.href='?page=booking&step=2';</script>";
+        exit();
+    }
+
+    if (empty($selected_pets)) {
+        $_SESSION['booking_error'] = 'กรุณาเลือกสัตว์เลี้ยงที่จะเข้าพัก';
+        echo "<script>window.location.href='?page=booking&step=2';</script>";
+        exit();
+    }
+}
+
 function estimate_total($room_types, $selected_room_type, $check_in_date, $check_out_date, $services, $selected_services)
 {
     $total = 0;

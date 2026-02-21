@@ -10,6 +10,76 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
+function validate_booking_form($form, $cart, $pdo, $customer_id) {
+    $room_type_id = $form['room_type_id'] ?? null;
+    $check_in_date = $form['check_in_date'] ?? null;
+    $check_out_date = $form['check_out_date'] ?? null;
+    $pet_ids = $form['pet_ids'] ?? [];
+
+    // 1. Validate วันที่
+    if (!$check_in_date || !$check_out_date) {
+        return ['step' => 1, 'error' => 'กรุณาเลือกวันที่เข้าพักและวันที่เช็คเอาท์'];
+    }
+    if (strtotime($check_in_date) >= strtotime($check_out_date)) {
+        return ['step' => 1, 'error' => 'วันที่เช็คอินต้องน้อยกว่าวันที่เช็คเอาท์'];
+    }
+
+    // 2. Validate ห้อง
+    if (!$room_type_id) {
+        return ['step' => 2, 'error' => 'กรุณาเลือกประเภทห้องพัก'];
+    }
+
+    // 3. Validate สัตว์เลี้ยง
+    if (empty($pet_ids)) {
+        return ['step' => 2, 'error' => 'กรุณาเลือกสัตว์เลี้ยงที่จะเข้าพัก'];
+    }
+
+    // 4. ตรวจสอบจำนวนห้องว่าง (เทียบกับของในตะกร้า + ห้องปัจจุบัน)
+    $cart_count = 0;
+    foreach ($cart as $item) {
+        if (
+            isset($item['room_type_id']) && $item['room_type_id'] == $room_type_id &&
+            $item['check_in_date'] == $check_in_date && $item['check_out_date'] == $check_out_date
+        ) {
+            $cart_count++;
+        }
+    }
+
+    try {
+        // เช็คห้องว่างจริงในระบบ
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM rooms WHERE room_type_id = ? AND status = 'active' AND deleted_at IS NULL");
+        $stmt->execute([$room_type_id]);
+        $available_rooms = (int)$stmt->fetchColumn();
+
+        if ($cart_count + 1 > $available_rooms) {
+            return ['step' => 2, 'error' => 'จำนวนห้องที่เลือกเกินจำนวนที่มีอยู่ กรุณาเลือกประเภทห้องอื่น'];
+        }
+
+        // 5. Validate max_pets
+        $stmt = $pdo->prepare("SELECT max_pets FROM room_types WHERE id = ?");
+        $stmt->execute([$room_type_id]);
+        $max_pets = (int)$stmt->fetchColumn();
+
+        if (count($pet_ids) > $max_pets) {
+            return ['step' => 2, 'error' => "ห้องประเภทนี้พักได้สูงสุด $max_pets ตัว"];
+        }
+
+        // 6. Validate เจ้าของสัตว์เลี้ยง (Same Family)
+        $in = implode(',', array_fill(0, count($pet_ids), '?'));
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM pets WHERE id IN ($in) AND customer_id != ?");
+        $params = array_merge($pet_ids, [$customer_id]);
+        $stmt->execute($params);
+        if ((int)$stmt->fetchColumn() > 0) {
+            return ['step' => 2, 'error' => 'พบสัตว์เลี้ยงที่ไม่ได้อยู่ในบัญชีของคุณ'];
+        }
+
+    } catch (PDOException $e) {
+        return ['step' => 2, 'error' => 'เกิดข้อผิดพลาดในการเชื่อมต่อฐานข้อมูล'];
+    }
+
+    return null; // ผ่านการตรวจสอบ
+}
+
 $current_step = isset($_POST['current_step']) ? (int)$_POST['current_step'] : 1;
 
 // ตรวจสอบว่ามีตะกร้าหรือยัง
@@ -42,63 +112,34 @@ if ($current_step === 3) {
 }
 
 if ($current_step === 4) {
-    // กด "จองห้องอื่นเพิ่ม"
-    if (isset($_POST['add_another'])) {
-        // ตรวจสอบจำนวนห้องที่เลือกในตะกร้า
-        $room_type_id = $_SESSION['booking_form']['room_type_id'];
-        $check_in_date = $_SESSION['booking_form']['check_in_date'];
-        $check_out_date = $_SESSION['booking_form']['check_out_date'];
-        
-        // นับจำนวนห้องที่เลือกในตะกร้า
-        $cart_count = 0;
-        foreach ($_SESSION['booking_cart'] as $item) {
-            if (
-                isset($item['room_type_id']) && $item['room_type_id'] == $room_type_id &&
-                isset($item['check_in_date']) && isset($item['check_out_date']) &&
-                $item['check_in_date'] == $check_in_date && $item['check_out_date'] == $check_out_date
-            ) {
-                $cart_count++;
-            }
-        }
-
-        // ดึงจำนวนห้องว่างจากฐานข้อมูล
-        $available_rooms = 0;
-        try {
-            $stmt = $pdo->prepare("SELECT COUNT(r.id) AS available_rooms FROM rooms r WHERE r.room_type_id = ? AND r.status = 'active' AND r.deleted_at IS NULL");
-            $stmt->execute([$room_type_id]);
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            $available_rooms = (int)($row['available_rooms'] ?? 0);
-        } catch (PDOException $e) {
-            $available_rooms = 0;
-        }
-
-        // เช็คว่าจำนวนห้องในตะกร้า + 1 เกินจำนวนห้องว่างหรือไม่
-        if ($cart_count + 1 > $available_rooms) {
-            // แจ้งเตือนและ redirect กลับไป step 2
-            $_SESSION['booking_error'] = 'จำนวนห้องที่เลือกเกินจำนวนที่มีอยู่ กรุณาเลือกใหม่';
-            header('Location: ?page=booking&step=2');
-            exit();
-        }
-
-        $_SESSION['booking_cart'][] = $_SESSION['booking_form'];
-
-        // ล้างค่าห้องเก่าออก แต่เก็บวันที่ไว้ (เพื่อความสะดวก)
-        $current_dates = [
-            'check_in_date' => $_SESSION['booking_form']['check_in_date'],
-            'check_out_date' => $_SESSION['booking_form']['check_out_date'],
-            'room_type_id' => null,
-            'pet_ids' => [],
-            'service_ids' => []
-        ];
-        $_SESSION['booking_form'] = $current_dates;
-        header('Location: ?page=booking&step=2');
+    // 1. ตรวจสอบข้อมูลก่อนทำรายการใดๆ
+    $validate_result = validate_booking_form($_SESSION['booking_form'], $_SESSION['booking_cart'], $pdo, $_SESSION['customer_id']);
+    
+    if ($validate_result) {
+        $_SESSION['booking_error'] = $validate_result['error'];
+        header('Location: ?page=booking&step=' . $validate_result['step']);
         exit();
     }
 
-    // กด "ไปที่หน้าชำระเงิน"
-    if (isset($_POST['confirm'])) {
-        $_SESSION['booking_cart'][] = $_SESSION['booking_form'];
-        unset($_SESSION['booking_form']); // ล้างฟอร์มชั่วคราวออก
+    // 2. ถ้าผ่านการตรวจสอบ ให้นำข้อมูลเข้าตะกร้า
+    $_SESSION['booking_cart'][] = $_SESSION['booking_form'];
+
+    // 3. แยกทางเลือกระหว่าง "จองเพิ่ม" หรือ "ไปตะกร้า"
+    if (isset($_POST['add_another'])) {
+        // เก็บเฉพาะวันที่ไว้ ล้างข้อมูลห้องและสัตว์เลี้ยงเพื่อจองห้องใหม่
+        $keep_dates = [
+            'check_in_date'  => $_SESSION['booking_form']['check_in_date'],
+            'check_out_date' => $_SESSION['booking_form']['check_out_date'],
+            'room_type_id'   => null,
+            'pet_ids'        => [],
+            'service_ids'    => []
+        ];
+        $_SESSION['booking_form'] = $keep_dates;
+        header('Location: ?page=booking&step=2');
+        exit();
+    } else {
+        // กรณี "ยืนยัน" หรือ "confirm"
+        unset($_SESSION['booking_form']); // ล้างฟอร์มชั่วคราวทิ้งเพราะเข้าตะกร้าไปแล้ว
         header('Location: ?page=cart');
         exit();
     }
