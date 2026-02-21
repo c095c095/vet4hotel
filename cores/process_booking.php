@@ -44,8 +44,44 @@ if ($current_step === 3) {
 if ($current_step === 4) {
     // กด "จองห้องอื่นเพิ่ม"
     if (isset($_POST['add_another'])) {
-        $_SESSION['booking_cart'][] = $_SESSION['booking_form'];
+        // ตรวจสอบจำนวนห้องที่เลือกในตะกร้า
+        $room_type_id = $_SESSION['booking_form']['room_type_id'];
+        $check_in_date = $_SESSION['booking_form']['check_in_date'];
+        $check_out_date = $_SESSION['booking_form']['check_out_date'];
         
+        // นับจำนวนห้องที่เลือกในตะกร้า
+        $cart_count = 0;
+        foreach ($_SESSION['booking_cart'] as $item) {
+            if (
+                isset($item['room_type_id']) && $item['room_type_id'] == $room_type_id &&
+                isset($item['check_in_date']) && isset($item['check_out_date']) &&
+                $item['check_in_date'] == $check_in_date && $item['check_out_date'] == $check_out_date
+            ) {
+                $cart_count++;
+            }
+        }
+
+        // ดึงจำนวนห้องว่างจากฐานข้อมูล
+        $available_rooms = 0;
+        try {
+            $stmt = $pdo->prepare("SELECT COUNT(r.id) AS available_rooms FROM rooms r WHERE r.room_type_id = ? AND r.status = 'active' AND r.deleted_at IS NULL");
+            $stmt->execute([$room_type_id]);
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            $available_rooms = (int)($row['available_rooms'] ?? 0);
+        } catch (PDOException $e) {
+            $available_rooms = 0;
+        }
+
+        // เช็คว่าจำนวนห้องในตะกร้า + 1 เกินจำนวนห้องว่างหรือไม่
+        if ($cart_count + 1 > $available_rooms) {
+            // แจ้งเตือนและ redirect กลับไป step 2
+            $_SESSION['booking_error'] = 'จำนวนห้องที่เลือกเกินจำนวนที่มีอยู่ กรุณาเลือกใหม่';
+            header('Location: ?page=booking&step=2');
+            exit();
+        }
+
+        $_SESSION['booking_cart'][] = $_SESSION['booking_form'];
+
         // ล้างค่าห้องเก่าออก แต่เก็บวันที่ไว้ (เพื่อความสะดวก)
         $current_dates = [
             'check_in_date' => $_SESSION['booking_form']['check_in_date'],
@@ -63,7 +99,7 @@ if ($current_step === 4) {
     if (isset($_POST['confirm'])) {
         $_SESSION['booking_cart'][] = $_SESSION['booking_form'];
         unset($_SESSION['booking_form']); // ล้างฟอร์มชั่วคราวออก
-        header('Location: ?page=payment');
+        header('Location: ?page=cart');
         exit();
     }
 }
