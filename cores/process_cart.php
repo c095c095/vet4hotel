@@ -168,10 +168,11 @@ if (isset($_POST['confirm_booking'])) {
                 WHERE r.room_type_id = ?
                   AND r.status = 'active'
                   AND r.deleted_at IS NULL
-                  AND r.id NOT IN (
-                      SELECT bi.room_id FROM booking_items bi
+                  AND NOT EXISTS (
+                      SELECT 1 FROM booking_items bi
                       JOIN bookings b ON b.id = bi.booking_id
-                      WHERE b.status NOT IN ('cancelled')
+                      WHERE bi.room_id = r.id
+                        AND b.status NOT IN ('cancelled')
                         AND bi.check_in_date < ?
                         AND bi.check_out_date > ?
                   )

@@ -40,18 +40,20 @@ function validate_booking_form($form, $cart, $pdo, $customer_id)
     // 4. ตรวจสอบจำนวนห้องว่าง (เทียบกับของในตะกร้า + ห้องปัจจุบัน)
     $cart_count = 0;
     foreach ($cart as $item) {
-        if (
-            isset($item['room_type_id']) && $item['room_type_id'] == $room_type_id &&
-            $item['check_in_date'] == $check_in_date && $item['check_out_date'] == $check_out_date
-        ) {
-            $cart_count++;
+        if (isset($item['room_type_id']) && $item['room_type_id'] == $room_type_id) {
+            $cin = $item['check_in_date'] ?? '';
+            $cout = $item['check_out_date'] ?? '';
+            if ($cin && $cout) {
+                if (strtotime($check_in_date) < strtotime($cout) && strtotime($check_out_date) > strtotime($cin)) {
+                    $cart_count++;
+                }
+            }
         }
     }
 
     try {
-        // เช็คห้องว่างจริงในระบบ
-        $stmt = $pdo->prepare("SELECT COUNT(*) FROM rooms WHERE room_type_id = ? AND status = 'active' AND deleted_at IS NULL");
-        $stmt->execute([$room_type_id]);
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM rooms r WHERE r.room_type_id = ? AND r.status = 'active' AND r.deleted_at IS NULL AND NOT EXISTS (SELECT 1 FROM booking_items bi JOIN bookings b ON b.id = bi.booking_id WHERE bi.room_id = r.id AND b.status NOT IN ('cancelled') AND bi.check_in_date < ? AND bi.check_out_date > ?)");
+        $stmt->execute([$room_type_id, $check_out_date, $check_in_date]);
         $available_rooms = (int) $stmt->fetchColumn();
 
         if ($cart_count + 1 > $available_rooms) {
