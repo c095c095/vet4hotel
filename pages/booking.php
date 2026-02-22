@@ -11,6 +11,19 @@ if (!isset($_SESSION['customer_id'])) {
 }
 
 $customer_id = $_SESSION['customer_id'];
+
+// หากมีการส่ง room_type_id มาจากหน้า rooms.php ให้เก็บไว้ใน session แล้ว redirect เพื่อลบออกจาก URL
+if (isset($_GET['room_type_id'])) {
+    $_SESSION['booking_form']['room_type_id'] = (int) $_GET['room_type_id'];
+
+    $query = $_GET;
+    unset($query['room_type_id']);
+    $query_string = http_build_query($query);
+
+    echo "<script>window.location.replace('?" . $query_string . "');</script>";
+    exit();
+}
+
 // รับ Step จาก GET ถ้าไม่มีให้เริ่มที่ 1
 $step = isset($_GET['step']) ? (int) $_GET['step'] : 1;
 
@@ -460,7 +473,8 @@ function estimate_total($room_types, $selected_room_type, $check_in_date, $check
                                 <p class="text-base-content/70">กรุณาตรวจสอบข้อมูลให้ถูกต้องก่อนเพิ่มลงตะกร้า</p>
                             </div>
 
-                            <div class="bg-base-100 rounded-3xl overflow-hidden md:border border-base-200 md:shadow-sm mb-8">
+                            <div
+                                class="bg-base-100 rounded-3xl overflow-hidden md:border border-base-200 md:shadow-sm mb-8">
                                 <div class="p-0 md:p-8">
                                     <!-- Header Receipt -->
                                     <div
