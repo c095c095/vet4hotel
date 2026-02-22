@@ -3131,6 +3131,9 @@
   .h-full {
     height: 100%;
   }
+  .max-h-\[70vh\] {
+    max-height: 70vh;
+  }
   .max-h-\[85vh\] {
     max-height: 85vh;
   }
@@ -5185,9 +5188,24 @@
       display: block;
     }
   }
+  .md\:max-h-\[60vh\] {
+    @media (width >= 48rem) {
+      max-height: 60vh;
+    }
+  }
   .md\:max-h-screen {
     @media (width >= 48rem) {
       max-height: 100vh;
+    }
+  }
+  .md\:w-3\/6 {
+    @media (width >= 48rem) {
+      width: calc(3 / 6 * 100%);
+    }
+  }
+  .md\:w-3\/9 {
+    @media (width >= 48rem) {
+      width: calc(3 / 9 * 100%);
     }
   }
   .md\:w-auto {
@@ -5331,6 +5349,26 @@
       min-height: 100%;
     }
   }
+  .lg\:w-3\/4 {
+    @media (width >= 64rem) {
+      width: calc(3 / 4 * 100%);
+    }
+  }
+  .lg\:w-3\/9 {
+    @media (width >= 64rem) {
+      width: calc(3 / 9 * 100%);
+    }
+  }
+  .lg\:w-5\/2 {
+    @media (width >= 64rem) {
+      width: calc(5 / 2 * 100%);
+    }
+  }
+  .lg\:w-10\/12 {
+    @media (width >= 64rem) {
+      width: calc(10 / 12 * 100%);
+    }
+  }
   .lg\:w-11\/12 {
     @media (width >= 64rem) {
       width: calc(11 / 12 * 100%);
@@ -5412,6 +5450,11 @@
     @media (width >= 64rem) {
       --tw-shadow: 0 20px 25px -5px var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 8px 10px -6px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
       box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+    }
+  }
+  .xl\:w-3\/9 {
+    @media (width >= 80rem) {
+      width: calc(3 / 9 * 100%);
     }
   }
   .xl\:border {

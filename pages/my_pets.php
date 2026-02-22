@@ -513,7 +513,7 @@ if (!empty($pets)) {
 <input type="checkbox" id="add_pet_modal" class="modal-toggle" />
 <div class="modal modal-bottom sm:modal-middle">
     <div
-        class="modal-box rounded-t-3xl rounded-b-none max-h-[85vh] md:max-h-screen p-0 sm:rounded-2xl flex flex-col lg:w-11/12 max-w-5xl">
+        class="modal-box rounded-t-3xl rounded-b-none max-h-[85vh] md:max-h-screen p-0 sm:rounded-2xl flex flex-col md:w-3/6 xl:w-3/9 max-w-5xl">
         <!-- Drag handle indicator (mobile only) -->
         <div class="flex justify-center pt-3 pb-2 sm:hidden">
             <div class="w-12 h-1.5 bg-base-300 rounded-full"></div>
@@ -627,7 +627,7 @@ if (!empty($pets)) {
 <input type="checkbox" id="edit_pet_modal" class="modal-toggle" />
 <div class="modal modal-bottom sm:modal-middle">
     <div
-        class="modal-box rounded-t-3xl rounded-b-none max-h-[85vh] md:max-h-screen p-0 sm:rounded-2xl flex flex-col lg:w-11/12 max-w-5xl">
+        class="modal-box rounded-t-3xl rounded-b-none max-h-[85vh] md:max-h-screen p-0 sm:rounded-2xl flex flex-col md:w-3/6 xl:w-3/9 max-w-5xl">
         <!-- Drag handle indicator (mobile only) -->
         <div class="flex justify-center pt-3 pb-2 sm:hidden">
             <div class="w-12 h-1.5 bg-base-300 rounded-full"></div>
