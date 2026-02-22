@@ -60,6 +60,11 @@ if ($step === 2) {
         echo "<script>window.location.href='?page=booking&step=1';</script>";
         exit();
     }
+    if (strtotime($check_in_date) >= strtotime($check_out_date)) {
+        $_SESSION['booking_error'] = 'วันที่เช็คเอาท์ต้องมาหลังจากวันที่เข้าพักอย่างน้อย 1 วัน';
+        echo "<script>window.location.href='?page=booking&step=1';</script>";
+        exit();
+    }
 }
 
 if ($step === 3 || $step === 4) {
@@ -365,6 +370,20 @@ function estimate_total($room_types, $selected_room_type, $check_in_date, $check
 
     if (nextStep1 && checkInInput && checkOutInput) {
         const validateStep1 = () => {
+            if (checkInInput.value) {
+                // อัปเดต min ของวันเช็คเอาท์ ไม่ให้น้อยกว่าวันเช็คอิน + 1 วัน
+                let parts = checkInInput.value.split('-');
+                if (parts.length === 3) {
+                    let d = new Date(parts[0], parts[1] - 1, parts[2]);
+                    d.setDate(d.getDate() + 1);
+                    let minCheckOut = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+                    checkOutInput.min = minCheckOut;
+
+                    if (checkOutInput.value && checkOutInput.value < minCheckOut) {
+                        checkOutInput.value = minCheckOut;
+                    }
+                }
+            }
             // เปิดปุ่มถ้ามีการเลือกทั้งวันเช็คอินและเช็คเอาท์
             nextStep1.disabled = !(checkInInput.value && checkOutInput.value);
         };
