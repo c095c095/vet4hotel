@@ -27,7 +27,8 @@ if (!array_key_exists($current_page, $pages)) {
 if ($pages[$current_page]['auth_required'] === true) {
     if (!isset($_SESSION['customer_id'])) {
         $_SESSION['error_msg'] = "กรุณาเข้าสู่ระบบก่อนเข้าใช้งานหน้านี้";
-        header("Location: index.php?page=login");
+        $current_url = '?' . http_build_query($_GET);
+        header("Location: ?page=login&redirect=" . urlencode($current_url));
         exit();
     }
 }

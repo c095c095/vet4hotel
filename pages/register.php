@@ -6,7 +6,10 @@
 
 // If user is already logged in, redirect them (optional if session exists)
 if (isset($_SESSION['customer_id'])) {
-    header("Location: ?page=profile");
+    $redirect = $_GET['redirect'] ?? '?page=profile';
+    if (empty($redirect))
+        $redirect = '?page=profile';
+    header("Location: " . $redirect);
     exit();
 }
 
@@ -31,7 +34,13 @@ unset($_SESSION['form_data']);
 
     <div class="max-w-2xl w-full mx-auto relative z-10">
         <!-- Back to login -->
-        <a href="?page=login"
+        <?php
+        $login_url = '?page=login';
+        if (!empty($_GET['redirect'])) {
+            $login_url .= '&redirect=' . urlencode($_GET['redirect']);
+        }
+        ?>
+        <a href="<?php echo htmlspecialchars($login_url); ?>"
             class="inline-flex items-center gap-2 text-sm text-base-content/60 hover:text-primary transition-colors mb-4">
             <i data-lucide="arrow-left" class="size-4"></i>
             กลับสู่หน้าล็อกอิน
@@ -58,6 +67,9 @@ unset($_SESSION['form_data']);
             <?php endif; ?>
 
             <form action="?action=register" method="POST" class="space-y-4">
+                <?php if (!empty($_GET['redirect'])): ?>
+                    <input type="hidden" name="redirect" value="<?php echo htmlspecialchars($_GET['redirect']); ?>">
+                <?php endif; ?>
                 <!-- Name Row -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div class="form-control">
@@ -178,7 +190,8 @@ unset($_SESSION['form_data']);
             <!-- Login Link -->
             <p class="text-center text-sm text-base-content/70">
                 มีบัญชีอยู่แล้วใช่หรือไม่?
-                <a href="?page=login" class="text-primary font-bold hover:underline">เข้าสู่ระบบที่นี่</a>
+                <a href="<?php echo htmlspecialchars($login_url); ?>"
+                    class="text-primary font-bold hover:underline">เข้าสู่ระบบที่นี่</a>
             </p>
         </div>
     </div>

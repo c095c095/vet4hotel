@@ -5,7 +5,8 @@
 // ═══════════════════════════════════════════════════════════
 
 if (!isset($_SESSION['customer_id'])) {
-    header("Location: ?page=login");
+    $current_url = '?' . http_build_query($_GET);
+    header("Location: ?page=login&redirect=" . urlencode($current_url));
     exit();
 }
 

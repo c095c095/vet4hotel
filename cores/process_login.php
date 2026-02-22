@@ -11,9 +11,14 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $email = trim($_POST['email'] ?? '');
 $password = $_POST['password'] ?? '';
 
+$redirect_back = '?page=login';
+if (!empty($_POST['redirect'])) {
+    $redirect_back .= '&redirect=' . urlencode($_POST['redirect']);
+}
+
 if (empty($email) || empty($password)) {
     $_SESSION['error_msg'] = "กรุณากรอกอีเมลและรหัสผ่าน";
-    header("Location: ?page=login");
+    header("Location: " . $redirect_back);
     exit();
 }
 
@@ -33,7 +38,7 @@ try {
             exit();
         } else {
             $_SESSION['error_msg'] = "บัญชีพนักงานนี้ถูกระงับการใช้งาน";
-            header("Location: ?page=login");
+            header("Location: " . $redirect_back);
             exit();
         }
     } else {
@@ -48,25 +53,27 @@ try {
                 $_SESSION['user_name'] = $customer['first_name'] . ' ' . $customer['last_name'];
 
                 // Redirect to the originally intended page or just home/profile
-                $redirect = $_SESSION['redirect_after_login'] ?? '?page=home';
-                unset($_SESSION['redirect_after_login']);
+                $redirect = $_POST['redirect'] ?? '?page=home';
+                if (empty($redirect)) {
+                    $redirect = '?page=home';
+                }
 
                 header("Location: " . $redirect);
                 exit();
             } else {
                 $_SESSION['error_msg'] = "บัญชีของคุณถูกระงับการใช้งาน กรุณาติดต่อสต๊าฟ";
-                header("Location: ?page=login");
+                header("Location: " . $redirect_back);
                 exit();
             }
         } else {
             $_SESSION['error_msg'] = "อีเมลหรือรหัสผ่านไม่ถูกต้อง";
-            header("Location: ?page=login");
+            header("Location: " . $redirect_back);
             exit();
         }
     }
 } catch (PDOException $e) {
     $_SESSION['error_msg'] = "เกิดข้อผิดพลาดของระบบ กรุณาลองใหม่อีกครั้ง";
     // error_log($e->getMessage());
-    header("Location: ?page=login");
+    header("Location: " . $redirect_back);
     exit();
 }

@@ -15,6 +15,15 @@ $email = trim($_POST['email'] ?? '');
 $password = $_POST['password'] ?? '';
 $confirm_password = $_POST['confirm_password'] ?? '';
 
+$redirect_back = '?page=register';
+$login_redirect = '?page=login';
+
+if (!empty($_POST['redirect'])) {
+    $redirect_param = '&redirect=' . urlencode($_POST['redirect']);
+    $redirect_back .= $redirect_param;
+    $login_redirect .= $redirect_param;
+}
+
 // Save form data to session so we can refill it on error
 $_SESSION['form_data'] = [
     'first_name' => $first_name,
@@ -25,15 +34,15 @@ $_SESSION['form_data'] = [
 
 if (empty($first_name) || empty($last_name) || empty($phone) || empty($email) || empty($password)) {
     $_SESSION['error_msg'] = "กรุณากรอกข้อมูลให้ครบถ้วน";
-    header("Location: ?page=register");
+    header("Location: " . $redirect_back);
     exit();
 } elseif ($password !== $confirm_password) {
     $_SESSION['error_msg'] = "รหัสผ่านและการยืนยันรหัสผ่านไม่ตรงกัน";
-    header("Location: ?page=register");
+    header("Location: " . $redirect_back);
     exit();
 } elseif (strlen($password) < 6) {
     $_SESSION['error_msg'] = "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร";
-    header("Location: ?page=register");
+    header("Location: " . $redirect_back);
     exit();
 }
 
@@ -43,7 +52,7 @@ try {
     $stmt->execute([$email, $phone]);
     if ($stmt->fetch()) {
         $_SESSION['error_msg'] = "อีเมลหรือเบอร์โทรศัพท์นี้ถูกใช้งานแล้ว";
-        header("Location: ?page=register");
+        header("Location: " . $redirect_back);
         exit();
     } else {
         // Insert new customer
@@ -56,12 +65,12 @@ try {
 
         // Redirect to login with success message
         $_SESSION['success_msg'] = "สมัครสมาชิกสำเร็จ กรุณาเข้าสู่ระบบ";
-        header("Location: ?page=login");
+        header("Location: " . $login_redirect);
         exit();
     }
 } catch (PDOException $e) {
     $_SESSION['error_msg'] = "เกิดข้อผิดพลาดในการสมัครสมาชิก กรุณาลองใหม่อีกครั้ง";
     // error_log($e->getMessage()); // In production, log this
-    header("Location: ?page=register");
+    header("Location: " . $redirect_back);
     exit();
 }

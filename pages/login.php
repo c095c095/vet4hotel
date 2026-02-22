@@ -6,7 +6,10 @@
 
 // If user is already logged in, redirect them
 if (isset($_SESSION['customer_id'])) {
-    header("Location: ?page=profile");
+    $redirect = $_GET['redirect'] ?? '?page=profile';
+    if (empty($redirect))
+        $redirect = '?page=profile';
+    header("Location: " . $redirect);
     exit();
 } elseif (isset($_SESSION['employee_id'])) {
     header("Location: admin/");
@@ -82,6 +85,9 @@ unset($_SESSION['success_msg']);
                     <?php endif; ?>
 
                     <form action="?action=login" method="POST" class="space-y-5">
+                        <?php if (!empty($_GET['redirect'])): ?>
+                            <input type="hidden" name="redirect" value="<?php echo htmlspecialchars($_GET['redirect']); ?>">
+                        <?php endif; ?>
                         <!-- Email Input -->
                         <div class="form-control">
                             <label class="label pt-0" for="email">
@@ -138,7 +144,14 @@ unset($_SESSION['success_msg']);
                     <!-- Register Link -->
                     <p class="text-center text-sm text-base-content/70">
                         ยังไม่มีบัญชีใช่หรือไม่?
-                        <a href="?page=register" class="text-primary font-bold hover:underline">สมัครสมาชิกที่นี่</a>
+                        <?php
+                        $register_url = '?page=register';
+                        if (!empty($_GET['redirect'])) {
+                            $register_url .= '&redirect=' . urlencode($_GET['redirect']);
+                        }
+                        ?>
+                        <a href="<?php echo htmlspecialchars($register_url); ?>"
+                            class="text-primary font-bold hover:underline">สมัครสมาชิกที่นี่</a>
                     </p>
                 </div>
             </div>
