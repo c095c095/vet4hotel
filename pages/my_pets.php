@@ -82,7 +82,7 @@ unset($_SESSION['msg_success'], $_SESSION['msg_error']);
 ?>
 
 <?php if ($msg_success): ?>
-    <div class="toast toast-top toast-center z-[9999]" id="flash-toast">
+    <div class="toast toast-top toast-center z-9999" id="flash-toast">
         <div class="alert alert-success shadow-lg">
             <i data-lucide="check-circle" class="size-5"></i>
             <span><?php echo htmlspecialchars($msg_success); ?></span>
@@ -91,7 +91,7 @@ unset($_SESSION['msg_success'], $_SESSION['msg_error']);
     <script>setTimeout(() => { const t = document.getElementById('flash-toast'); if (t) t.remove(); }, 4000);</script>
 <?php endif; ?>
 <?php if ($msg_error): ?>
-    <div class="toast toast-top toast-center z-[9999]" id="flash-toast-err">
+    <div class="toast toast-top toast-center z-9999" id="flash-toast-err">
         <div class="alert alert-error shadow-lg">
             <i data-lucide="alert-circle" class="size-5"></i>
             <span><?php echo htmlspecialchars($msg_error); ?></span>
@@ -227,21 +227,26 @@ unset($_SESSION['msg_success'], $_SESSION['msg_error']);
                     <!-- Detail Modal (Mobile Bottom / Desktop Middle, styled like navbar modal) -->
                     <input type="checkbox" id="pet_details_modal_<?php echo $pet['id']; ?>" class="modal-toggle" />
                     <div class="modal modal-bottom sm:modal-middle">
-                        <div class="modal-box rounded-t-3xl rounded-b-none max-h-[85vh] p-0 sm:rounded-2xl sm:p-8 max-w-lg">
+                        <div class="modal-box rounded-t-3xl rounded-b-none max-h-[85vh] sm:rounded-2xl p-0 max-w-lg">
                             <!-- Drag handle indicator (mobile only) -->
                             <div class="flex justify-center pt-3 pb-2 sm:hidden">
                                 <div class="w-12 h-1.5 bg-base-300 rounded-full"></div>
                             </div>
-                            <div class="px-5 sm:px-0 pb-4 border-b border-base-200">
-                                <div class="flex items-center justify-between mb-4">
-                                    <span class="font-bold text-lg tracking-tight">ข้อมูลสัตว์เลี้ยง</span>
-                                    <label for="pet_details_modal_<?php echo $pet['id']; ?>"
-                                        class="btn btn-ghost btn-sm btn-circle">
-                                        <i data-lucide="x" class="size-4"></i>
-                                    </label>
+                            <!--  -->
+                            <div
+                                class="px-5 sm:px-6 py-4 border-b border-base-200 sticky top-0 bg-base-100 z-20 flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <div class="bg-primary/10 text-primary rounded-full p-2">
+                                        <i data-lucide="eye" class="size-5"></i>
+                                    </div>
+                                    <div class="font-bold text-base-content">ข้อมูลสัตว์เลี้ยง</div>
                                 </div>
+                                <label for="vaccine_modal_<?php echo $pet['id']; ?>" class="btn btn-ghost btn-sm btn-circle">
+                                    <i data-lucide="x" class="size-4"></i>
+                                </label>
                             </div>
-                            <div class="px-5 sm:px-0 pb-4">
+                            <!--  -->
+                            <div class="px-5 sm:px-6 py-4">
                                 <div class="flex items-center gap-4 mb-6">
                                     <div class="avatar">
                                         <div
@@ -328,7 +333,7 @@ unset($_SESSION['msg_success'], $_SESSION['msg_error']);
                     <input type="checkbox" id="vaccine_modal_<?php echo $pet['id']; ?>" class="modal-toggle" />
                     <div class="modal modal-bottom sm:modal-middle">
                         <div
-                            class="modal-box rounded-t-3xl rounded-b-none max-h-[90vh] p-0 sm:rounded-2xl flex flex-col w-11/12 max-w-2xl">
+                            class="modal-box rounded-t-3xl rounded-b-none max-h-[90vh] p-0 sm:rounded-2xl flex flex-col max-w-lg">
                             <!-- Drag handle (mobile) -->
                             <div class="flex justify-center pt-3 pb-1 sm:hidden">
                                 <div class="w-12 h-1.5 bg-base-300 rounded-full"></div>
@@ -373,7 +378,7 @@ unset($_SESSION['msg_success'], $_SESSION['msg_error']);
                                                     class="flex items-start justify-between gap-3 rounded-xl border p-3 <?php echo $rowClass; ?>">
                                                     <div class="flex items-center gap-2 min-w-0">
                                                         <i data-lucide="shield-check"
-                                                            class="size-4 flex-shrink-0 <?php echo $isExpired ? 'text-error' : 'text-success'; ?>"></i>
+                                                            class="size-4 shrink-0 <?php echo $isExpired ? 'text-error' : 'text-success'; ?>"></i>
                                                         <div class="min-w-0">
                                                             <div class="font-medium text-sm text-base-content truncate">
                                                                 <?php echo htmlspecialchars($rec['vaccine_name']); ?>
@@ -382,7 +387,7 @@ unset($_SESSION['msg_success'], $_SESSION['msg_error']);
                                                                 &nbsp;|&nbsp; หมดอายุ: <?php echo $expiryFmt; ?></div>
                                                         </div>
                                                     </div>
-                                                    <div class="flex-shrink-0 flex flex-col items-end gap-1">
+                                                    <div class="shrink-0 flex flex-col items-end gap-1">
                                                         <span
                                                             class="badge <?php echo $badgeClass; ?> badge-sm"><?php echo $badgeText; ?></span>
                                                         <?php if ($rec['is_verified']): ?>
@@ -484,13 +489,13 @@ unset($_SESSION['msg_success'], $_SESSION['msg_error']);
 <input type="checkbox" id="add_pet_modal" class="modal-toggle" />
 <div class="modal modal-bottom sm:modal-middle">
     <div
-        class="modal-box rounded-t-3xl rounded-b-none max-h-[85vh] md:max-h-screen p-0 sm:rounded-2xl sm:p-8 flex flex-col w-11/12 max-w-5xl">
+        class="modal-box rounded-t-3xl rounded-b-none max-h-[85vh] md:max-h-screen p-0 sm:rounded-2xl flex flex-col lg:w-11/12 max-w-5xl">
         <!-- Drag handle indicator (mobile only) -->
         <div class="flex justify-center pt-3 pb-2 sm:hidden">
             <div class="w-12 h-1.5 bg-base-300 rounded-full"></div>
         </div>
         <!-- Fixed header -->
-        <div class="px-5 sm:px-0 border-b border-base-200 bg-base-100 sticky top-0 z-20">
+        <div class="px-5 sm:px-6 border-b border-base-200 bg-base-100 sticky top-0 z-20">
             <div class="flex items-center justify-between py-4">
                 <span class="font-bold text-lg tracking-tight text-primary">เพิ่มสัตว์เลี้ยงใหม่</span>
                 <label for="add_pet_modal" class="btn btn-ghost btn-sm btn-circle">
@@ -499,8 +504,8 @@ unset($_SESSION['msg_success'], $_SESSION['msg_error']);
             </div>
         </div>
         <!-- Scrollable form body -->
-        <form method="POST" action="cores/process_pet.php" autocomplete="off"
-            class="px-5 sm:px-0 pb-4 flex-1 overflow-y-auto">
+        <form method="POST" action="?action=pet" autocomplete="off"
+            class="px-5 sm:px-6 py-4 flex-1 overflow-y-auto">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="space-y-4">
                     <div class="form-control">
@@ -595,13 +600,13 @@ unset($_SESSION['msg_success'], $_SESSION['msg_error']);
 <input type="checkbox" id="edit_pet_modal" class="modal-toggle" />
 <div class="modal modal-bottom sm:modal-middle">
     <div
-        class="modal-box rounded-t-3xl rounded-b-none max-h-[85vh] md:max-h-screen p-0 sm:rounded-2xl sm:p-8 flex flex-col w-11/12 max-w-5xl">
+        class="modal-box rounded-t-3xl rounded-b-none max-h-[85vh] md:max-h-screen p-0 sm:rounded-2xl flex flex-col lg:w-11/12 max-w-5xl">
         <!-- Drag handle indicator (mobile only) -->
         <div class="flex justify-center pt-3 pb-2 sm:hidden">
             <div class="w-12 h-1.5 bg-base-300 rounded-full"></div>
         </div>
         <!-- Fixed header -->
-        <div class="px-5 sm:px-0 border-b border-base-200 bg-base-100 sticky top-0 z-20">
+        <div class="px-5 sm:px-6 border-b border-base-200 bg-base-100 sticky top-0 z-20">
             <div class="flex items-center justify-between py-4">
                 <span class="font-bold text-lg tracking-tight text-primary">แก้ไขข้อมูลสัตว์เลี้ยง</span>
                 <label for="edit_pet_modal" class="btn btn-ghost btn-sm btn-circle">
@@ -610,8 +615,8 @@ unset($_SESSION['msg_success'], $_SESSION['msg_error']);
             </div>
         </div>
         <!-- Scrollable form body -->
-        <form method="POST" action="cores/process_pet.php" autocomplete="off"
-            class="px-5 sm:px-0 pb-4 flex-1 overflow-y-auto" id="edit_pet_form">
+        <form method="POST" action="?action=pet" autocomplete="off"
+            class="px-5 sm:px-6 py-4 flex-1 overflow-y-auto" id="edit_pet_form">
             <input type="hidden" name="pet_id" id="edit_pet_id">
             <input type="hidden" name="action" value="edit">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
