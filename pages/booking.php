@@ -10,11 +10,6 @@ if (!isset($_SESSION['customer_id'])) {
     exit();
 }
 
-function debug_data_to_console($data)
-{
-    echo "<script>console.log(" . json_encode($data) . ");</script>";
-}
-
 $customer_id = $_SESSION['customer_id'];
 
 // หากมีการส่ง room_type_id มาจากหน้า rooms.php ให้เก็บไว้ใน session แล้ว redirect เพื่อลบออกจาก URL
@@ -42,17 +37,15 @@ try {
     $pets = [];
 }
 
+$form = @$_SESSION['booking_form'];
+$selected_room_type = @$form['room_type_id'];
+$selected_pets = (array) @$form['pet_ids'];
+$selected_services = (array) @$form['service_ids'];
+$check_in_date = @$form['check_in_date'];
+$check_out_date = @$form['check_out_date'];
+
 $room_types = [];
 try {
-    $stmt = $pdo->prepare("SELECT rt.*, COUNT(r.id) AS available_rooms
-        FROM room_types rt
-        LEFT JOIN rooms r ON r.room_type_id = rt.id AND r.status = 'active' AND r.deleted_at IS NULL
-        WHERE rt.is_active = 1
-        GROUP BY rt.id
-        HAVING available_rooms > 0
-        ORDER BY rt.base_price_per_night ASC");
-
-    // 
     $stmt = $pdo->prepare("SELECT rt.*, COUNT(DISTINCT r.id) AS available_rooms
         FROM room_types rt
         JOIN rooms r ON r.room_type_id = rt.id AND r.status = 'active' AND r.deleted_at IS NULL
@@ -67,12 +60,22 @@ try {
         HAVING available_rooms > 0
         ORDER BY rt.base_price_per_night ASC
     ");
-    // 
 
     $stmt->execute([
-        ':check_in' => $check_in_date ?? date('Y-m-d'),
-        ':check_out' => $check_out_date ?? date('Y-m-d', strtotime('+1 day')),
+        ':check_in' => !empty($check_in_date) ? $check_in_date : date('Y-m-d'),
+        ':check_out' => !empty($check_out_date) ? $check_out_date : date('Y-m-d', strtotime('+1 day')),
     ]);
+
+    $sql = $stmt->queryString;
+    $params = [
+        ':check_in' => !empty($check_in_date) ? $check_in_date : date('Y-m-d'),
+        ':check_out' => !empty($check_out_date) ? $check_out_date : date('Y-m-d', strtotime('+1 day'))
+    ];
+    foreach ($params as $key => $value) {
+        $sql = str_replace($key, "'$value'", $sql);
+    }
+    echo "<script>console.log(" . json_encode($sql) . ");</script>";
+
     $room_types = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     $room_types = [];
@@ -85,13 +88,6 @@ try {
 } catch (PDOException $e) {
     $services = [];
 }
-
-$form = @$_SESSION['booking_form'];
-$selected_room_type = @$form['room_type_id'];
-$selected_pets = (array) @$form['pet_ids'];
-$selected_services = (array) @$form['service_ids'];
-$check_in_date = @$form['check_in_date'];
-$check_out_date = @$form['check_out_date'];
 
 if ($step === 2) {
     if (!$check_in_date || !$check_out_date) {
@@ -278,8 +274,6 @@ function estimate_total($room_types, $selected_room_type, $check_in_date, $check
                                     }
                                 }
 
-                                debug_data_to_console($room_types);
-
                                 $has_room = false;
                                 foreach ($room_types as $rt) {
                                     $cart_count = $cart_count_map[$rt['id']] ?? 0;
@@ -385,7 +379,7 @@ function estimate_total($room_types, $selected_room_type, $check_in_date, $check
                                             <div
                                                 class="border-2 rounded-xl p-4 transition-all duration-200 flex flex-col items-center justify-center gap-2 text-center peer-checked:border-primary peer-checked:bg-primary/5 peer-checked:text-primary peer-disabled:opacity-50 peer-disabled:cursor-not-allowed border-base-200 bg-base-100 hover:border-primary/30">
                                                 <div class="avatar placeholder">
-                                                    <div class="bg-neutral text-neutral-content w-12 rounded-full">
+                                                    <div class="bg-neutral text-neutral-content w-12 rounded-full flex items-center justify-center">
                                                         <span
                                                             class="text-xl"><?php echo mb_substr($pet['name'], 0, 1, "UTF-8"); ?></span>
                                                     </div>

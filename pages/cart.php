@@ -224,7 +224,7 @@ $net_total = $grand_subtotal - $discount_amount;
                             <div class="card-body p-0">
                                 <!-- Card Header -->
                                 <div
-                                    class="flex items-center justify-between bg-gradient-to-r from-primary/5 to-transparent p-4 md:p-5 border-b border-base-200">
+                                    class="flex items-center justify-between bg-linear-to-r from-primary/5 to-transparent p-4 md:p-5 border-b border-base-200">
                                     <div class="flex items-center gap-3">
                                         <div class="bg-primary text-primary-content p-2.5 rounded-xl shadow-sm">
                                             <i data-lucide="bed-double" class="size-5"></i>
