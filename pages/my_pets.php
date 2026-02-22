@@ -208,7 +208,6 @@ if (!empty($pets)) {
                             <div class="flex justify-center pt-3 pb-2 sm:hidden">
                                 <div class="w-12 h-1.5 bg-base-300 rounded-full"></div>
                             </div>
-                            <!--  -->
                             <div
                                 class="px-5 sm:px-6 py-4 border-b border-base-200 sticky top-0 bg-base-100 z-20 flex items-center justify-between">
                                 <div class="flex items-center gap-2">
@@ -221,7 +220,6 @@ if (!empty($pets)) {
                                     <i data-lucide="x" class="size-4"></i>
                                 </label>
                             </div>
-                            <!--  -->
                             <div class="px-5 sm:px-6 py-4">
                                 <div class="flex items-center gap-4 mb-6">
                                     <div class="avatar">
@@ -295,12 +293,49 @@ if (!empty($pets)) {
                                     <?php endif; ?>
                                 </div>
                                 <div class="divider my-4"></div>
-                                <div class="flex justify-end gap-2">
-                                    <label for="pet_details_modal_<?php echo $pet['id']; ?>" class="btn  w-full">ปิด</label>
+                                <div class="flex justify-between gap-2">
+                                    <label for="delete_pet_modal_<?php echo $pet['id']; ?>"
+                                        class="btn btn-error btn-outline btn-sm gap-1 hover:text-white">
+                                        <i data-lucide="trash-2" class="size-4"></i> ลบ
+                                    </label>
+                                    <label for="pet_details_modal_<?php echo $pet['id']; ?>" class="btn w-auto">ปิด</label>
                                 </div>
                             </div>
                         </div>
                         <label class="modal-backdrop" for="pet_details_modal_<?php echo $pet['id']; ?>"></label>
+                    </div>
+
+                    <!-- ═══════════════════════════════════════════ -->
+                    <!-- Delete Confirm Modal ─ per pet             -->
+                    <!-- ═══════════════════════════════════════════ -->
+                    <input type="checkbox" id="delete_pet_modal_<?php echo $pet['id']; ?>" class="modal-toggle" />
+                    <div class="modal modal-middle">
+                        <div class="modal-box rounded-t-3xl sm:rounded-2xl lg:max-w-sm text-center">
+                            <div
+                                class="bg-error/10 text-error rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                                <i data-lucide="alert-triangle" class="size-8"></i>
+                            </div>
+                            <h3 class="font-bold text-lg text-base-content mb-2">ยืนยันการลบ</h3>
+                            <p class="text-base-content/60 text-sm mb-1">
+                                คุณต้องการลบข้อมูลของ
+                                <span
+                                    class="font-semibold text-base-content"><?php echo htmlspecialchars($pet['name']); ?></span>
+                                หรือไม่?
+                            </p>
+                            <p class="text-xs text-base-content/40 mb-6">ข้อมูลจะถูกซ่อนจากระบบ
+                                สามารถกู้คืนได้โดยติดต่อเจ้าหน้าที่</p>
+                            <div class="flex gap-3 justify-center">
+                                <label for="delete_pet_modal_<?php echo $pet['id']; ?>" class="btn btn-ghost">ยกเลิก</label>
+                                <form method="POST" action="?action=pet">
+                                    <input type="hidden" name="action" value="delete">
+                                    <input type="hidden" name="pet_id" value="<?php echo $pet['id']; ?>">
+                                    <button type="submit" class="btn btn-error text-white gap-1">
+                                        <i data-lucide="trash-2" class="size-4"></i> ลบข้อมูล
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        <label class="modal-backdrop" for="delete_pet_modal_<?php echo $pet['id']; ?>"></label>
                     </div>
 
                     <!-- ═══════════════════════════════════════════ -->
@@ -571,7 +606,7 @@ if (!empty($pets)) {
 
             <div class="flex justify-end gap-2 mt-6">
                 <label for="add_pet_modal" class="btn btn-outline">ยกเลิก</label>
-                <button type="submit" form="pet-form" class="btn btn-primary gap-2 font-semibold">
+                <button type="submit" class="btn btn-primary gap-2 font-semibold">
                     <i data-lucide="check" class="size-4"></i>
                     เพิ่มสัตว์เลี้ยง
                 </button>
