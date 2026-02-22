@@ -436,11 +436,12 @@ if (!empty($pets)) {
                                         <input type="hidden" name="pet_id" value="<?php echo $pet['id']; ?>">
 
                                         <div class="form-control">
-                                            <label class="label pb-1">
+                                            <label class="label pb-1" for="vaccine_type_id_<?php echo $pet['id']; ?>">
                                                 <span class="label-text font-medium">ประเภทวัคซีน <span
                                                         class="text-error">*</span></span>
                                             </label>
-                                            <select name="vaccine_type_id" class="select select-bordered w-full" required>
+                                            <select name="vaccine_type_id" id="vaccine_type_id_<?php echo $pet['id']; ?>"
+                                                class="select select-bordered w-full" required>
                                                 <option value="">-- เลือกประเภทวัคซีน --</option>
                                                 <?php foreach ($vaccine_types as $vt): ?>
                                                     <?php if ($vt['species_id'] == $pet['species_id']): ?>
@@ -454,19 +455,21 @@ if (!empty($pets)) {
 
                                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                             <div class="form-control">
-                                                <label class="label pb-1">
+                                                <label class="label pb-1" for="administered_date_<?php echo $pet['id']; ?>">
                                                     <span class="label-text font-medium">วันที่ฉีด</span>
                                                 </label>
-                                                <input type="date" name="administered_date" class="input input-bordered w-full"
-                                                    max="<?php echo date('Y-m-d'); ?>">
+                                                <input type="date" name="administered_date"
+                                                    id="administered_date_<?php echo $pet['id']; ?>"
+                                                    class="input input-bordered w-full" max="<?php echo date('Y-m-d'); ?>">
                                             </div>
                                             <div class="form-control">
-                                                <label class="label pb-1">
+                                                <label class="label pb-1" for="expiry_date_<?php echo $pet['id']; ?>">
                                                     <span class="label-text font-medium">วันหมดอายุ <span
                                                             class="text-error">*</span></span>
                                                 </label>
-                                                <input type="date" name="expiry_date" class="input input-bordered w-full"
-                                                    required min="<?php echo date('Y-m-d'); ?>">
+                                                <input type="date" name="expiry_date" id="expiry_date_<?php echo $pet['id']; ?>"
+                                                    class="input input-bordered w-full" required
+                                                    min="<?php echo date('Y-m-d'); ?>">
                                             </div>
                                         </div>
 
@@ -529,14 +532,15 @@ if (!empty($pets)) {
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="space-y-4">
                     <div class="form-control">
-                        <label class="label font-medium text-base-content">ชื่อสัตว์เลี้ยง <span
+                        <label for="add_name" class="label label-text font-medium">ชื่อสัตว์เลี้ยง <span
                                 class="text-error">*</span></label>
-                        <input type="text" name="name" class="input input-bordered w-full" required>
+                        <input type="text" name="name" id="add_name" autocomplete="off"
+                            class="input input-bordered w-full" required>
                     </div>
                     <div class="form-control">
-                        <label class="label font-medium text-base-content">ชนิดสัตว์ <span
+                        <label for="add_species_id" class="label label-text font-medium">ชนิดสัตว์ <span
                                 class="text-error">*</span></label>
-                        <select name="species_id" class="select select-bordered w-full" required
+                        <select name="species_id" id="add_species_id" class="select select-bordered w-full" required
                             onchange="filterBreeds(this.value)">
                             <option value="">-- เลือกชนิดสัตว์ --</option>
                             <?php foreach ($species_list as $sp): ?>
@@ -546,7 +550,7 @@ if (!empty($pets)) {
                         </select>
                     </div>
                     <div class="form-control">
-                        <label class="label font-medium text-base-content">สายพันธุ์</label>
+                        <label for="breed_select" class="label label-text font-medium">สายพันธุ์</label>
                         <select name="breed_id" class="select select-bordered w-full" id="breed_select">
                             <option value="">-- เลือกสายพันธุ์ --</option>
                             <?php foreach ($breeds_list as $br): ?>
@@ -557,8 +561,9 @@ if (!empty($pets)) {
                         </select>
                     </div>
                     <div class="form-control">
-                        <label class="label font-medium text-base-content">เพศ <span class="text-error">*</span></label>
-                        <select name="gender" class="select select-bordered w-full" required>
+                        <label for="add_gender" class="label label-text font-medium">เพศ <span
+                                class="text-error">*</span></label>
+                        <select name="gender" id="add_gender" class="select select-bordered w-full" required>
                             <option value="male">ตัวผู้</option>
                             <option value="female">ตัวเมีย</option>
                             <option value="spayed">ทำหมันแล้ว (เมีย)</option>
@@ -567,37 +572,39 @@ if (!empty($pets)) {
                         </select>
                     </div>
                     <div class="form-control">
-                        <label class="label font-medium text-base-content">วันเกิด</label>
-                        <input type="date" name="dob" class="input input-bordered w-full">
+                        <label for="add_dob" class="label label-text font-medium">วันเกิด</label>
+                        <input type="date" name="dob" id="add_dob" class="input input-bordered w-full">
                     </div>
                 </div>
                 <div class="space-y-4">
                     <div class="form-control">
-                        <label class="label font-medium text-base-content">น้ำหนัก</label>
+                        <label for="add_weight_kg" class="label label-text font-medium">น้ำหนัก</label>
                         <div class="flex items-center gap-2">
-                            <input type="number" name="weight_kg" class="input input-bordered w-full" min="0"
-                                step="0.01" placeholder="น้ำหนัก">
+                            <input type="number" name="weight_kg" id="add_weight_kg" class="input input-bordered w-full"
+                                min="0" step="0.01" placeholder="น้ำหนัก">
                             <span class="text-base-content/60 text-sm">kg</span>
                         </div>
                     </div>
                     <div class="form-control">
-                        <label class="label font-medium text-base-content">ชื่อคลินิก/สัตวแพทย์ประจำตัว</label>
-                        <input type="text" name="vet_name" class="input input-bordered w-full"
+                        <label for="add_vet_name"
+                            class="label label-text font-medium">ชื่อคลินิก/สัตวแพทย์ประจำตัว</label>
+                        <input type="text" name="vet_name" id="add_vet_name" class="input input-bordered w-full"
                             placeholder="ชื่อคลินิก/สัตวแพทย์">
                     </div>
                     <div class="form-control">
-                        <label class="label font-medium text-base-content">เบอร์คลินิก/สัตวแพทย์</label>
-                        <input type="text" name="vet_phone" class="input input-bordered w-full"
+                        <label for="add_vet_phone" class="label label-text font-medium">เบอร์คลินิก/สัตวแพทย์</label>
+                        <input type="text" name="vet_phone" id="add_vet_phone" class="input input-bordered w-full"
                             placeholder="เบอร์โทรศัพท์">
                     </div>
                     <div class="form-control">
-                        <label class="label font-medium text-base-content">หมายเหตุพฤติกรรม</label>
-                        <textarea name="behavior_note" class="textarea textarea-bordered w-full"
+                        <label for="add_behavior_note" class="label label-text font-medium">หมายเหตุพฤติกรรม</label>
+                        <textarea name="behavior_note" id="add_behavior_note" class="textarea textarea-bordered w-full"
                             placeholder="เช่น กลัวฟ้าร้อง, ไม่ชอบอาบน้ำ"></textarea>
                     </div>
                     <div class="form-control">
-                        <label class="label cursor-pointer flex items-center gap-2">
-                            <input type="checkbox" name="is_aggressive" class="checkbox checkbox-error text-white" />
+                        <label for="add_is_aggressive" class="label cursor-pointer flex items-center gap-2">
+                            <input type="checkbox" name="is_aggressive" id="add_is_aggressive"
+                                class="checkbox checkbox-error text-white" />
                             <span class="text-error font-semibold">ดุ/กัด (แจ้งเตือนพนักงาน)</span>
                         </label>
                     </div>
@@ -642,12 +649,13 @@ if (!empty($pets)) {
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="space-y-4">
                     <div class="form-control">
-                        <label class="label font-medium text-base-content">ชื่อสัตว์เลี้ยง <span
+                        <label for="edit_name" class="label label-text font-medium">ชื่อสัตว์เลี้ยง <span
                                 class="text-error">*</span></label>
-                        <input type="text" name="name" id="edit_name" class="input input-bordered w-full" required>
+                        <input type="text" name="name" id="edit_name" autocomplete="off"
+                            class="input input-bordered w-full" required>
                     </div>
                     <div class="form-control">
-                        <label class="label font-medium text-base-content">ชนิดสัตว์ <span
+                        <label for="edit_species_id" class="label label-text font-medium">ชนิดสัตว์ <span
                                 class="text-error">*</span></label>
                         <select name="species_id" id="edit_species_id" class="select select-bordered w-full" required
                             onchange="filterEditBreeds(this.value)">
@@ -659,7 +667,7 @@ if (!empty($pets)) {
                         </select>
                     </div>
                     <div class="form-control">
-                        <label class="label font-medium text-base-content">สายพันธุ์</label>
+                        <label for="edit_breed_id" class="label label-text font-medium">สายพันธุ์</label>
                         <select name="breed_id" id="edit_breed_id" class="select select-bordered w-full">
                             <option value="">-- เลือกสายพันธุ์ --</option>
                             <?php foreach ($breeds_list as $br): ?>
@@ -670,7 +678,8 @@ if (!empty($pets)) {
                         </select>
                     </div>
                     <div class="form-control">
-                        <label class="label font-medium text-base-content">เพศ <span class="text-error">*</span></label>
+                        <label for="edit_gender" class="label label-text font-medium">เพศ <span
+                                class="text-error">*</span></label>
                         <select name="gender" id="edit_gender" class="select select-bordered w-full" required>
                             <option value="male">ตัวผู้</option>
                             <option value="female">ตัวเมีย</option>
@@ -680,13 +689,13 @@ if (!empty($pets)) {
                         </select>
                     </div>
                     <div class="form-control">
-                        <label class="label font-medium text-base-content">วันเกิด</label>
+                        <label for="edit_dob" class="label label-text font-medium">วันเกิด</label>
                         <input type="date" name="dob" id="edit_dob" class="input input-bordered w-full">
                     </div>
                 </div>
                 <div class="space-y-4">
                     <div class="form-control">
-                        <label class="label font-medium text-base-content">น้ำหนัก</label>
+                        <label for="edit_weight_kg" class="label label-text font-medium">น้ำหนัก</label>
                         <div class="flex items-center gap-2">
                             <input type="number" name="weight_kg" id="edit_weight_kg"
                                 class="input input-bordered w-full" min="0" step="0.01" placeholder="น้ำหนัก">
@@ -694,22 +703,23 @@ if (!empty($pets)) {
                         </div>
                     </div>
                     <div class="form-control">
-                        <label class="label font-medium text-base-content">ชื่อคลินิก/สัตวแพทย์ประจำตัว</label>
+                        <label for="edit_vet_name"
+                            class="label label-text font-medium">ชื่อคลินิก/สัตวแพทย์ประจำตัว</label>
                         <input type="text" name="vet_name" id="edit_vet_name" class="input input-bordered w-full"
                             placeholder="ชื่อคลินิก/สัตวแพทย์">
                     </div>
                     <div class="form-control">
-                        <label class="label font-medium text-base-content">เบอร์คลินิก/สัตวแพทย์</label>
+                        <label for="edit_vet_phone" class="label label-text font-medium">เบอร์คลินิก/สัตวแพทย์</label>
                         <input type="text" name="vet_phone" id="edit_vet_phone" class="input input-bordered w-full"
                             placeholder="เบอร์โทรศัพท์">
                     </div>
                     <div class="form-control">
-                        <label class="label font-medium text-base-content">หมายเหตุพฤติกรรม</label>
+                        <label for="edit_behavior_note" class="label label-text font-medium">หมายเหตุพฤติกรรม</label>
                         <textarea name="behavior_note" id="edit_behavior_note" class="textarea textarea-bordered w-full"
                             placeholder="เช่น กลัวฟ้าร้อง, ไม่ชอบอาบน้ำ"></textarea>
                     </div>
                     <div class="form-control">
-                        <label class="label cursor-pointer flex items-center gap-2">
+                        <label for="edit_is_aggressive" class="label cursor-pointer flex items-center gap-2">
                             <input type="checkbox" name="is_aggressive" id="edit_is_aggressive"
                                 class="checkbox checkbox-error text-white" />
                             <span class="text-error font-semibold">ดุ/กัด (แจ้งเตือนพนักงาน)</span>
