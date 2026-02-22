@@ -11,6 +11,33 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 try {
     // รับค่าและทำความสะอาดข้อมูลเบื้องต้น
     $customer_id = $_SESSION['customer_id'];
+    $action = $_POST['action'] ?? 'add';
+
+    // ══════════════════════════════════════════════════════════
+    // SOFT DELETE PET
+    // ══════════════════════════════════════════════════════════
+    if ($action === 'delete') {
+        $pet_id = (int) ($_POST['pet_id'] ?? 0);
+        if ($pet_id <= 0) {
+            throw new Exception("ไม่พบข้อมูลสัตว์เลี้ยงที่ต้องการลบ");
+        }
+
+        // Ownership check
+        $checkStmt = $pdo->prepare("SELECT name FROM pets WHERE id = ? AND customer_id = ? AND deleted_at IS NULL LIMIT 1");
+        $checkStmt->execute([$pet_id, $customer_id]);
+        $pet = $checkStmt->fetch(PDO::FETCH_ASSOC);
+        if (!$pet) {
+            throw new Exception("ไม่พบข้อมูลสัตว์เลี้ยงหรือคุณไม่มีสิทธิ์ลบข้อมูลนี้");
+        }
+
+        $delStmt = $pdo->prepare("UPDATE pets SET deleted_at = NOW() WHERE id = ? AND customer_id = ?");
+        $delStmt->execute([$pet_id, $customer_id]);
+
+        $_SESSION['msg_success'] = "ลบข้อมูลของ " . htmlspecialchars($pet['name']) . " เรียบร้อยแล้ว";
+        header("Location: ?page=my_pets");
+        exit();
+    }
+
     $name = trim($_POST['name'] ?? '');
     $species_id = $_POST['species_id'] ?? null;
     $breed_id = !empty($_POST['breed_id']) ? $_POST['breed_id'] : null; // ถ้าไม่เลือกให้เป็น NULL

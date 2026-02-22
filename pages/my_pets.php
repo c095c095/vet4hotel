@@ -74,31 +74,7 @@ if (!empty($pets)) {
         $vaccine_records = [];
     }
 }
-
-// Flash messages
-$msg_success = $_SESSION['msg_success'] ?? null;
-$msg_error = $_SESSION['msg_error'] ?? null;
-unset($_SESSION['msg_success'], $_SESSION['msg_error']);
 ?>
-
-<?php if ($msg_success): ?>
-    <div class="toast toast-top toast-center z-9999" id="flash-toast">
-        <div class="alert alert-success shadow-lg">
-            <i data-lucide="check-circle" class="size-5"></i>
-            <span><?php echo htmlspecialchars($msg_success); ?></span>
-        </div>
-    </div>
-    <script>setTimeout(() => { const t = document.getElementById('flash-toast'); if (t) t.remove(); }, 4000);</script>
-<?php endif; ?>
-<?php if ($msg_error): ?>
-    <div class="toast toast-top toast-center z-9999" id="flash-toast-err">
-        <div class="alert alert-error shadow-lg">
-            <i data-lucide="alert-circle" class="size-5"></i>
-            <span><?php echo htmlspecialchars($msg_error); ?></span>
-        </div>
-    </div>
-    <script>setTimeout(() => { const t = document.getElementById('flash-toast-err'); if (t) t.remove(); }, 5000);</script>
-<?php endif; ?>
 
 <section class="relative min-h-[80vh] bg-base-100 overflow-hidden">
     <div class="absolute inset-0 overflow-hidden pointer-events-none z-0" aria-hidden="true">
@@ -394,6 +370,16 @@ unset($_SESSION['msg_success'], $_SESSION['msg_error']);
                                                             <span class="badge badge-ghost badge-sm gap-1"><i data-lucide="check"
                                                                     class="size-3"></i>ยืนยันแล้ว</span>
                                                         <?php endif; ?>
+                                                        <form method="POST" action="?action=vaccine"
+                                                            onsubmit="return confirm('คุณต้องการลบวัคซีนนี้หรือไม่?');" class="inline">
+                                                            <input type="hidden" name="vaccine_action" value="delete">
+                                                            <input type="hidden" name="vaccine_id" value="<?php echo $rec['id']; ?>">
+                                                            <button type="submit"
+                                                                class="btn btn-ghost btn-xs text-error hover:bg-error/10"
+                                                                title="ลบวัคซีน">
+                                                                <i data-lucide="trash-2" class="size-3.5"></i>
+                                                            </button>
+                                                        </form>
                                                     </div>
                                                 </div>
                                             <?php endforeach; ?>
@@ -504,8 +490,7 @@ unset($_SESSION['msg_success'], $_SESSION['msg_error']);
             </div>
         </div>
         <!-- Scrollable form body -->
-        <form method="POST" action="?action=pet" autocomplete="off"
-            class="px-5 sm:px-6 py-4 flex-1 overflow-y-auto">
+        <form method="POST" action="?action=pet" autocomplete="off" class="px-5 sm:px-6 py-4 flex-1 overflow-y-auto">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="space-y-4">
                     <div class="form-control">
@@ -615,8 +600,8 @@ unset($_SESSION['msg_success'], $_SESSION['msg_error']);
             </div>
         </div>
         <!-- Scrollable form body -->
-        <form method="POST" action="?action=pet" autocomplete="off"
-            class="px-5 sm:px-6 py-4 flex-1 overflow-y-auto" id="edit_pet_form">
+        <form method="POST" action="?action=pet" autocomplete="off" class="px-5 sm:px-6 py-4 flex-1 overflow-y-auto"
+            id="edit_pet_form">
             <input type="hidden" name="pet_id" id="edit_pet_id">
             <input type="hidden" name="action" value="edit">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">

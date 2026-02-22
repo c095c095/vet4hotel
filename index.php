@@ -28,6 +28,34 @@
         <?php
         if (file_exists($page_file)) {
             include $page_file;
+
+            $msg_success = $_SESSION['msg_success'] ?? null;
+            $msg_error = $_SESSION['msg_error'] ?? null;
+            unset($_SESSION['msg_success'], $_SESSION['msg_error']);
+
+            if ($msg_success) {
+                ?>
+                <div class="toast toast-top toast-center z-9999" id="flash-toast">
+                    <div class="alert alert-success shadow-lg">
+                        <i data-lucide="check-circle" class="size-5"></i>
+                        <span><?php echo htmlspecialchars($msg_success); ?></span>
+                    </div>
+                </div>
+                <script>setTimeout(() => { const t = document.getElementById('flash-toast'); if (t) t.remove(); }, 4000);</script>
+                <?php
+            }
+
+            if ($msg_error) {
+                ?>
+                <div class="toast toast-top toast-center z-9999" id="flash-toast-err">
+                    <div class="alert alert-error shadow-lg">
+                        <i data-lucide="alert-circle" class="size-5"></i>
+                        <span><?php echo htmlspecialchars($msg_error); ?></span>
+                    </div>
+                </div>
+                <script>setTimeout(() => { const t = document.getElementById('flash-toast-err'); if (t) t.remove(); }, 5000);</script>
+                <?php
+            }
         } else {
             echo "<div class='container mt-5'>";
             echo "<div class='alert alert-danger text-center'>";
