@@ -11,7 +11,8 @@
 <section class="py-12 mt-16 relative z-20">
     <div class="container mx-auto px-4 lg:px-8">
         <div class="max-w-7xl mx-auto">
-            <div class="bg-base-100 rounded-3xl xl:border border-base-200 lg:shadow-xl shadow-base-200/40 p-6 md:p-8 lg:p-10">
+            <div
+                class="bg-base-100 rounded-3xl xl:border border-base-200 lg:shadow-xl shadow-base-200/40 p-6 md:p-8 lg:p-10">
                 <div class="flex flex-wrap items-center justify-between gap-4 mb-8">
                     <div>
                         <h2 class="text-2xl md:text-3xl font-bold text-base-content">ข้อมูลติดต่อสาขาหลัก</h2>
@@ -21,7 +22,8 @@
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
                     <div class="bg-base-200/50 rounded-2xl p-6 border border-base-200">
-                        <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4">
+                        <div
+                            class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4">
                             <i data-lucide="map-pin" class="size-6"></i>
                         </div>
                         <h3 class="font-bold text-base-content mb-3">ที่อยู่</h3>
@@ -30,7 +32,8 @@
                             <p>ประชานิเวศน์ 1 จตุจักร</p>
                             <p>กรุงเทพฯ 10900</p>
                         </div>
-                        <a href="https://www.google.com/maps?ll=13.840317,100.544365&z=17&t=m&hl=th&gl=US&mapclient=embed&cid=6771606152475334214" target="_blank" rel="noopener noreferrer"
+                        <a href="https://www.google.com/maps?ll=13.840317,100.544365&z=17&t=m&hl=th&gl=US&mapclient=embed&cid=6771606152475334214"
+                            target="_blank" rel="noopener noreferrer"
                             class="btn btn-primary btn-sm rounded-full gap-2 mt-5 w-full">
                             <i data-lucide="navigation" class="size-4"></i>
                             เปิดแผนที่
@@ -38,14 +41,16 @@
                     </div>
 
                     <div class="bg-base-200/50 rounded-2xl p-6 border border-base-200">
-                        <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4">
+                        <div
+                            class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4">
                             <i data-lucide="phone-call" class="size-6"></i>
                         </div>
                         <h3 class="font-bold text-base-content mb-3">ช่องทางติดต่อ</h3>
                         <div class="space-y-3 text-sm text-base-content/70">
                             <div>
                                 <p class="font-medium text-base-content">โทรศัพท์</p>
-                                <a href="tel:029538085" class="hover:text-primary transition-colors">0-2953-8085-6</a><br>
+                                <a href="tel:029538085"
+                                    class="hover:text-primary transition-colors">0-2953-8085-6</a><br>
                                 <a href="tel:025893204" class="hover:text-primary transition-colors">0-2589-3204</a>
                             </div>
                             <div>
@@ -54,13 +59,15 @@
                             </div>
                             <div>
                                 <p class="font-medium text-base-content">อีเมล</p>
-                                <a href="mailto:vet4hospital@gmail.com" class="hover:text-primary transition-colors break-all">vet4hospital@gmail.com</a>
+                                <a href="mailto:vet4hospital@gmail.com"
+                                    class="hover:text-primary transition-colors break-all">vet4hospital@gmail.com</a>
                             </div>
                         </div>
                     </div>
 
                     <div class="bg-base-200/50 rounded-2xl p-6 border border-base-200">
-                        <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4">
+                        <div
+                            class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4">
                             <i data-lucide="message-circle" class="size-6"></i>
                         </div>
                         <h3 class="font-bold text-base-content mb-3">แชทสอบถาม</h3>
@@ -173,7 +180,8 @@
                     <div class="mb-10">
                         <h2 class="text-3xl font-bold text-base-content mb-4">ฝากข้อความถึงเรา</h2>
                         <p class="text-base-content/60 text-sm">
-                            ต้องการสอบถามบริการ, ราคาห้องพัก, หรือฝากคำติชม กรุณากรอกแบบฟอร์มด้านล่าง ทีมงานจะรีบติดต่อกลับให้เร็วที่สุดค่ะ
+                            ต้องการสอบถามบริการ, ราคาห้องพัก, หรือฝากคำติชม กรุณากรอกแบบฟอร์มด้านล่าง
+                            ทีมงานจะรีบติดต่อกลับให้เร็วที่สุดค่ะ
                         </p>
                     </div>
 
@@ -181,7 +189,8 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="form-control">
                                 <label class="label">
-                                    <span class="label-text font-medium text-base-content">ชื่อ - นามสกุล <span class="text-error">*</span></span>
+                                    <span class="label-text font-medium text-base-content">ชื่อ - นามสกุล <span
+                                            class="text-error">*</span></span>
                                 </label>
                                 <div class="relative">
                                     <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -194,7 +203,8 @@
 
                             <div class="form-control">
                                 <label class="label">
-                                    <span class="label-text font-medium text-base-content">เบอร์โทรศัพท์ <span class="text-error">*</span></span>
+                                    <span class="label-text font-medium text-base-content">เบอร์โทรศัพท์ <span
+                                            class="text-error">*</span></span>
                                 </label>
                                 <div class="relative">
                                     <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -221,13 +231,15 @@
 
                         <div class="form-control">
                             <label class="label">
-                                <span class="label-text font-medium text-base-content">เรื่องที่ต้องการติดต่อ <span class="text-error">*</span></span>
+                                <span class="label-text font-medium text-base-content">เรื่องที่ต้องการติดต่อ <span
+                                        class="text-error">*</span></span>
                             </label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                                     <i data-lucide="info" class="size-5 text-base-content/40"></i>
                                 </div>
-                                <select name="subject" required class="select select-bordered w-full pl-11 focus:select-primary bg-base-100 text-base-content transition-all appearance-none">
+                                <select name="subject" required
+                                    class="select select-bordered w-full pl-11 focus:select-primary bg-base-100 text-base-content transition-all appearance-none">
                                     <option value="" disabled selected>-- เลือกหัวข้อ --</option>
                                     <option value="booking">สอบถามการจองห้องพัก</option>
                                     <option value="pricing">สอบถามราคา / โปรโมชัน</option>
@@ -240,7 +252,8 @@
 
                         <div class="form-control">
                             <label class="label">
-                                <span class="label-text font-medium text-base-content">ข้อความ <span class="text-error">*</span></span>
+                                <span class="label-text font-medium text-base-content">ข้อความ <span
+                                        class="text-error">*</span></span>
                             </label>
                             <textarea name="message" rows="4" required placeholder="ระบุรายละเอียดที่ต้องการสอบถาม..."
                                 class="textarea textarea-bordered w-full focus:textarea-primary bg-base-100 text-base-content placeholder-base-content/30 transition-all p-4"></textarea>
@@ -248,11 +261,13 @@
 
                         <div role="alert" class="alert shadow-sm">
                             <i data-lucide="info" class="size-5"></i>
-                            <span class="text-sm">หากต้องการติดต่อด่วน โปรดโทร <strong>0-2953-8085-6</strong> หรือแชท <strong>LINE: @vet4</strong> ค่ะ</span>
+                            <span class="text-sm">หากต้องการติดต่อด่วน โปรดโทร <strong>0-2953-8085-6</strong> หรือแชท
+                                <strong>LINE: @vet4</strong> ค่ะ</span>
                         </div>
 
                         <div>
-                            <button type="submit" class="btn btn-primary w-full md:w-auto px-8 rounded-xl gap-2 hover:shadow-lg hover:shadow-primary/30 transition-all">
+                            <button type="submit"
+                                class="btn btn-primary w-full md:w-auto px-8 rounded-xl gap-2 hover:shadow-lg hover:shadow-primary/30 transition-all">
                                 <i data-lucide="send" class="size-4"></i>
                                 ส่งข้อความ
                             </button>
@@ -261,12 +276,9 @@
                 </div>
 
                 <div class="bg-base-300 relative min-h-[400px] lg:min-h-full" id="map-container">
-                    <iframe
-                        id="main-map"
+                    <iframe id="main-map"
                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3873.977966807751!2d100.54210521540763!3d13.840361090290221!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e29ceff7b8553f%3A0x5df993eb0d245646!2sVET+4+Animal+Hospital!5e0!3m2!1sth!2sth!4v1520268866770"
-                        class="absolute inset-0 w-full h-full border-0"
-                        allowfullscreen=""
-                        loading="lazy"
+                        class="absolute inset-0 w-full h-full border-0" allowfullscreen="" loading="lazy"
                         referrerpolicy="no-referrer-when-downgrade">
                     </iframe>
                 </div>
@@ -280,14 +292,17 @@
 <!-- ═══════════════════════════════════════════════════════════════════ -->
 <section class="py-16 bg-primary/5 border-t border-primary/10 text-center">
     <div class="container mx-auto px-4">
-        <h2 class="text-2xl md:text-3xl font-bold text-base-content mb-4">พร้อมพาน้อง ๆ มาเป็นครอบครัวเดียวกับเราหรือยัง?</h2>
-        <p class="text-base-content/60 mb-8 max-w-xl mx-auto">จองห้องพักออนไลน์ได้ง่าย ๆ ผ่านระบบจองของเรา หรือดูรายละเอียดห้องพักทั้งหมดก่อนตัดสินใจ</p>
+        <h2 class="text-2xl md:text-3xl font-bold text-base-content mb-4">พร้อมพาน้อง ๆ
+            มาเป็นครอบครัวเดียวกับเราหรือยัง?</h2>
+        <p class="text-base-content/60 mb-8 max-w-xl mx-auto">จองห้องพักออนไลน์ได้ง่าย ๆ ผ่านระบบจองของเรา
+            หรือดูรายละเอียดห้องพักทั้งหมดก่อนตัดสินใจ</p>
         <div class="flex flex-wrap items-center justify-center gap-4">
             <a href="?page=booking" class="btn btn-primary rounded-xl gap-2 shadow-lg hover:shadow-primary/30">
                 <i data-lucide="calendar-check" class="size-5"></i>
                 จองห้องพักเลย
             </a>
-            <a href="?page=rooms" class="btn btn-outline border-base-300 hover:border-base-content/20 bg-base-100 rounded-xl gap-2">
+            <a href="?page=rooms"
+                class="btn btn-outline border-base-300 hover:border-base-content/20 bg-base-100 rounded-xl gap-2">
                 <i data-lucide="layout-grid" class="size-5"></i>
                 ดูห้องพักทั้งหมด
             </a>

@@ -49,6 +49,57 @@ function calculateAge($dob)
 }
 ?>
 
+<?php
+// ดึง vaccine types สำหรับ modal (พร้อม species_id)
+$vaccine_types = $pdo->query("SELECT * FROM vaccine_types WHERE is_active = 1 ORDER BY name ASC")->fetchAll(PDO::FETCH_ASSOC);
+
+// ดึงประวัติวัคซีนของสัตว์เลี้ยงทั้งหมดในครั้งเดียว
+$vaccine_records = [];
+if (!empty($pets)) {
+    $pet_ids = array_column($pets, 'id');
+    $placeholders = implode(',', array_fill(0, count($pet_ids), '?'));
+    try {
+        $vStmt = $pdo->prepare("
+            SELECT pv.*, vt.name AS vaccine_name
+            FROM pet_vaccinations pv
+            JOIN vaccine_types vt ON pv.vaccine_type_id = vt.id
+            WHERE pv.pet_id IN ($placeholders)
+            ORDER BY pv.expiry_date DESC
+        ");
+        $vStmt->execute($pet_ids);
+        foreach ($vStmt->fetchAll(PDO::FETCH_ASSOC) as $rec) {
+            $vaccine_records[$rec['pet_id']][] = $rec;
+        }
+    } catch (PDOException $e) {
+        $vaccine_records = [];
+    }
+}
+
+// Flash messages
+$msg_success = $_SESSION['msg_success'] ?? null;
+$msg_error = $_SESSION['msg_error'] ?? null;
+unset($_SESSION['msg_success'], $_SESSION['msg_error']);
+?>
+
+<?php if ($msg_success): ?>
+    <div class="toast toast-top toast-center z-[9999]" id="flash-toast">
+        <div class="alert alert-success shadow-lg">
+            <i data-lucide="check-circle" class="size-5"></i>
+            <span><?php echo htmlspecialchars($msg_success); ?></span>
+        </div>
+    </div>
+    <script>setTimeout(() => { const t = document.getElementById('flash-toast'); if (t) t.remove(); }, 4000);</script>
+<?php endif; ?>
+<?php if ($msg_error): ?>
+    <div class="toast toast-top toast-center z-[9999]" id="flash-toast-err">
+        <div class="alert alert-error shadow-lg">
+            <i data-lucide="alert-circle" class="size-5"></i>
+            <span><?php echo htmlspecialchars($msg_error); ?></span>
+        </div>
+    </div>
+    <script>setTimeout(() => { const t = document.getElementById('flash-toast-err'); if (t) t.remove(); }, 5000);</script>
+<?php endif; ?>
+
 <section class="relative min-h-[80vh] bg-base-100 overflow-hidden">
     <div class="absolute inset-0 overflow-hidden pointer-events-none z-0" aria-hidden="true">
         <div class="floating-paw absolute top-[8%] left-[6%] opacity-20 text-primary" style="animation-delay: 0.5s;">
@@ -155,7 +206,9 @@ function calculateAge($dob)
                             <?php endif; ?>
                             <hr class="border-base-200 my-2">
                             <div class="card-actions justify-end mt-4">
-                                <button onclick="document.getElementById('vaccine_modal_<?php echo $pet['id']; ?>').checked = true" class="btn btn-secondary btn-outline btn-sm gap-2">
+                                <button
+                                    onclick="document.getElementById('vaccine_modal_<?php echo $pet['id']; ?>').checked = true"
+                                    class="btn btn-secondary btn-outline btn-sm gap-2">
                                     <i data-lucide="syringe" class="size-4"></i> วัคซีน
                                 </button>
                                 <button onclick="openEditPetModal(<?php echo $pet['id']; ?>)"
@@ -268,6 +321,145 @@ function calculateAge($dob)
                         </div>
                         <label class="modal-backdrop" for="pet_details_modal_<?php echo $pet['id']; ?>"></label>
                     </div>
+
+                    <!-- ═══════════════════════════════════════════ -->
+                    <!-- Vaccine Modal ─ per pet                     -->
+                    <!-- ═══════════════════════════════════════════ -->
+                    <input type="checkbox" id="vaccine_modal_<?php echo $pet['id']; ?>" class="modal-toggle" />
+                    <div class="modal modal-bottom sm:modal-middle">
+                        <div
+                            class="modal-box rounded-t-3xl rounded-b-none max-h-[90vh] p-0 sm:rounded-2xl flex flex-col w-11/12 max-w-2xl">
+                            <!-- Drag handle (mobile) -->
+                            <div class="flex justify-center pt-3 pb-1 sm:hidden">
+                                <div class="w-12 h-1.5 bg-base-300 rounded-full"></div>
+                            </div>
+                            <!-- Header -->
+                            <div
+                                class="px-5 sm:px-6 py-4 border-b border-base-200 sticky top-0 bg-base-100 z-20 flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <div class="bg-secondary/10 text-secondary rounded-full p-2">
+                                        <i data-lucide="syringe" class="size-5"></i>
+                                    </div>
+                                    <div>
+                                        <div class="font-bold text-base-content">บันทึกวัคซีน</div>
+                                        <div class="text-xs text-base-content/50"><?php echo htmlspecialchars($pet['name']); ?>
+                                        </div>
+                                    </div>
+                                </div>
+                                <label for="vaccine_modal_<?php echo $pet['id']; ?>" class="btn btn-ghost btn-sm btn-circle">
+                                    <i data-lucide="x" class="size-4"></i>
+                                </label>
+                            </div>
+                            <!-- Scrollable body -->
+                            <div class="flex-1 overflow-y-auto px-5 sm:px-6 py-4 space-y-6">
+
+                                <!-- ── Existing Records ─────────────────────── -->
+                                <div>
+                                    <h3 class="text-sm font-semibold text-base-content/60 uppercase tracking-wider mb-3">
+                                        ประวัติวัคซีน</h3>
+                                    <?php $records = $vaccine_records[$pet['id']] ?? []; ?>
+                                    <?php if (!empty($records)): ?>
+                                        <div class="space-y-2">
+                                            <?php foreach ($records as $rec): ?>
+                                                <?php
+                                                $isExpired = strtotime($rec['expiry_date']) < time();
+                                                $rowClass = $isExpired ? 'border-error/30 bg-error/5' : 'border-success/30 bg-success/5';
+                                                $badgeClass = $isExpired ? 'badge-error' : 'badge-success';
+                                                $badgeText = $isExpired ? 'หมดอายุแล้ว' : 'ยังมีผล';
+                                                $expiryFmt = date('d/m/Y', strtotime($rec['expiry_date']));
+                                                $adminFmt = $rec['administered_date'] ? date('d/m/Y', strtotime($rec['administered_date'])) : '-';
+                                                ?>
+                                                <div
+                                                    class="flex items-start justify-between gap-3 rounded-xl border p-3 <?php echo $rowClass; ?>">
+                                                    <div class="flex items-center gap-2 min-w-0">
+                                                        <i data-lucide="shield-check"
+                                                            class="size-4 flex-shrink-0 <?php echo $isExpired ? 'text-error' : 'text-success'; ?>"></i>
+                                                        <div class="min-w-0">
+                                                            <div class="font-medium text-sm text-base-content truncate">
+                                                                <?php echo htmlspecialchars($rec['vaccine_name']); ?>
+                                                            </div>
+                                                            <div class="text-xs text-base-content/50">ฉีด: <?php echo $adminFmt; ?>
+                                                                &nbsp;|&nbsp; หมดอายุ: <?php echo $expiryFmt; ?></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="flex-shrink-0 flex flex-col items-end gap-1">
+                                                        <span
+                                                            class="badge <?php echo $badgeClass; ?> badge-sm"><?php echo $badgeText; ?></span>
+                                                        <?php if ($rec['is_verified']): ?>
+                                                            <span class="badge badge-ghost badge-sm gap-1"><i data-lucide="check"
+                                                                    class="size-3"></i>ยืนยันแล้ว</span>
+                                                        <?php endif; ?>
+                                                    </div>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        </div>
+                                    <?php else: ?>
+                                        <div
+                                            class="text-center py-6 rounded-xl bg-base-200/60 border border-dashed border-base-300">
+                                            <i data-lucide="shield-off" class="size-8 text-base-content/30 mx-auto mb-2"></i>
+                                            <p class="text-sm text-base-content/50">ยังไม่มีบันทึกวัคซีน</p>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+
+                                <!-- ── Add New Vaccine Form ─────────────────── -->
+                                <div>
+                                    <h3 class="text-sm font-semibold text-base-content/60 uppercase tracking-wider mb-3">
+                                        เพิ่มวัคซีนใหม่</h3>
+                                    <form method="POST" action="?action=vaccine" class="space-y-4">
+                                        <input type="hidden" name="pet_id" value="<?php echo $pet['id']; ?>">
+
+                                        <div class="form-control">
+                                            <label class="label pb-1">
+                                                <span class="label-text font-medium">ประเภทวัคซีน <span
+                                                        class="text-error">*</span></span>
+                                            </label>
+                                            <select name="vaccine_type_id" class="select select-bordered w-full" required>
+                                                <option value="">-- เลือกประเภทวัคซีน --</option>
+                                                <?php foreach ($vaccine_types as $vt): ?>
+                                                    <?php if ($vt['species_id'] == $pet['species_id']): ?>
+                                                        <option value="<?php echo $vt['id']; ?>">
+                                                            <?php echo htmlspecialchars($vt['name']); ?>
+                                                        </option>
+                                                    <?php endif; ?>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                            <div class="form-control">
+                                                <label class="label pb-1">
+                                                    <span class="label-text font-medium">วันที่ฉีด</span>
+                                                </label>
+                                                <input type="date" name="administered_date" class="input input-bordered w-full"
+                                                    max="<?php echo date('Y-m-d'); ?>">
+                                            </div>
+                                            <div class="form-control">
+                                                <label class="label pb-1">
+                                                    <span class="label-text font-medium">วันหมดอายุ <span
+                                                            class="text-error">*</span></span>
+                                                </label>
+                                                <input type="date" name="expiry_date" class="input input-bordered w-full"
+                                                    required min="<?php echo date('Y-m-d'); ?>">
+                                            </div>
+                                        </div>
+
+                                        <div class="flex justify-end gap-2 pt-2 border-t border-base-200">
+                                            <label for="vaccine_modal_<?php echo $pet['id']; ?>"
+                                                class="btn btn-ghost">ยกเลิก</label>
+                                            <button type="submit" class="btn btn-secondary gap-2">
+                                                <i data-lucide="plus-circle" class="size-4"></i>
+                                                บันทึกวัคซีน
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+
+                            </div><!-- /scrollable body -->
+                        </div>
+                        <label class="modal-backdrop" for="vaccine_modal_<?php echo $pet['id']; ?>"></label>
+                    </div><!-- /vaccine modal -->
+
                 <?php endforeach; ?>
             </div>
         <?php else: ?>
