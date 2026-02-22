@@ -484,7 +484,7 @@ $net_total = $grand_subtotal - $discount_amount;
                                     </div>
 
                                     <button type="submit"
-                                        class="btn btn-primary btn-lg w-full gap-2 font-bold text-base shadow-lg shadow-primary/30 hover:shadow-primary/50 transition-shadow">
+                                        class="btn btn-primary btn-lg w-full gap-2 font-bold text-base ">
                                         <i data-lucide="check-circle" class="size-5"></i>
                                         ยืนยันการจอง
                                     </button>

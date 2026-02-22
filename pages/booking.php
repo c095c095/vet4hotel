@@ -10,6 +10,11 @@ if (!isset($_SESSION['customer_id'])) {
     exit();
 }
 
+function debug_data_to_console($data)
+{
+    echo "<script>console.log(" . json_encode($data) . ");</script>";
+}
+
 $customer_id = $_SESSION['customer_id'];
 
 // หากมีการส่ง room_type_id มาจากหน้า rooms.php ให้เก็บไว้ใน session แล้ว redirect เพื่อลบออกจาก URL
@@ -46,7 +51,28 @@ try {
         GROUP BY rt.id
         HAVING available_rooms > 0
         ORDER BY rt.base_price_per_night ASC");
-    $stmt->execute();
+
+    // 
+    $stmt = $pdo->prepare("SELECT rt.*, COUNT(DISTINCT r.id) AS available_rooms
+        FROM room_types rt
+        JOIN rooms r ON r.room_type_id = rt.id AND r.status = 'active' AND r.deleted_at IS NULL
+        AND NOT EXISTS (
+                SELECT 1
+                FROM booking_items bi
+                JOIN bookings b ON b.id = bi.booking_id
+                WHERE bi.room_id = r.id AND b.status NOT IN ('cancelled') AND bi.check_in_date < :check_out AND bi.check_out_date > :check_in
+        )
+        WHERE rt.is_active = 1
+        GROUP BY rt.id
+        HAVING available_rooms > 0
+        ORDER BY rt.base_price_per_night ASC
+    ");
+    // 
+
+    $stmt->execute([
+        ':check_in' => $check_in_date ?? date('Y-m-d'),
+        ':check_out' => $check_out_date ?? date('Y-m-d', strtotime('+1 day')),
+    ]);
     $room_types = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     $room_types = [];
@@ -251,6 +277,9 @@ function estimate_total($room_types, $selected_room_type, $check_in_date, $check
                                         $cart_count_map[$rid] = ($cart_count_map[$rid] ?? 0) + 1;
                                     }
                                 }
+
+                                debug_data_to_console($room_types);
+
                                 $has_room = false;
                                 foreach ($room_types as $rt) {
                                     $cart_count = $cart_count_map[$rt['id']] ?? 0;
