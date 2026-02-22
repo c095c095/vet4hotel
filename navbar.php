@@ -56,13 +56,21 @@ $user_menu_items = [
             </ul>
         </div>
 
-        <!-- Vertical divider + Theme toggle -->
-        <div class="flex items-center ml-auto lg:ml-0">
+        <!-- Theme toggle + Cart icon -->
+        <div class="flex items-center ml-auto lg:ml-0 gap-1">
             <label class="swap swap-rotate btn btn-ghost btn-circle btn-sm">
                 <input type="checkbox" data-toggle-theme="dark,light" data-act-class="ACTIVECLASS" />
                 <i data-lucide="sun" class="swap-off size-5"></i>
                 <i data-lucide="moon" class="swap-on size-5"></i>
             </label>
+            <?php
+            $cart_count = count($_SESSION['booking_cart'] ?? []);
+            if ($is_logged_in && $cart_count > 0): ?>
+                <a href="?page=cart" class="btn btn-ghost btn-circle btn-sm indicator" title="ตะกร้าของฉัน">
+                    <i data-lucide="shopping-cart" class="size-5"></i>
+                    <span class="badge badge-primary badge-xs indicator-item"><?php echo $cart_count; ?></span>
+                </a>
+            <?php endif; ?>
         </div>
         <div class="flex divider divider-horizontal mx-0 py-2"></div>
 

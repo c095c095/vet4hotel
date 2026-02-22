@@ -21,6 +21,7 @@ $pages = [
 
     // --- Booking Engine ---
     "booking" => ["title" => "จองห้องพัก", "file" => "pages/booking.php", "auth_required" => true],
+    "cart" => ["title" => "ตะกร้าของฉัน", "file" => "pages/cart.php", "auth_required" => true],
     "payment" => ["title" => "ชำระเงิน", "file" => "pages/payment.php", "auth_required" => true],
 
     // --- Error Pages ---
