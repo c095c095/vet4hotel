@@ -372,7 +372,6 @@ function estimate_total($room_types, $selected_room_type, $check_in_date, $check
                                     foreach ($pets as $pet) {
                                         $is_pet_selected = in_array($pet['id'], $selected_pets);
                                         ?>
-                                        <script>console.log(<?php echo json_encode($pet); ?>);</script>
                                         <label class="cursor-pointer group relative">
                                             <input type="checkbox" name="pet_ids[]" value="<?php echo (int) $pet['id']; ?>"
                                                 class="peer hidden" <?php echo $is_pet_selected ? 'checked' : ''; ?>>
