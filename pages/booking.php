@@ -570,11 +570,11 @@ function estimate_total($room_types, $selected_room_type, $check_in_date, $check
                                 <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
                                     <button type="submit" name="add_another" value="1"
                                         class="btn btn-outline btn-lg border-2 border-primary text-primary gap-2 font-bold px-6">
-                                        <i data-lucide="plus" class="size-4"></i> จองห้องอื่นเพิ่ม
+                                        <i data-lucide="plus" class="size-4"></i> เพิ่มห้องนี้ และจองห้องต่อ
                                     </button>
                                     <button type="submit" name="confirm" value="1"
                                         class="btn btn-primary btn-lg px-8 gap-2 font-bold text-base">
-                                        ไปที่หน้าตะกร้า <i data-lucide="shopping-cart" class="size-5"></i>
+                                        เพิ่มห้องนี้ และไปที่ตะกร้า <i data-lucide="shopping-cart" class="size-5"></i>
                                     </button>
                                 </div>
                             </div>
