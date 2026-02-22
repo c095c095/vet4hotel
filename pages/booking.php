@@ -30,7 +30,7 @@ $step = isset($_GET['step']) ? (int) $_GET['step'] : 1;
 // --- ดึงข้อมูลพื้นฐาน ---
 $pets = [];
 try {
-    $stmt = $pdo->prepare("SELECT * FROM pets WHERE customer_id = ? AND deleted_at IS NULL ORDER BY name ASC");
+    $stmt = $pdo->prepare("SELECT p.*, s.name as species, b.name as breed FROM pets p LEFT JOIN species s ON p.species_id = s.id LEFT JOIN breeds b ON p.breed_id = b.id WHERE p.customer_id = ? AND p.deleted_at IS NULL ORDER BY p.name ASC");
     $stmt->execute([$customer_id]);
     $pets = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
@@ -74,7 +74,6 @@ try {
     foreach ($params as $key => $value) {
         $sql = str_replace($key, "'$value'", $sql);
     }
-    echo "<script>console.log(" . json_encode($sql) . ");</script>";
 
     $room_types = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
@@ -373,13 +372,15 @@ function estimate_total($room_types, $selected_room_type, $check_in_date, $check
                                     foreach ($pets as $pet) {
                                         $is_pet_selected = in_array($pet['id'], $selected_pets);
                                         ?>
+                                        <script>console.log(<?php echo json_encode($pet); ?>);</script>
                                         <label class="cursor-pointer group relative">
                                             <input type="checkbox" name="pet_ids[]" value="<?php echo (int) $pet['id']; ?>"
                                                 class="peer hidden" <?php echo $is_pet_selected ? 'checked' : ''; ?>>
                                             <div
                                                 class="border-2 rounded-xl p-4 transition-all duration-200 flex flex-col items-center justify-center gap-2 text-center peer-checked:border-primary peer-checked:bg-primary/5 peer-checked:text-primary peer-disabled:opacity-50 peer-disabled:cursor-not-allowed border-base-200 bg-base-100 hover:border-primary/30">
                                                 <div class="avatar placeholder">
-                                                    <div class="bg-neutral text-neutral-content w-12 rounded-full flex items-center justify-center">
+                                                    <div
+                                                        class="bg-neutral text-neutral-content w-12 rounded-full flex items-center justify-center">
                                                         <span
                                                             class="text-xl"><?php echo mb_substr($pet['name'], 0, 1, "UTF-8"); ?></span>
                                                     </div>
@@ -390,8 +391,13 @@ function estimate_total($room_types, $selected_room_type, $check_in_date, $check
                                                 </div>
                                                 <span class="font-medium truncate w-full"
                                                     title="<?php echo htmlspecialchars($pet['name']); ?>"><?php echo htmlspecialchars($pet['name']); ?></span>
-                                                <span
-                                                    class="text-[10px] text-base-content/50 uppercase tracking-wider"><?php echo htmlspecialchars($pet['species'] ?? 'Pet'); ?></span>
+                                                <span class="text-[10px] text-base-content/50 uppercase tracking-wider">
+                                                    <?php
+                                                    $species_text = $pet['species'] ?? 'Pet';
+                                                    $breed_text = $pet['breed'] ?? '';
+                                                    echo htmlspecialchars($species_text . ($breed_text ? ' • ' . $breed_text : ''));
+                                                    ?>
+                                                </span>
                                             </div>
                                         </label>
                                         <?php
