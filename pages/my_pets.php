@@ -493,18 +493,53 @@ if (!empty($pets)) {
                 <?php endforeach; ?>
             </div>
         <?php else: ?>
-            <div class="text-center py-20 bg-base-200/50 rounded-3xl border-2 border-dashed border-base-300">
-                <div class="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <i data-lucide="paw-print" class="size-12 text-primary/40"></i>
+            <div
+                class="text-center py-20 bg-base-200/50 rounded-3xl border-2 border-dashed border-base-300">
+                <div
+                    class="relative z-10 w-24 h-24 bg-primary rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-primary/30 text-primary-content">
+                    <i data-lucide="heart" class="size-12"></i>
                 </div>
-                <h3 class="text-2xl font-bold text-base-content mb-2">ยังไม่มีข้อมูลสัตว์เลี้ยง</h3>
-                <p class="text-base-content/60 max-w-md mx-auto mb-8">
-                    เพิ่มข้อมูลสัตว์เลี้ยงของคุณตอนนี้ เพื่อเริ่มจองห้องพักและรับการอัปเดตประจำวันจากเรา
+                <h3 class="text-3xl font-extrabold text-base-content mb-3 relative z-10">ยินดีต้อนรับสู่ครอบครัว Vet4!</h3>
+                <p class="text-base-content/70 max-w-lg mx-auto mb-10 text-lg relative z-10">
+                    ดูเหมือนว่าคุณจะเพิ่งเริ่มใช้งาน มาเพิ่มข้อมูลสัตว์เลี้ยงแสนรักของคุณกันเถอะ
+                    เพื่อให้เราช่วยดูแลพวกเขาอย่างดีที่สุด
                 </p>
-                <a href="?page=add_pet" class="btn btn-primary px-8">
-                    <i data-lucide="plus" class="size-5"></i>
-                    เพิ่มสัตว์เลี้ยงตัวแรก
-                </a>
+
+                <!-- Steps -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-12 relative z-10 px-6">
+                    <div
+                        class="bg-base-200/50 p-6 rounded-2xl flex flex-col items-center hover:bg-base-200 transition-colors">
+                        <div
+                            class="w-14 h-14 bg-primary/20 text-primary rounded-full flex items-center justify-center mb-4">
+                            <i data-lucide="file-text" class="size-7"></i>
+                        </div>
+                        <h4 class="font-bold text-base-content mb-2 text-lg">1. สร้างโปรไฟล์</h4>
+                        <p class="text-sm text-base-content/60 text-center">เพิ่มข้อมูลพื้นฐานของน้องๆ ที่น่ารักของคุณ</p>
+                    </div>
+                    <div
+                        class="bg-base-200/50 p-6 rounded-2xl flex flex-col items-center hover:bg-base-200 transition-colors">
+                        <div
+                            class="w-14 h-14 bg-secondary/20 text-secondary rounded-full flex items-center justify-center mb-4">
+                            <i data-lucide="syringe" class="size-7"></i>
+                        </div>
+                        <h4 class="font-bold text-base-content mb-2 text-lg">2. บันทึกวัคซีน</h4>
+                        <p class="text-sm text-base-content/60 text-center">เพิ่มประวัติวัคซีนเพื่อดูแลสุขภาพที่ดี</p>
+                    </div>
+                    <div
+                        class="bg-base-200/50 p-6 rounded-2xl flex flex-col items-center hover:bg-base-200 transition-colors">
+                        <div class="w-14 h-14 bg-accent/20 text-accent rounded-full flex items-center justify-center mb-4">
+                            <i data-lucide="home" class="size-7"></i>
+                        </div>
+                        <h4 class="font-bold text-base-content mb-2 text-lg">3. เข้าพักกับเรา</h4>
+                        <p class="text-sm text-base-content/60 text-center">สบายใจด้วยบริการจองห้องพักคุณภาพ</p>
+                    </div>
+                </div>
+
+                <button onclick="document.getElementById('add_pet_modal').checked = true"
+                    class="btn btn-primary btn-lg px-10 relative z-10 group transition-all hover:scale-105">
+                    <i data-lucide="plus-circle" class="size-6 group-hover:rotate-90 transition-transform duration-300"></i>
+                    เริ่มต้นเพิ่มน้องตัวแรกเลย
+                </button>
             </div>
         <?php endif; ?>
     </div>
