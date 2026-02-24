@@ -17,6 +17,7 @@ $pages = [
     "profile" => ["title" => "ข้อมูลส่วนตัว", "file" => "pages/profile.php", "auth_required" => true],
     "my_pets" => ["title" => "สัตว์เลี้ยงของฉัน", "file" => "pages/my_pets.php", "auth_required" => true],
     "booking_history" => ["title" => "ประวัติการจอง", "file" => "pages/booking_history.php", "auth_required" => true],
+    "booking_detail" => ["title" => "รายละเอียดการจอง", "file" => "pages/booking_detail.php", "auth_required" => true],
     "active_stay" => ["title" => "ติดตามสถานะเข้าพัก (Live)", "file" => "pages/active_stay.php", "auth_required" => true],
 
     // --- Booking Engine ---

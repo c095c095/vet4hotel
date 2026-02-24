@@ -152,31 +152,17 @@ try {
 
 $status_config = [
     'pending_payment' => ['label' => 'รอชำระเงิน', 'badge' => 'badge-warning', 'icon' => 'clock', 'color' => 'text-warning'],
-    'confirmed'       => ['label' => 'ยืนยันแล้ว', 'badge' => 'badge-info', 'icon' => 'check-circle', 'color' => 'text-info'],
-    'checked_in'      => ['label' => 'เข้าพักอยู่', 'badge' => 'badge-success', 'icon' => 'home', 'color' => 'text-success'],
-    'checked_out'     => ['label' => 'เช็คเอาท์แล้ว', 'badge' => 'badge-neutral', 'icon' => 'log-out', 'color' => 'text-base-content/60'],
-    'cancelled'       => ['label' => 'ยกเลิก', 'badge' => 'badge-error', 'icon' => 'x-circle', 'color' => 'text-error'],
+    'confirmed' => ['label' => 'ยืนยันแล้ว', 'badge' => 'badge-info', 'icon' => 'check-circle', 'color' => 'text-info'],
+    'checked_in' => ['label' => 'เข้าพักอยู่', 'badge' => 'badge-success', 'icon' => 'home', 'color' => 'text-success'],
+    'checked_out' => ['label' => 'เช็คเอาท์แล้ว', 'badge' => 'badge-neutral', 'icon' => 'log-out', 'color' => 'text-base-content/60'],
+    'cancelled' => ['label' => 'ยกเลิก', 'badge' => 'badge-error', 'icon' => 'x-circle', 'color' => 'text-error'],
 ];
 
 $payment_status_config = [
-    'pending'  => ['label' => 'รอตรวจสอบ', 'badge' => 'badge-warning'],
+    'pending' => ['label' => 'รอตรวจสอบ', 'badge' => 'badge-warning'],
     'verified' => ['label' => 'ชำระแล้ว', 'badge' => 'badge-success'],
     'rejected' => ['label' => 'ถูกปฏิเสธ', 'badge' => 'badge-error'],
     'refunded' => ['label' => 'คืนเงินแล้ว', 'badge' => 'badge-info'],
-];
-
-$transport_type_labels = [
-    'pickup'    => 'รับสัตว์เลี้ยง',
-    'dropoff'   => 'ส่งสัตว์เลี้ยง',
-    'roundtrip' => 'รับ-ส่ง',
-];
-
-$transport_status_labels = [
-    'pending'    => ['label' => 'รอดำเนินการ', 'badge' => 'badge-warning'],
-    'assigned'   => ['label' => 'มอบหมายแล้ว', 'badge' => 'badge-info'],
-    'in_transit' => ['label' => 'กำลังเดินทาง', 'badge' => 'badge-accent'],
-    'completed'  => ['label' => 'เสร็จสิ้น', 'badge' => 'badge-success'],
-    'cancelled'  => ['label' => 'ยกเลิก', 'badge' => 'badge-error'],
 ];
 
 // Stats
@@ -185,7 +171,8 @@ $total_bookings = count($bookings);
 // Thai date helper
 function thaiDateShort($date)
 {
-    if (!$date) return '-';
+    if (!$date)
+        return '-';
     $months = ['', 'ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
     $ts = strtotime($date);
     $d = (int) date('j', $ts);
@@ -196,7 +183,8 @@ function thaiDateShort($date)
 
 function thaiDateTime($datetime)
 {
-    if (!$datetime) return '-';
+    if (!$datetime)
+        return '-';
     $months = ['', 'ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
     $ts = strtotime($datetime);
     $d = (int) date('j', $ts);
@@ -222,7 +210,8 @@ function nightsCount($cin, $cout)
         <div class="floating-paw absolute top-[6%] left-[5%] opacity-15 text-primary" style="animation-delay:0.3s;">
             <i data-lucide="calendar-check" class="size-14"></i>
         </div>
-        <div class="floating-paw absolute bottom-[4%] right-[8%] opacity-10 text-secondary" style="animation-delay:1.5s;">
+        <div class="floating-paw absolute bottom-[4%] right-[8%] opacity-10 text-secondary"
+            style="animation-delay:1.5s;">
             <i data-lucide="paw-print" class="size-18"></i>
         </div>
         <div class="floating-paw absolute top-[20%] right-[4%] opacity-8 text-accent" style="animation-delay:2.2s;">
@@ -238,7 +227,8 @@ function nightsCount($cin, $cout)
                 <i data-lucide="history" class="size-8"></i>
             </div>
             <h1 class="text-2xl md:text-3xl font-bold text-base-content mb-2">ประวัติการจอง</h1>
-            <p class="text-base-content/60 max-w-md mx-auto">ดูรายละเอียดการจองทั้งหมดของคุณ พร้อมสถานะและข้อมูลการชำระเงิน</p>
+            <p class="text-base-content/60 max-w-md mx-auto">ดูรายละเอียดการจองทั้งหมดของคุณ
+                พร้อมสถานะและข้อมูลการชำระเงิน</p>
         </div>
 
         <?php if (empty($bookings)): ?>
@@ -270,14 +260,16 @@ function nightsCount($cin, $cout)
             <div class="flex flex-wrap gap-2 mb-6 justify-center" id="status-filters">
                 <button class="btn btn-sm btn-primary gap-1.5 filter-btn active" data-filter="all">
                     <i data-lucide="layers" class="size-3.5"></i> ทั้งหมด
-                    <span class="badge badge-sm bg-primary-content/20 text-primary-content"><?php echo $total_bookings; ?></span>
+                    <span
+                        class="badge badge-sm bg-primary-content/20 text-primary-content"><?php echo $total_bookings; ?></span>
                 </button>
                 <?php
                 $status_counts = array_count_values(array_column($bookings, 'status'));
                 foreach ($status_config as $sKey => $sCfg):
                     $cnt = $status_counts[$sKey] ?? 0;
-                    if ($cnt === 0) continue;
-                ?>
+                    if ($cnt === 0)
+                        continue;
+                    ?>
                     <button class="btn btn-sm btn-ghost gap-1.5 filter-btn" data-filter="<?php echo $sKey; ?>">
                         <i data-lucide="<?php echo $sCfg['icon']; ?>" class="size-3.5"></i>
                         <?php echo $sCfg['label']; ?>
@@ -305,7 +297,7 @@ function nightsCount($cin, $cout)
                         }
                     }
 
-                    // Compute overall date range (earliest check-in → latest check-out) across all items
+                    // Compute overall date range
                     $earliest_cin = null;
                     $latest_cout = null;
                     $total_nights = 0;
@@ -318,14 +310,15 @@ function nightsCount($cin, $cout)
                         }
                         $total_nights += nightsCount($item['check_in_date'], $item['check_out_date']);
                     }
-                ?>
+                    ?>
 
                     <div class="card bg-base-100 shadow-md border border-base-200 overflow-hidden booking-card group"
                         data-status="<?php echo $booking['status']; ?>">
                         <div class="card-body p-0">
 
                             <!-- Card Header -->
-                            <div class="flex flex-col sm:flex-row sm:items-center justify-between bg-linear-to-r from-primary/5 to-transparent p-4 md:p-5 border-b border-base-200 gap-3">
+                            <div
+                                class="flex flex-col sm:flex-row sm:items-center justify-between bg-linear-to-r from-primary/5 to-transparent p-4 md:p-5 border-b border-base-200 gap-3">
                                 <div class="flex items-center gap-3">
                                     <div class="bg-primary text-primary-content p-2.5 rounded-xl shadow-sm">
                                         <i data-lucide="<?php echo $sCfg['icon']; ?>" class="size-5"></i>
@@ -370,8 +363,10 @@ function nightsCount($cin, $cout)
                                             <div>
                                                 <div class="text-xs text-base-content/50 font-medium">ช่วงเข้าพัก</div>
                                                 <div class="font-semibold text-base-content">
-                                                    <?php echo thaiDateShort($earliest_cin); ?> — <?php echo thaiDateShort($latest_cout); ?>
-                                                    <span class="badge badge-ghost badge-xs ml-1"><?php echo $total_nights; ?> คืน</span>
+                                                    <?php echo thaiDateShort($earliest_cin); ?> —
+                                                    <?php echo thaiDateShort($latest_cout); ?>
+                                                    <span class="badge badge-ghost badge-xs ml-1"><?php echo $total_nights; ?>
+                                                        คืน</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -413,7 +408,8 @@ function nightsCount($cin, $cout)
                                                         <i data-lucide="paw-print" class="size-3"></i>
                                                     <?php endif; ?>
                                                     <?php echo htmlspecialchars($pet['pet_name']); ?>
-                                                    <span class="text-[10px] text-base-content/40">(<?php echo htmlspecialchars($pet['species_name']); ?>)</span>
+                                                    <span
+                                                        class="text-[10px] text-base-content/40">(<?php echo htmlspecialchars($pet['species_name']); ?>)</span>
                                                 </div>
                                             <?php endforeach; ?>
                                         </div>
@@ -430,15 +426,18 @@ function nightsCount($cin, $cout)
 
                                 <!-- Price breakdown -->
                                 <?php if ((float) $booking['discount_amount'] > 0): ?>
-                                    <div class="flex items-center gap-3 text-sm bg-success/5 border border-success/20 rounded-xl px-4 py-2.5">
+                                    <div
+                                        class="flex items-center gap-3 text-sm bg-success/5 border border-success/20 rounded-xl px-4 py-2.5">
                                         <i data-lucide="ticket" class="size-4 text-success shrink-0"></i>
                                         <div class="flex-1">
                                             <span class="text-base-content/70">โค้ดส่วนลด</span>
                                             <?php if ($booking['promo_code']): ?>
-                                                <span class="font-bold text-success ml-1"><?php echo htmlspecialchars($booking['promo_code']); ?></span>
+                                                <span
+                                                    class="font-bold text-success ml-1"><?php echo htmlspecialchars($booking['promo_code']); ?></span>
                                             <?php endif; ?>
                                         </div>
-                                        <span class="font-bold text-success">-฿<?php echo number_format($booking['discount_amount']); ?></span>
+                                        <span
+                                            class="font-bold text-success">-฿<?php echo number_format($booking['discount_amount']); ?></span>
                                     </div>
                                 <?php endif; ?>
 
@@ -449,7 +448,7 @@ function nightsCount($cin, $cout)
                                         <?php if (!empty($payments)):
                                             $last_pay = end($payments);
                                             $pCfg = $payment_status_config[$last_pay['status']] ?? $payment_status_config['pending'];
-                                        ?>
+                                            ?>
                                             <span class="badge <?php echo $pCfg['badge']; ?> badge-sm gap-1">
                                                 <i data-lucide="credit-card" class="size-3"></i>
                                                 <?php echo $pCfg['label']; ?>
@@ -469,308 +468,14 @@ function nightsCount($cin, $cout)
                                         <?php endif; ?>
                                     </div>
 
-                                    <button onclick="document.getElementById('detail_modal_<?php echo $bId; ?>').checked = true"
+                                    <a href="?page=booking_detail&id=<?php echo $bId; ?>"
                                         class="btn btn-primary btn-sm gap-1.5 shadow-sm">
                                         <i data-lucide="eye" class="size-4"></i>
                                         ดูรายละเอียด
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ═══════════════════════════════════════════ -->
-                    <!-- DETAIL MODAL — per booking                 -->
-                    <!-- ═══════════════════════════════════════════ -->
-                    <input type="checkbox" id="detail_modal_<?php echo $bId; ?>" class="modal-toggle" />
-                    <div class="modal modal-bottom sm:modal-middle">
-                        <div class="modal-box rounded-t-3xl rounded-b-none max-h-[90vh] sm:rounded-2xl p-0 sm:max-w-2xl flex flex-col">
-                            <!-- Drag handle (mobile) -->
-                            <div class="flex justify-center pt-3 pb-1 sm:hidden">
-                                <div class="w-12 h-1.5 bg-base-300 rounded-full"></div>
-                            </div>
-
-                            <!-- Modal Header -->
-                            <div class="px-5 sm:px-6 py-4 border-b border-base-200 sticky top-0 bg-base-100 z-20 flex items-center justify-between">
-                                <div class="flex items-center gap-3">
-                                    <div class="bg-primary/10 text-primary rounded-full p-2">
-                                        <i data-lucide="receipt" class="size-5"></i>
-                                    </div>
-                                    <div>
-                                        <div class="font-bold text-base-content"><?php echo htmlspecialchars($booking['booking_ref']); ?></div>
-                                        <div class="flex items-center gap-2 mt-0.5">
-                                            <span class="badge <?php echo $sCfg['badge']; ?> badge-xs gap-1">
-                                                <?php echo $sCfg['label']; ?>
-                                            </span>
-                                            <span class="text-xs text-base-content/40"><?php echo thaiDateShort($booking['created_at']); ?></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <label for="detail_modal_<?php echo $bId; ?>" class="btn btn-ghost btn-sm btn-circle">
-                                    <i data-lucide="x" class="size-4"></i>
-                                </label>
-                            </div>
-
-                            <!-- Modal Body (scrollable) -->
-                            <div class="flex-1 overflow-y-auto px-5 sm:px-6 py-4 space-y-5">
-
-                                <!-- § Room Items -->
-                                <?php if (!empty($items)): ?>
-                                    <div>
-                                        <h4 class="text-sm font-semibold text-base-content/60 uppercase tracking-wider mb-3 flex items-center gap-2">
-                                            <i data-lucide="bed-double" class="size-4"></i> ห้องพัก
-                                        </h4>
-                                        <div class="space-y-3">
-                                            <?php foreach ($items as $item):
-                                                $nights = nightsCount($item['check_in_date'], $item['check_out_date']);
-                                                $itemPets = $item_pets_map[$item['id']] ?? [];
-                                            ?>
-                                                <div class="rounded-xl border border-base-200 bg-base-200/30 p-4">
-                                                    <div class="flex items-start justify-between gap-3 mb-2">
-                                                        <div>
-                                                            <div class="font-bold text-base-content">
-                                                                <?php echo htmlspecialchars($item['room_type_name']); ?>
-                                                            </div>
-                                                            <div class="text-xs text-base-content/50 mt-0.5">
-                                                                ห้อง <?php echo htmlspecialchars($item['room_number']); ?>
-                                                                · ชั้น <?php echo htmlspecialchars($item['floor_level']); ?>
-                                                                <?php if ($item['size_sqm']): ?>
-                                                                    · <?php echo number_format($item['size_sqm'], 0); ?> ตร.ม.
-                                                                <?php endif; ?>
-                                                            </div>
-                                                        </div>
-                                                        <div class="text-right shrink-0">
-                                                            <div class="font-bold text-primary">฿<?php echo number_format($item['subtotal']); ?></div>
-                                                            <div class="text-[10px] text-base-content/40">
-                                                                ฿<?php echo number_format($item['locked_unit_price']); ?>/คืน × <?php echo $nights; ?> คืน
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="flex items-center gap-2 text-xs text-base-content/60 mb-2">
-                                                        <i data-lucide="calendar" class="size-3"></i>
-                                                        <?php echo thaiDateShort($item['check_in_date']); ?> — <?php echo thaiDateShort($item['check_out_date']); ?>
-                                                    </div>
-                                                    <?php if (!empty($itemPets)): ?>
-                                                        <div class="flex flex-wrap gap-1.5">
-                                                            <?php foreach ($itemPets as $pet): ?>
-                                                                <span class="badge badge-outline badge-sm gap-1 border-primary/20 text-primary">
-                                                                    <?php if ($pet['species_id'] == 1): ?>
-                                                                        <i data-lucide="dog" class="size-2.5"></i>
-                                                                    <?php elseif ($pet['species_id'] == 2): ?>
-                                                                        <i data-lucide="cat" class="size-2.5"></i>
-                                                                    <?php else: ?>
-                                                                        <i data-lucide="paw-print" class="size-2.5"></i>
-                                                                    <?php endif; ?>
-                                                                    <?php echo htmlspecialchars($pet['pet_name']); ?>
-                                                                    <span class="text-[9px] text-base-content/40"><?php echo htmlspecialchars($pet['breed_name'] ?? $pet['species_name']); ?></span>
-                                                                </span>
-                                                            <?php endforeach; ?>
-                                                        </div>
-                                                    <?php endif; ?>
-                                                </div>
-                                            <?php endforeach; ?>
-                                        </div>
-                                    </div>
-                                <?php endif; ?>
-
-                                <!-- § Services -->
-                                <?php if (!empty($services)): ?>
-                                    <div>
-                                        <h4 class="text-sm font-semibold text-base-content/60 uppercase tracking-wider mb-3 flex items-center gap-2">
-                                            <i data-lucide="sparkles" class="size-4"></i> บริการเสริม
-                                        </h4>
-                                        <div class="space-y-2">
-                                            <?php foreach ($services as $svc):
-                                                $chargeLabel = '';
-                                                if ($svc['charge_type'] === 'per_night') $chargeLabel = 'ต่อคืน';
-                                                elseif ($svc['charge_type'] === 'per_pet') $chargeLabel = 'ต่อตัว';
-                                                else $chargeLabel = 'ต่อการเข้าพัก';
-                                            ?>
-                                                <div class="flex justify-between items-center text-sm bg-base-200/40 rounded-lg px-3 py-2.5">
-                                                    <div class="flex items-center gap-2 text-base-content/70">
-                                                        <i data-lucide="plus-circle" class="size-3.5 text-accent"></i>
-                                                        <span><?php echo htmlspecialchars($svc['service_name']); ?></span>
-                                                        <?php if ($svc['pet_name']): ?>
-                                                            <span class="text-xs text-base-content/40">(<?php echo htmlspecialchars($svc['pet_name']); ?>)</span>
-                                                        <?php endif; ?>
-                                                        <span class="badge badge-ghost badge-xs"><?php echo $chargeLabel; ?></span>
-                                                    </div>
-                                                    <span class="font-medium shrink-0">
-                                                        ฿<?php echo number_format($svc['total_price']); ?>
-                                                        <?php if ($svc['quantity'] > 1): ?>
-                                                            <span class="text-xs text-base-content/40">× <?php echo $svc['quantity']; ?></span>
-                                                        <?php endif; ?>
-                                                    </span>
-                                                </div>
-                                            <?php endforeach; ?>
-                                        </div>
-                                    </div>
-                                <?php endif; ?>
-
-                                <!-- § Transportation -->
-                                <?php if (!empty($transports)): ?>
-                                    <div>
-                                        <h4 class="text-sm font-semibold text-base-content/60 uppercase tracking-wider mb-3 flex items-center gap-2">
-                                            <i data-lucide="truck" class="size-4"></i> Pet Taxi
-                                        </h4>
-                                        <div class="space-y-2">
-                                            <?php foreach ($transports as $tr):
-                                                $trType = $transport_type_labels[$tr['transport_type']] ?? $tr['transport_type'];
-                                                $trStatus = $transport_status_labels[$tr['status']] ?? ['label' => $tr['status'], 'badge' => 'badge-ghost'];
-                                            ?>
-                                                <div class="rounded-xl border border-base-200 bg-base-200/30 p-3">
-                                                    <div class="flex items-center justify-between mb-1.5">
-                                                        <span class="font-medium text-sm text-base-content"><?php echo $trType; ?></span>
-                                                        <span class="badge <?php echo $trStatus['badge']; ?> badge-sm"><?php echo $trStatus['label']; ?></span>
-                                                    </div>
-                                                    <div class="text-xs text-base-content/60 space-y-0.5">
-                                                        <div class="flex items-center gap-1.5">
-                                                            <i data-lucide="map-pin" class="size-3"></i>
-                                                            <?php echo htmlspecialchars($tr['address']); ?>
-                                                        </div>
-                                                        <div class="flex items-center gap-1.5">
-                                                            <i data-lucide="clock" class="size-3"></i>
-                                                            <?php echo thaiDateTime($tr['scheduled_datetime']); ?>
-                                                        </div>
-                                                        <?php if ($tr['distance_km']): ?>
-                                                            <div class="flex items-center gap-1.5">
-                                                                <i data-lucide="navigation" class="size-3"></i>
-                                                                ระยะทาง <?php echo number_format($tr['distance_km'], 1); ?> กม.
-                                                            </div>
-                                                        <?php endif; ?>
-                                                        <?php if ($tr['driver_name']): ?>
-                                                            <div class="flex items-center gap-1.5">
-                                                                <i data-lucide="user" class="size-3"></i>
-                                                                <?php echo htmlspecialchars($tr['driver_name']); ?>
-                                                                <?php if ($tr['driver_phone']): ?>
-                                                                    · <?php echo htmlspecialchars($tr['driver_phone']); ?>
-                                                                <?php endif; ?>
-                                                            </div>
-                                                        <?php endif; ?>
-                                                    </div>
-                                                    <div class="text-right mt-1">
-                                                        <span class="font-bold text-primary text-sm">฿<?php echo number_format($tr['price']); ?></span>
-                                                    </div>
-                                                </div>
-                                            <?php endforeach; ?>
-                                        </div>
-                                    </div>
-                                <?php endif; ?>
-
-                                <!-- § Payment History -->
-                                <div>
-                                    <h4 class="text-sm font-semibold text-base-content/60 uppercase tracking-wider mb-3 flex items-center gap-2">
-                                        <i data-lucide="credit-card" class="size-4"></i> ประวัติการชำระเงิน
-                                    </h4>
-                                    <?php if (!empty($payments)): ?>
-                                        <div class="space-y-2">
-                                            <?php foreach ($payments as $pay):
-                                                $pCfg = $payment_status_config[$pay['status']] ?? $payment_status_config['pending'];
-                                                $payTypeLabel = '';
-                                                switch ($pay['payment_type']) {
-                                                    case 'deposit':
-                                                        $payTypeLabel = 'มัดจำ';
-                                                        break;
-                                                    case 'full_payment':
-                                                        $payTypeLabel = 'ชำระเต็มจำนวน';
-                                                        break;
-                                                    case 'balance_due':
-                                                        $payTypeLabel = 'ชำระส่วนที่เหลือ';
-                                                        break;
-                                                    case 'extra_charge':
-                                                        $payTypeLabel = 'ค่าบริการเพิ่มเติม';
-                                                        break;
-                                                    default:
-                                                        $payTypeLabel = $pay['payment_type'];
-                                                }
-                                            ?>
-                                                <div class="flex items-center justify-between rounded-xl border border-base-200 bg-base-200/30 px-4 py-3">
-                                                    <div class="flex items-center gap-3">
-                                                        <div class="bg-base-300 p-1.5 rounded-lg">
-                                                            <i data-lucide="banknote" class="size-4 text-base-content/60"></i>
-                                                        </div>
-                                                        <div>
-                                                            <div class="font-medium text-sm text-base-content"><?php echo $payTypeLabel; ?></div>
-                                                            <div class="text-[10px] text-base-content/40 mt-0.5">
-                                                                <?php echo thaiDateTime($pay['paid_at'] ?? $pay['created_at']); ?>
-                                                                <?php if ($pay['channel_name']): ?>
-                                                                    · <?php echo htmlspecialchars($pay['channel_name']); ?>
-                                                                <?php endif; ?>
-                                                                <?php if ($pay['transaction_ref']): ?>
-                                                                    · Ref: <?php echo htmlspecialchars($pay['transaction_ref']); ?>
-                                                                <?php endif; ?>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="text-right shrink-0">
-                                                        <div class="font-bold text-sm text-base-content">฿<?php echo number_format($pay['amount']); ?></div>
-                                                        <span class="badge <?php echo $pCfg['badge']; ?> badge-xs mt-0.5"><?php echo $pCfg['label']; ?></span>
-                                                    </div>
-                                                </div>
-                                            <?php endforeach; ?>
-                                        </div>
-                                    <?php else: ?>
-                                        <div class="text-center py-4 rounded-xl bg-base-200/40 border border-dashed border-base-300">
-                                            <i data-lucide="credit-card" class="size-6 text-base-content/20 mx-auto mb-1"></i>
-                                            <p class="text-xs text-base-content/40">ยังไม่มีรายการชำระเงิน</p>
-                                        </div>
-                                    <?php endif; ?>
-                                </div>
-
-                                <!-- § Special Requests -->
-                                <?php if ($booking['special_requests']): ?>
-                                    <div>
-                                        <h4 class="text-sm font-semibold text-base-content/60 uppercase tracking-wider mb-3 flex items-center gap-2">
-                                            <i data-lucide="message-square" class="size-4"></i> คำขอพิเศษ
-                                        </h4>
-                                        <div class="bg-base-200/40 rounded-xl px-4 py-3 text-sm text-base-content/70 italic">
-                                            "<?php echo nl2br(htmlspecialchars($booking['special_requests'])); ?>"
-                                        </div>
-                                    </div>
-                                <?php endif; ?>
-
-                                <!-- § Price Summary -->
-                                <div class="bg-linear-to-br from-primary/5 to-primary/10 rounded-2xl p-4 border border-primary/10">
-                                    <h4 class="text-sm font-semibold text-base-content/60 uppercase tracking-wider mb-3 flex items-center gap-2">
-                                        <i data-lucide="calculator" class="size-4"></i> สรุปยอดชำระ
-                                    </h4>
-                                    <div class="space-y-2 text-sm">
-                                        <div class="flex justify-between">
-                                            <span class="text-base-content/60">ยอดรวมก่อนส่วนลด</span>
-                                            <span class="font-medium">฿<?php echo number_format($booking['subtotal_amount']); ?></span>
-                                        </div>
-                                        <?php if ((float) $booking['discount_amount'] > 0): ?>
-                                            <div class="flex justify-between text-success">
-                                                <span>
-                                                    ส่วนลด
-                                                    <?php if ($booking['promo_code']): ?>
-                                                        (<?php echo htmlspecialchars($booking['promo_code']); ?>)
-                                                    <?php endif; ?>
-                                                </span>
-                                                <span class="font-medium">-฿<?php echo number_format($booking['discount_amount']); ?></span>
-                                            </div>
-                                        <?php endif; ?>
-                                        <div class="border-t border-primary/20 pt-2 flex justify-between">
-                                            <span class="font-bold text-base text-base-content">ยอดสุทธิ</span>
-                                            <span class="font-black text-xl text-primary">฿<?php echo number_format($booking['net_amount']); ?></span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div><!-- /modal body -->
-
-                            <!-- Modal Footer -->
-                            <div class="px-5 sm:px-6 py-4 border-t border-base-200 bg-base-100 flex justify-end gap-2">
-                                <?php if ($booking['status'] === 'checked_in'): ?>
-                                    <a href="?page=active_stay" class="btn btn-primary btn-sm gap-1.5">
-                                        <i data-lucide="radio" class="size-4"></i>
-                                        ติดตามสถานะ Live
                                     </a>
-                                <?php endif; ?>
-                                <label for="detail_modal_<?php echo $bId; ?>" class="btn btn-ghost btn-sm">ปิด</label>
+                                </div>
                             </div>
                         </div>
-                        <label class="modal-backdrop" for="detail_modal_<?php echo $bId; ?>"></label>
                     </div>
 
                 <?php endforeach; ?>
@@ -816,7 +521,7 @@ function nightsCount($cin, $cout)
             });
         });
 
-        // Re-init Lucide icons for modal content
+        // Re-init Lucide icons
         if (typeof lucide !== 'undefined') {
             lucide.createIcons();
         }

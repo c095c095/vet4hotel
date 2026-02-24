@@ -305,6 +305,7 @@ CREATE TABLE `services` (
 CREATE TABLE `booking_services` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `booking_id` int(11) NOT NULL,
+  `booking_item_id` int(11) DEFAULT NULL, -- ระบุว่าบริการนี้สั่งกับห้องไหน
   `service_id` int(11) NOT NULL,
   `pet_id` int(11) DEFAULT NULL, -- ระบุได้ว่าบริการนี้ทำกับสัตว์ตัวไหน (เช่น อาบน้ำ)
   `quantity` int(11) NOT NULL DEFAULT 1,
@@ -313,6 +314,7 @@ CREATE TABLE `booking_services` (
   `scheduled_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`booking_id`) REFERENCES `bookings`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`booking_item_id`) REFERENCES `booking_items`(`id`) ON DELETE CASCADE,
   FOREIGN KEY (`service_id`) REFERENCES `services`(`id`) ON DELETE RESTRICT,
   FOREIGN KEY (`pet_id`) REFERENCES `pets`(`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

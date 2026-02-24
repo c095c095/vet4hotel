@@ -239,10 +239,10 @@ if (isset($_POST['confirm_booking'])) {
                         }
 
                         $stmt = $pdo->prepare("
-                            INSERT INTO booking_services (booking_id, service_id, quantity, locked_unit_price, total_price) 
-                            VALUES (?, ?, ?, ?, ?)
+                            INSERT INTO booking_services (booking_id, booking_item_id, service_id, quantity, locked_unit_price, total_price) 
+                            VALUES (?, ?, ?, ?, ?, ?)
                         ");
-                        $stmt->execute([$booking_id, (int) $sid, $quantity, $svc_price, $total_svc]);
+                        $stmt->execute([$booking_id, $booking_item_id, (int) $sid, $quantity, $svc_price, $total_svc]);
                     }
                 }
             }
