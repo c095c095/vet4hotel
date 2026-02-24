@@ -48,6 +48,7 @@ try {
 
     if (!$booking) {
         header("Location: ?page=booking_history");
+        echo "<script> window.location.href = '?page=booking_history'; </script>";
         exit();
     }
 

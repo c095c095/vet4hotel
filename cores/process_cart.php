@@ -144,6 +144,22 @@ if (isset($_POST['confirm_booking'])) {
 
         // 2. สร้าง Booking Reference
         $booking_ref = 'BK-' . date('Ymd') . '-' . str_pad(mt_rand(1, 9999), 4, '0', STR_PAD_LEFT);
+        $max_attempts = 999;
+        while (true) {
+            if (--$max_attempts <= 0) {
+                $pdo->rollBack();
+                $_SESSION['msg_error'] = 'ไม่สามารถสร้างหมายเลขการจองที่ไม่ซ้ำได้ กรุณาลองใหม่';
+                header('Location: ?page=cart');
+                exit();
+            }
+
+            $stmt = $pdo->prepare("SELECT COUNT(*) FROM bookings WHERE booking_ref = ?");
+            $stmt->execute([$booking_ref]);
+            if ($stmt->fetchColumn() == 0) {
+                break; // ไม่ซ้ำ
+            }
+            $booking_ref = 'BK-' . date('Ymd') . '-' . str_pad(mt_rand(1, 9999), 4, '0', STR_PAD_LEFT);
+        }
 
         // 3. Insert bookings (Header)
         $special_requests = trim($_POST['special_requests'] ?? '');
@@ -260,7 +276,7 @@ if (isset($_POST['confirm_booking'])) {
         unset($_SESSION['booking_cart'], $_SESSION['booking_promo'], $_SESSION['booking_form']);
 
         $_SESSION['msg_success'] = 'จองห้องพักสำเร็จ! หมายเลขการจอง: ' . $booking_ref;
-        header('Location: ?page=booking_history');
+        header('Location: ?page=booking_detail&id=' . $booking_id);
         exit();
 
     } catch (PDOException $e) {

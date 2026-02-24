@@ -469,6 +469,18 @@ function estimate_total($room_types, $selected_room_type, $check_in_date, $check
                                                     </div>
                                                     <p class="text-sm text-base-content/60 leading-snug">
                                                         <?php echo htmlspecialchars($sv['description']); ?>
+
+                                                        <div class="text-xs text-base-content/40 mt-1">
+                                                        <?php
+                                                        if ($sv['charge_type'] === 'per_night') {
+                                                            echo 'คิดค่าบริการต่อคืน';
+                                                        } elseif ($sv['charge_type'] === 'per_pet') {
+                                                            echo 'คิดค่าบริการต่อสัตว์เลี้ยง';
+                                                        } else {
+                                                            echo 'คิดค่าบริการต่อการเข้าพัก';
+                                                        }
+                                                        ?>
+                                                    </div>
                                                     </p>
                                                 </div>
                                             </div>

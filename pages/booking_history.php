@@ -226,7 +226,7 @@ function nightsCount($cin, $cout)
             <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 text-primary mb-4">
                 <i data-lucide="history" class="size-8"></i>
             </div>
-            <h1 class="text-2xl md:text-3xl font-bold text-base-content mb-2">ประวัติการจอง</h1>
+            <h1 class="text-2xl md:text-3xl font-bold mb-2 text-primary">ประวัติการจอง</h1>
             <p class="text-base-content/60 max-w-md mx-auto">ดูรายละเอียดการจองทั้งหมดของคุณ
                 พร้อมสถานะและข้อมูลการชำระเงิน</p>
         </div>

@@ -2787,6 +2787,9 @@
   .-mr-20 {
     margin-right: calc(var(--spacing) * -20);
   }
+  .mr-3 {
+    margin-right: calc(var(--spacing) * 3);
+  }
   .-mb-20 {
     margin-bottom: calc(var(--spacing) * -20);
   }

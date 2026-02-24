@@ -191,7 +191,7 @@ $net_total = $grand_subtotal - $discount_amount;
 
         <?php if (empty($cart_items)): ?>
             <!-- ═══ EMPTY STATE ═══ -->
-            <div class="card bg-base-100 shadow-xl max-w-lg mx-auto border border-base-200">
+            <div class="card bg-base-100 max-w-lg mx-auto border border-base-200">
                 <div class="card-body items-center text-center py-16 px-8">
                     <div class="relative mb-6">
                         <div class="bg-base-200 p-6 rounded-full">
