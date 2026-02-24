@@ -255,7 +255,7 @@ CREATE TABLE `bookings` (
   `promotion_id` int(11) DEFAULT NULL, -- โค้ดส่วนลดที่ใช้
   `discount_amount` decimal(10,2) NOT NULL DEFAULT 0.00, -- ยอดที่ลดไปกี่บาท
   `net_amount` decimal(10,2) NOT NULL DEFAULT 0.00, -- ยอดสุทธิที่ลูกค้าต้องจ่าย (subtotal - discount)
-  `status` enum('pending_payment', 'confirmed', 'checked_in', 'checked_out', 'cancelled') DEFAULT 'pending_payment',
+  `status` enum('pending_payment', 'verifying_payment', 'confirmed', 'checked_in', 'checked_out', 'cancelled') DEFAULT 'pending_payment',
   `special_requests` text DEFAULT NULL,
   `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -379,9 +379,15 @@ CREATE TABLE `daily_care_tasks` (
 -- ช่องทางการรับชำระเงินของโรงแรม
 CREATE TABLE `payment_channels` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `provider_name` varchar(100) NOT NULL, -- e.g., KBank, PromptPay, Stripe
-  `account_details` text NOT NULL, -- เก็บเลขบัญชี หรือ API Key ชั่วคราว (เข้ารหัส)
+  `type` enum('qr_promptpay', 'bank_transfer', 'credit_card', 'cash') NOT NULL COMMENT 'ประเภทช่องทาง',
+  `name` varchar(100) NOT NULL COMMENT 'ชื่อช่องทางการชำระเงิน',
+  `bank_name` varchar(100) DEFAULT NULL COMMENT 'ชื่อธนาคาร (ถ้ามี)',
+  `account_name` varchar(100) DEFAULT NULL COMMENT 'ชื่อบัญชี',
+  `account_number` varchar(50) DEFAULT NULL COMMENT 'เลขบัญชี / เบอร์พร้อมเพย์',
+  `icon_class` varchar(50) DEFAULT NULL COMMENT 'สำหรับใส่ชื่อคลาส Icon (เช่น lucide)',
+  `fee_percent` decimal(5,2) DEFAULT 0.00 COMMENT 'ค่าธรรมเนียม %',
   `is_active` tinyint(1) DEFAULT 1,
+  `sort_order` int(11) DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

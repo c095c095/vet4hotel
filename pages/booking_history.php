@@ -119,7 +119,7 @@ try {
         $stmt = $pdo->prepare("
             SELECT 
                 pay.*,
-                pc.provider_name AS channel_name
+                pc.name AS channel_name
             FROM payments pay
             LEFT JOIN payment_channels pc ON pay.payment_channel_id = pc.id
             WHERE pay.booking_id IN ($placeholders)
@@ -152,6 +152,7 @@ try {
 
 $status_config = [
     'pending_payment' => ['label' => 'รอชำระเงิน', 'badge' => 'badge-warning', 'icon' => 'clock', 'color' => 'text-warning'],
+    'verifying_payment' => ['label' => 'กำลังตรวจสอบ', 'badge' => 'badge-info', 'icon' => 'search', 'color' => 'text-info'],
     'confirmed' => ['label' => 'ยืนยันแล้ว', 'badge' => 'badge-info', 'icon' => 'check-circle', 'color' => 'text-info'],
     'checked_in' => ['label' => 'เข้าพักอยู่', 'badge' => 'badge-success', 'icon' => 'home', 'color' => 'text-success'],
     'checked_out' => ['label' => 'เช็คเอาท์แล้ว', 'badge' => 'badge-neutral', 'icon' => 'log-out', 'color' => 'text-base-content/60'],

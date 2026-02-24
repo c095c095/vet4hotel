@@ -123,7 +123,7 @@ try {
     $stmt = $pdo->prepare("
         SELECT 
             pay.*,
-            pc.provider_name AS channel_name
+            pc.name AS channel_name
         FROM payments pay
         LEFT JOIN payment_channels pc ON pay.payment_channel_id = pc.id
         WHERE pay.booking_id = ?
@@ -152,6 +152,7 @@ try {
 
 $status_config = [
     'pending_payment' => ['label' => 'รอชำระเงิน', 'badge' => 'badge-warning', 'icon' => 'clock', 'color' => 'text-warning', 'bg' => 'bg-warning/10'],
+    'verifying_payment' => ['label' => 'กำลังตรวจสอบ', 'badge' => 'badge-info', 'icon' => 'search', 'color' => 'text-info', 'bg' => 'bg-info/10'],
     'confirmed' => ['label' => 'ยืนยันแล้ว', 'badge' => 'badge-info', 'icon' => 'check-circle', 'color' => 'text-info', 'bg' => 'bg-info/10'],
     'checked_in' => ['label' => 'เข้าพักอยู่', 'badge' => 'badge-success', 'icon' => 'home', 'color' => 'text-success', 'bg' => 'bg-success/10'],
     'checked_out' => ['label' => 'เช็คเอาท์แล้ว', 'badge' => 'badge-neutral', 'icon' => 'log-out', 'color' => 'text-base-content/60', 'bg' => 'bg-base-200'],
@@ -184,7 +185,8 @@ $sCfg = $status_config[$booking['status']] ?? $status_config['pending_payment'];
 // Thai date helpers
 function thaiDateShort_d($date)
 {
-    if (!$date) return '-';
+    if (!$date)
+        return '-';
     $months = ['', 'ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
     $ts = strtotime($date);
     $d = (int) date('j', $ts);
@@ -195,7 +197,8 @@ function thaiDateShort_d($date)
 
 function thaiDateTime_d($datetime)
 {
-    if (!$datetime) return '-';
+    if (!$datetime)
+        return '-';
     $months = ['', 'ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
     $ts = strtotime($datetime);
     $d = (int) date('j', $ts);
@@ -219,7 +222,8 @@ foreach ($items as $item) {
     $total_room_cost += (float) $item['subtotal'];
 }
 foreach ($item_services_map as $svcs) {
-    foreach ($svcs as $s) $total_service_cost += (float) $s['total_price'];
+    foreach ($svcs as $s)
+        $total_service_cost += (float) $s['total_price'];
 }
 foreach ($general_services as $s) {
     $total_service_cost += (float) $s['total_price'];
@@ -342,8 +346,9 @@ $latest_cout = !empty($items) ? max(array_column($items, 'check_out_date')) : nu
                 $itemPets = $item_pets_map[$item['id']] ?? [];
                 $itemServices = $item_services_map[$item['id']] ?? [];
                 $roomServiceTotal = 0;
-                foreach ($itemServices as $s) $roomServiceTotal += (float) $s['total_price'];
-            ?>
+                foreach ($itemServices as $s)
+                    $roomServiceTotal += (float) $s['total_price'];
+                ?>
                 <div class="card bg-base-100 shadow-md border border-base-200 overflow-hidden animate-[fadeInUp_0.4s_ease_forwards] opacity-0"
                     style="animation-delay: <?php echo $idx * 0.1; ?>s;">
                     <div class="card-body p-0">
@@ -360,8 +365,7 @@ $latest_cout = !empty($items) ? max(array_column($items, 'check_out_date')) : nu
                                             class="w-full h-full object-cover">
                                     </div>
                                 <?php else: ?>
-                                    <div
-                                        class="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                                    <div class="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
                                         <i data-lucide="bed-double" class="size-7 text-primary/50"></i>
                                     </div>
                                 <?php endif; ?>
@@ -426,7 +430,8 @@ $latest_cout = !empty($items) ? max(array_column($items, 'check_out_date')) : nu
                             <!-- Pets in this room -->
                             <?php if (!empty($itemPets)): ?>
                                 <div>
-                                    <div class="text-[11px] font-semibold text-base-content/50 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                                    <div
+                                        class="text-[11px] font-semibold text-base-content/50 uppercase tracking-wider mb-2 flex items-center gap-1.5">
                                         <i data-lucide="paw-print" class="size-3"></i>
                                         สัตว์เลี้ยงในห้องนี้ (<?php echo count($itemPets); ?> ตัว)
                                     </div>
@@ -460,7 +465,8 @@ $latest_cout = !empty($items) ? max(array_column($items, 'check_out_date')) : nu
                             <!-- Services for this room -->
                             <?php if (!empty($itemServices)): ?>
                                 <div>
-                                    <div class="text-[11px] font-semibold text-base-content/50 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                                    <div
+                                        class="text-[11px] font-semibold text-base-content/50 uppercase tracking-wider mb-2 flex items-center gap-1.5">
                                         <i data-lucide="sparkles" class="size-3"></i>
                                         บริการเสริมของห้องนี้ (<?php echo count($itemServices); ?> รายการ)
                                     </div>
@@ -471,12 +477,11 @@ $latest_cout = !empty($items) ? max(array_column($items, 'check_out_date')) : nu
                                                 'per_pet' => 'ต่อตัว',
                                                 default => 'ต่อการเข้าพัก',
                                             };
-                                        ?>
+                                            ?>
                                             <div
                                                 class="flex items-center justify-between text-sm bg-accent/5 border border-accent/10 rounded-lg px-3 py-2.5">
                                                 <div class="flex items-center gap-2 text-base-content/70 min-w-0">
-                                                    <i data-lucide="plus-circle"
-                                                        class="size-3.5 text-accent shrink-0"></i>
+                                                    <i data-lucide="plus-circle" class="size-3.5 text-accent shrink-0"></i>
                                                     <span class="truncate">
                                                         <?php echo htmlspecialchars($svc['service_name']); ?>
                                                     </span>
@@ -490,8 +495,8 @@ $latest_cout = !empty($items) ? max(array_column($items, 'check_out_date')) : nu
                                                 <span class="font-semibold text-base-content shrink-0 ml-2">
                                                     ฿<?php echo number_format($svc['total_price']); ?>
                                                     <?php if ($svc['quantity'] > 1): ?>
-                                                        <span
-                                                            class="text-xs text-base-content/40 font-normal">× <?php echo $svc['quantity']; ?></span>
+                                                        <span class="text-xs text-base-content/40 font-normal">×
+                                                            <?php echo $svc['quantity']; ?></span>
                                                     <?php endif; ?>
                                                 </span>
                                             </div>
@@ -530,9 +535,8 @@ $latest_cout = !empty($items) ? max(array_column($items, 'check_out_date')) : nu
                                 'per_pet' => 'ต่อตัว',
                                 default => 'ต่อการเข้าพัก',
                             };
-                        ?>
-                            <div
-                                class="flex items-center justify-between text-sm bg-base-200/40 rounded-lg px-3 py-2.5">
+                            ?>
+                            <div class="flex items-center justify-between text-sm bg-base-200/40 rounded-lg px-3 py-2.5">
                                 <div class="flex items-center gap-2 text-base-content/70">
                                     <i data-lucide="plus-circle" class="size-3.5 text-accent"></i>
                                     <span><?php echo htmlspecialchars($svc['service_name']); ?></span>
@@ -545,8 +549,7 @@ $latest_cout = !empty($items) ? max(array_column($items, 'check_out_date')) : nu
                                 <span class="font-medium shrink-0">
                                     ฿<?php echo number_format($svc['total_price']); ?>
                                     <?php if ($svc['quantity'] > 1): ?>
-                                        <span
-                                            class="text-xs text-base-content/40">× <?php echo $svc['quantity']; ?></span>
+                                        <span class="text-xs text-base-content/40">× <?php echo $svc['quantity']; ?></span>
                                     <?php endif; ?>
                                 </span>
                             </div>
@@ -568,7 +571,7 @@ $latest_cout = !empty($items) ? max(array_column($items, 'check_out_date')) : nu
                         <?php foreach ($transports as $tr):
                             $trType = $transport_type_labels[$tr['transport_type']] ?? $tr['transport_type'];
                             $trStatus = $transport_status_labels[$tr['status']] ?? ['label' => $tr['status'], 'badge' => 'badge-ghost'];
-                        ?>
+                            ?>
                             <div class="rounded-xl border border-base-200 bg-base-200/30 p-4">
                                 <div class="flex items-center justify-between mb-2">
                                     <span class="font-medium text-sm text-base-content"><?php echo $trType; ?></span>
@@ -629,7 +632,7 @@ $latest_cout = !empty($items) ? max(array_column($items, 'check_out_date')) : nu
                                 'extra_charge' => 'ค่าบริการเพิ่มเติม',
                                 default => $pay['payment_type'],
                             };
-                        ?>
+                            ?>
                             <div
                                 class="flex items-center justify-between rounded-xl border border-base-200 bg-base-200/30 px-4 py-3">
                                 <div class="flex items-center gap-3">
@@ -638,7 +641,8 @@ $latest_cout = !empty($items) ? max(array_column($items, 'check_out_date')) : nu
                                     </div>
                                     <div>
                                         <div class="font-medium text-sm text-base-content">
-                                            <?php echo $payTypeLabel; ?></div>
+                                            <?php echo $payTypeLabel; ?>
+                                        </div>
                                         <div class="text-[10px] text-base-content/40 mt-0.5">
                                             <?php echo thaiDateTime_d($pay['paid_at'] ?? $pay['created_at']); ?>
                                             <?php if ($pay['channel_name']): ?>
@@ -730,8 +734,7 @@ $latest_cout = !empty($items) ? max(array_column($items, 'check_out_date')) : nu
                             </div>
                         <?php endif; ?>
                         <!-- Net total -->
-                        <div
-                            class="flex justify-between items-center pt-3 border-t-2 border-primary/20">
+                        <div class="flex justify-between items-center pt-3 border-t-2 border-primary/20">
                             <span class="font-bold text-lg text-base-content">ยอดสุทธิ</span>
                             <span
                                 class="font-black text-2xl text-primary">฿<?php echo number_format($booking['net_amount']); ?></span>
@@ -743,8 +746,7 @@ $latest_cout = !empty($items) ? max(array_column($items, 'check_out_date')) : nu
 
         <!-- ═══ BOTTOM ACTIONS ═══ -->
         <div class="flex flex-col sm:flex-row items-center justify-between gap-3 mb-6">
-            <a href="?page=booking_history"
-                class="btn btn-ghost gap-2 w-full sm:w-auto">
+            <a href="?page=booking_history" class="btn btn-ghost gap-2 w-full sm:w-auto">
                 <i data-lucide="arrow-left" class="size-4"></i>
                 กลับไปประวัติการจอง
             </a>
@@ -757,8 +759,7 @@ $latest_cout = !empty($items) ? max(array_column($items, 'check_out_date')) : nu
                     </a>
                 <?php endif; ?>
                 <?php if ($booking['status'] === 'checked_in'): ?>
-                    <a href="?page=active_stay"
-                        class="btn btn-primary gap-2 flex-1 sm:flex-none">
+                    <a href="?page=active_stay" class="btn btn-primary gap-2 flex-1 sm:flex-none">
                         <i data-lucide="radio" class="size-4"></i>
                         ติดตามสถานะ Live
                     </a>

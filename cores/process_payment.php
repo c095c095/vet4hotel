@@ -149,7 +149,7 @@ if (isset($_FILES['proof_image']) && $_FILES['proof_image']['error'] === UPLOAD_
     }
 
     // URL relative to project root
-    $proof_image_url = 'assets/uploads/slips/' . $filename;
+    $proof_image_url = 'uploads/slips/' . $filename;
 
 } else {
     $_SESSION['msg_error'] = 'กรุณาอัปโหลดหลักฐานการชำระเงิน (สลิป)';
@@ -162,6 +162,9 @@ if (isset($_FILES['proof_image']) && $_FILES['proof_image']['error'] === UPLOAD_
 // ─────────────────────────────────────────────────────────
 
 try {
+    $pdo->beginTransaction();
+
+    // Insert payment record
     $stmt = $pdo->prepare("
         INSERT INTO payments (
             booking_id, 
@@ -184,11 +187,21 @@ try {
         $proof_image_url,
     ]);
 
+    // Update booking status to verifying_payment
+    $stmt = $pdo->prepare("UPDATE bookings SET status = 'verifying_payment' WHERE id = ? AND status = 'pending_payment'");
+    $stmt->execute([$booking_id]);
+
+    $pdo->commit();
+
     $_SESSION['msg_success'] = 'ส่งหลักฐานการชำระเงินสำเร็จ! พนักงานจะตรวจสอบและยืนยันให้โดยเร็ว';
     header('Location: ?page=booking_detail&id=' . $booking_id);
     exit();
 
 } catch (PDOException $e) {
+    if ($pdo->inTransaction()) {
+        $pdo->rollBack();
+    }
+
     // If file was uploaded, clean it up on DB failure
     if ($proof_image_url && file_exists(__DIR__ . '/../' . $proof_image_url)) {
         unlink(__DIR__ . '/../' . $proof_image_url);

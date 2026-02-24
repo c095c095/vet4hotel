@@ -96,7 +96,7 @@ try {
     }
 
     // 4. Payment channels
-    $stmt = $pdo->prepare("SELECT * FROM payment_channels WHERE is_active = 1 ORDER BY id ASC");
+    $stmt = $pdo->prepare("SELECT * FROM payment_channels WHERE is_active = 1 ORDER BY sort_order ASC, id ASC");
     $stmt->execute();
     $payment_channels = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -422,24 +422,53 @@ foreach ($items as $item) {
 
                             <?php if (!empty($payment_channels)): ?>
                                 <div class="space-y-3" id="payment-channels">
-                                    <?php foreach ($payment_channels as $cidx => $channel): ?>
+                                    <?php foreach ($payment_channels as $cidx => $channel):
+                                        $ch_icon = $channel['icon_class'] ?: match($channel['type']) {
+                                            'qr_promptpay' => 'qr-code',
+                                            'bank_transfer' => 'building-2',
+                                            'credit_card' => 'credit-card',
+                                            'cash' => 'banknote',
+                                            default => 'wallet',
+                                        };
+                                    ?>
                                         <label
                                             class="payment-channel-option flex items-start gap-3 p-4 rounded-xl border-2 border-base-200 cursor-pointer transition-all duration-200 hover:border-primary/40 hover:bg-primary/5 has-checked:border-primary has-checked:bg-primary/5 has-checked:shadow-md">
                                             <input type="radio" name="selected_channel_preview"
                                                 value="<?php echo $channel['id']; ?>"
                                                 class="radio radio-primary radio-sm mt-0.5 shrink-0" <?php echo $cidx === 0 ? 'checked' : ''; ?>
-                                            onchange="document.getElementById('payment_channel_id').value = this.value;">
+                                                onchange="document.getElementById('payment_channel_id').value = this.value;">
                                             <div class="flex-1 min-w-0">
                                                 <div class="font-bold text-sm text-base-content">
-                                                    <?php echo htmlspecialchars($channel['provider_name']); ?>
+                                                    <?php echo htmlspecialchars($channel['name']); ?>
                                                 </div>
-                                                <div
-                                                    class="text-xs text-base-content/50 mt-1 leading-relaxed whitespace-pre-line">
-                                                    <?php echo nl2br(htmlspecialchars($channel['account_details'])); ?>
-                                                </div>
+                                                <?php if ($channel['bank_name']): ?>
+                                                    <div class="text-xs text-base-content/50 mt-0.5">
+                                                        <?php echo htmlspecialchars($channel['bank_name']); ?>
+                                                    </div>
+                                                <?php endif; ?>
+                                                <?php if ($channel['account_name'] || $channel['account_number']): ?>
+                                                    <div class="mt-1.5 bg-base-200/60 rounded-lg px-3 py-2">
+                                                        <?php if ($channel['account_name']): ?>
+                                                            <div class="text-xs text-base-content/60 font-medium">
+                                                                <?php echo htmlspecialchars($channel['account_name']); ?>
+                                                            </div>
+                                                        <?php endif; ?>
+                                                        <?php if ($channel['account_number']): ?>
+                                                            <div class="text-sm font-bold text-base-content tracking-wide mt-0.5">
+                                                                <?php echo htmlspecialchars($channel['account_number']); ?>
+                                                            </div>
+                                                        <?php endif; ?>
+                                                    </div>
+                                                <?php endif; ?>
+                                                <?php if ((float)$channel['fee_percent'] > 0): ?>
+                                                    <div class="text-[10px] text-warning mt-1 flex items-center gap-1">
+                                                        <i data-lucide="info" class="size-2.5"></i>
+                                                        ค่าธรรมเนียม <?php echo number_format($channel['fee_percent'], 2); ?>%
+                                                    </div>
+                                                <?php endif; ?>
                                             </div>
                                             <div class="bg-primary/10 p-2 rounded-lg shrink-0">
-                                                <i data-lucide="building-2" class="size-5 text-primary"></i>
+                                                <i data-lucide="<?php echo htmlspecialchars($ch_icon); ?>" class="size-5 text-primary"></i>
                                             </div>
                                         </label>
                                     <?php endforeach; ?>
@@ -539,7 +568,7 @@ foreach ($items as $item) {
                                             <p class="text-sm font-medium text-base-content/60">กดเลือก หรือ
                                                 ลากไฟล์มาวาง</p>
                                             <p class="text-xs text-base-content/30 mt-1">รองรับ JPG, PNG, WEBP (สูงสุด
-                                                5MB)</p>
+                                                32MB)</p>
                                         </div>
                                         <div id="upload-preview" class="hidden">
                                             <img id="preview-image" src="" alt="Preview"
@@ -630,9 +659,9 @@ foreach ($items as $item) {
         function showPreview(file) {
             if (!file || !file.type.startsWith('image/')) return;
 
-            // Validate file size (5MB)
-            if (file.size > 5 * 1024 * 1024) {
-                alert('ไฟล์มีขนาดใหญ่เกินไป (สูงสุด 5MB)');
+            // Validate file size (32MB)
+            if (file.size > 32 * 1024 * 1024) {
+                alert('ไฟล์มีขนาดใหญ่เกินไป (สูงสุด 32MB)');
                 return;
             }
 
