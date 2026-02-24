@@ -750,7 +750,7 @@ $latest_cout = !empty($items) ? max(array_column($items, 'check_out_date')) : nu
             </a>
             <div class="flex gap-2 w-full sm:w-auto">
                 <?php if ($booking['status'] === 'pending_payment'): ?>
-                    <a href="?page=payment&booking_id=<?php echo $booking['id']; ?>"
+                    <a href="?page=payment&id=<?php echo $booking['id']; ?>"
                         class="btn btn-primary gap-2 flex-1 sm:flex-none">
                         <i data-lucide="credit-card" class="size-4"></i>
                         ชำระเงิน
