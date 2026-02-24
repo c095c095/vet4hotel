@@ -58,7 +58,8 @@ try {
 
 // Validate form inputs
 $payment_channel_id = isset($_POST['payment_channel_id']) ? (int) $_POST['payment_channel_id'] : 0;
-$payment_type = $_POST['payment_type'] ?? '';
+// $payment_type = $_POST['payment_type'] ?? '';
+$payment_type = 'full_payment'; // NOTE: สำหรับตอนนี้รองรับแค่ชำระเต็มจำนวนเท่านั้นในระบบนี้ เลยตั้งค่าเป็นค่าคงที่ไปก่อน
 $amount = isset($_POST['amount']) ? (float) $_POST['amount'] : 0;
 $transaction_ref = trim($_POST['transaction_ref'] ?? '');
 

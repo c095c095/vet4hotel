@@ -500,23 +500,6 @@ foreach ($items as $item) {
                                 <input type="hidden" name="payment_channel_id" id="payment_channel_id"
                                     value="<?php echo !empty($payment_channels) ? $payment_channels[0]['id'] : ''; ?>">
 
-                                <!-- Payment Type -->
-                                <div class="form-control mb-4">
-                                    <label class="label pb-1">
-                                        <span class="label-text text-sm font-medium flex items-center gap-1.5">
-                                            <i data-lucide="list" class="size-4 text-base-content/50"></i>
-                                            ประเภทการชำระ
-                                        </span>
-                                    </label>
-                                    <select name="payment_type"
-                                        class="select select-bordered select-sm focus:border-primary focus:ring-2 focus:ring-primary/20"
-                                        required>
-                                        <option value="full_payment">ชำระเต็มจำนวน</option>
-                                        <option value="deposit">มัดจำ</option>
-                                        <option value="balance_due">ชำระส่วนที่เหลือ</option>
-                                    </select>
-                                </div>
-
                                 <!-- Amount -->
                                 <div class="form-control mb-4">
                                     <label class="label pb-1">
