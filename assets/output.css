@@ -3935,6 +3935,12 @@
       border-color: color-mix(in oklab, var(--color-accent) 10%, transparent);
     }
   }
+  .border-accent\/25 {
+    border-color: var(--color-accent);
+    @supports (color: color-mix(in lab, red, red)) {
+      border-color: color-mix(in oklab, var(--color-accent) 25%, transparent);
+    }
+  }
   .border-base-100 {
     border-color: var(--color-base-100);
   }

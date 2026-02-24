@@ -252,13 +252,29 @@ $latest_cout = !empty($items) ? max(array_column($items, 'check_out_date')) : nu
     <div class="w-full max-w-4xl mx-auto px-4 relative z-10">
 
         <!-- ═══ BACK NAVIGATION ═══ -->
-        <div class="mb-6">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-3 mb-6">
             <a href="?page=booking_history"
                 class="btn btn-ghost btn-sm gap-2 text-base-content/60 hover:text-primary transition-colors -ml-2">
                 <i data-lucide="arrow-left" class="size-4"></i>
                 กลับไปประวัติการจอง
             </a>
+            <div class="flex gap-2 w-full sm:w-auto">
+                <?php if ($booking['status'] === 'pending_payment'): ?>
+                    <a href="?page=payment&id=<?php echo $booking['id']; ?>"
+                        class="btn btn-primary gap-2 flex-1 sm:flex-none">
+                        <i data-lucide="credit-card" class="size-4"></i>
+                        ชำระเงิน
+                    </a>
+                <?php endif; ?>
+                <?php if ($booking['status'] === 'checked_in'): ?>
+                    <a href="?page=active_stay" class="btn btn-primary gap-2 flex-1 sm:flex-none">
+                        <i data-lucide="radio" class="size-4"></i>
+                        ติดตามสถานะ Live
+                    </a>
+                <?php endif; ?>
+            </div>
         </div>
+
 
         <!-- ═══ BOOKING HEADER CARD ═══ -->
         <div class="card bg-base-100 shadow-lg border border-base-200 overflow-hidden mb-6">
@@ -745,28 +761,10 @@ $latest_cout = !empty($items) ? max(array_column($items, 'check_out_date')) : nu
         </div>
 
         <!-- ═══ BOTTOM ACTIONS ═══ -->
-        <div class="flex flex-col sm:flex-row items-center justify-between gap-3 mb-6">
-            <a href="?page=booking_history" class="btn btn-ghost gap-2 w-full sm:w-auto">
-                <i data-lucide="arrow-left" class="size-4"></i>
-                กลับไปประวัติการจอง
-            </a>
-            <div class="flex gap-2 w-full sm:w-auto">
-                <?php if ($booking['status'] === 'pending_payment'): ?>
-                    <a href="?page=payment&id=<?php echo $booking['id']; ?>"
-                        class="btn btn-primary gap-2 flex-1 sm:flex-none">
-                        <i data-lucide="credit-card" class="size-4"></i>
-                        ชำระเงิน
-                    </a>
-                <?php endif; ?>
-                <?php if ($booking['status'] === 'checked_in'): ?>
-                    <a href="?page=active_stay" class="btn btn-primary gap-2 flex-1 sm:flex-none">
-                        <i data-lucide="radio" class="size-4"></i>
-                        ติดตามสถานะ Live
-                    </a>
-                <?php endif; ?>
-            </div>
-        </div>
-
+        <a href="?page=booking_history" class="btn btn-ghost gap-2 w-full sm:w-auto mb-6">
+            <i data-lucide="arrow-left" class="size-4"></i>
+            กลับไปประวัติการจอง
+        </a>
     </div>
 </section>
 

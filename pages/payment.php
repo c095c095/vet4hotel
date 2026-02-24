@@ -54,6 +54,7 @@ try {
     // Guard: must be pending_payment
     if ($booking['status'] !== 'pending_payment') {
         $_SESSION['msg_error'] = 'การจองนี้ไม่สามารถชำระเงินได้ในขณะนี้';
+        echo "<script>window.location.href='?page=booking_detail&id={$booking_id}';</script>";
         header("Location: ?page=booking_detail&id=" . $booking_id);
         exit();
     }
@@ -108,6 +109,28 @@ try {
     ");
     $stmt->execute([$booking_id]);
     $existing_payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // 6. Booking services (per item)
+    $item_services_map = [];
+    $total_services_amount = 0;
+    if (!empty($all_item_ids)) {
+        $ph2 = implode(',', array_fill(0, count($all_item_ids), '?'));
+        $stmt = $pdo->prepare("
+            SELECT 
+                bs.*,
+                s.name AS service_name,
+                s.charge_type
+            FROM booking_services bs
+            JOIN services s ON bs.service_id = s.id
+            WHERE bs.booking_item_id IN ($ph2)
+            ORDER BY s.name ASC
+        ");
+        $stmt->execute($all_item_ids);
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $bsvc) {
+            $item_services_map[$bsvc['booking_item_id']][] = $bsvc;
+            $total_services_amount += (float) $bsvc['total_price'];
+        }
+    }
 
 } catch (PDOException $e) {
     $_SESSION['msg_error'] = 'เกิดข้อผิดพลาดในการโหลดข้อมูล';
@@ -337,6 +360,23 @@ foreach ($items as $item) {
                                             <?php endforeach; ?>
                                         </div>
                                     <?php endif; ?>
+
+                                    <!-- Services -->
+                                    <?php
+                                    $itemSvcs = $item_services_map[$item['id']] ?? [];
+                                    if (!empty($itemSvcs)): ?>
+                                        <div class="flex flex-wrap gap-1.5 mt-2">
+                                            <?php foreach ($itemSvcs as $bsvc): ?>
+                                                <span
+                                                    class="badge badge-accent badge-outline badge-sm gap-1 py-2.5 border-accent/25">
+                                                    <i data-lucide="sparkles" class="size-2.5"></i>
+                                                    <?php echo htmlspecialchars($bsvc['service_name']); ?>
+                                                    <span
+                                                        class="text-[10px] text-base-content/50">฿<?php echo number_format($bsvc['total_price']); ?></span>
+                                                </span>
+                                            <?php endforeach; ?>
+                                        </div>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
@@ -354,11 +394,33 @@ foreach ($items as $item) {
                                 สรุปยอดชำระ
                             </h3>
                             <div class="space-y-2.5 text-sm">
+                                <!-- Room subtotal breakdown -->
+                                <?php
+                                $rooms_only_total = (float) $booking['subtotal_amount'] - $total_services_amount;
+                                ?>
                                 <div class="flex justify-between items-center">
-                                    <span class="text-base-content/60">ยอดรวมก่อนส่วนลด</span>
-                                    <span class="font-medium">฿
-                                        <?php echo number_format($booking['subtotal_amount']); ?>
+                                    <span class="text-base-content/60 flex items-center gap-1.5">
+                                        <i data-lucide="bed-double" class="size-3.5"></i>
+                                        ค่าห้องพัก
                                     </span>
+                                    <span class="font-medium">฿<?php echo number_format($rooms_only_total); ?></span>
+                                </div>
+
+                                <?php if ($total_services_amount > 0): ?>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-base-content/60 flex items-center gap-1.5">
+                                            <i data-lucide="sparkles" class="size-3.5"></i>
+                                            ค่าบริการเสริม
+                                        </span>
+                                        <span
+                                            class="font-medium">+฿<?php echo number_format($total_services_amount); ?></span>
+                                    </div>
+                                <?php endif; ?>
+
+                                <div class="flex justify-between items-center pt-2 border-t border-base-200">
+                                    <span class="text-base-content/60">ยอดรวมก่อนส่วนลด</span>
+                                    <span
+                                        class="font-medium">฿<?php echo number_format($booking['subtotal_amount']); ?></span>
                                 </div>
                                 <?php if ((float) $booking['discount_amount'] > 0): ?>
                                     <div class="flex justify-between items-center text-success">
@@ -423,14 +485,14 @@ foreach ($items as $item) {
                             <?php if (!empty($payment_channels)): ?>
                                 <div class="space-y-3" id="payment-channels">
                                     <?php foreach ($payment_channels as $cidx => $channel):
-                                        $ch_icon = $channel['icon_class'] ?: match($channel['type']) {
+                                        $ch_icon = $channel['icon_class'] ?: match ($channel['type']) {
                                             'qr_promptpay' => 'qr-code',
                                             'bank_transfer' => 'building-2',
                                             'credit_card' => 'credit-card',
                                             'cash' => 'banknote',
                                             default => 'wallet',
                                         };
-                                    ?>
+                                        ?>
                                         <label
                                             class="payment-channel-option flex items-start gap-3 p-4 rounded-xl border-2 border-base-200 cursor-pointer transition-all duration-200 hover:border-primary/40 hover:bg-primary/5 has-checked:border-primary has-checked:bg-primary/5 has-checked:shadow-md">
                                             <input type="radio" name="selected_channel_preview"
@@ -460,7 +522,7 @@ foreach ($items as $item) {
                                                         <?php endif; ?>
                                                     </div>
                                                 <?php endif; ?>
-                                                <?php if ((float)$channel['fee_percent'] > 0): ?>
+                                                <?php if ((float) $channel['fee_percent'] > 0): ?>
                                                     <div class="text-[10px] text-warning mt-1 flex items-center gap-1">
                                                         <i data-lucide="info" class="size-2.5"></i>
                                                         ค่าธรรมเนียม <?php echo number_format($channel['fee_percent'], 2); ?>%
@@ -468,7 +530,8 @@ foreach ($items as $item) {
                                                 <?php endif; ?>
                                             </div>
                                             <div class="bg-primary/10 p-2 rounded-lg shrink-0">
-                                                <i data-lucide="<?php echo htmlspecialchars($ch_icon); ?>" class="size-5 text-primary"></i>
+                                                <i data-lucide="<?php echo htmlspecialchars($ch_icon); ?>"
+                                                    class="size-5 text-primary"></i>
                                             </div>
                                         </label>
                                     <?php endforeach; ?>
