@@ -305,10 +305,19 @@ function nightsCount($cin, $cout)
                         }
                     }
 
-                    // First item dates for summary
-                    $first_cin = $items[0]['check_in_date'] ?? null;
-                    $first_cout = $items[0]['check_out_date'] ?? null;
-                    $total_nights = $first_cin && $first_cout ? nightsCount($first_cin, $first_cout) : 0;
+                    // Compute overall date range (earliest check-in → latest check-out) across all items
+                    $earliest_cin = null;
+                    $latest_cout = null;
+                    $total_nights = 0;
+                    foreach ($items as $item) {
+                        if ($earliest_cin === null || $item['check_in_date'] < $earliest_cin) {
+                            $earliest_cin = $item['check_in_date'];
+                        }
+                        if ($latest_cout === null || $item['check_out_date'] > $latest_cout) {
+                            $latest_cout = $item['check_out_date'];
+                        }
+                        $total_nights += nightsCount($item['check_in_date'], $item['check_out_date']);
+                    }
                 ?>
 
                     <div class="card bg-base-100 shadow-md border border-base-200 overflow-hidden booking-card group"
@@ -353,15 +362,15 @@ function nightsCount($cin, $cout)
                             <div class="p-4 md:p-5 space-y-4">
                                 <!-- Dates & Rooms Summary -->
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    <?php if ($first_cin): ?>
+                                    <?php if ($earliest_cin): ?>
                                         <div class="flex items-center gap-2.5 text-sm">
                                             <div class="bg-base-200 p-2 rounded-lg">
                                                 <i data-lucide="calendar" class="size-4 text-primary"></i>
                                             </div>
                                             <div>
-                                                <div class="text-xs text-base-content/50 font-medium">วันที่เข้าพัก</div>
+                                                <div class="text-xs text-base-content/50 font-medium">ช่วงเข้าพัก</div>
                                                 <div class="font-semibold text-base-content">
-                                                    <?php echo thaiDateShort($first_cin); ?> — <?php echo thaiDateShort($first_cout); ?>
+                                                    <?php echo thaiDateShort($earliest_cin); ?> — <?php echo thaiDateShort($latest_cout); ?>
                                                     <span class="badge badge-ghost badge-xs ml-1"><?php echo $total_nights; ?> คืน</span>
                                                 </div>
                                             </div>
