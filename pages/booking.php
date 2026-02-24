@@ -115,7 +115,7 @@ if ($step === 3 || $step === 4) {
     }
 }
 
-function estimate_total($room_types, $selected_room_type, $check_in_date, $check_out_date, $services, $selected_services)
+function estimate_total($room_types, $selected_room_type, $check_in_date, $check_out_date, $services, $selected_services, $selected_pets = [])
 {
     $total = 0;
     $nights = 1;
@@ -124,6 +124,7 @@ function estimate_total($room_types, $selected_room_type, $check_in_date, $check
         $end = strtotime($check_out_date);
         $nights = max(1, round(($end - $start) / 86400));
     }
+    $pet_count = max(1, count((array) $selected_pets));
     foreach ($room_types as $rt) {
         if ($rt['id'] == $selected_room_type) {
             $total += $rt['base_price_per_night'] * $nights;
@@ -132,8 +133,13 @@ function estimate_total($room_types, $selected_room_type, $check_in_date, $check
     }
     foreach ($services as $sv) {
         if (in_array($sv['id'], (array) $selected_services)) {
-            // สมมติคิดราคา per_stay
-            $total += $sv['price'];
+            if ($sv['charge_type'] === 'per_night') {
+                $total += $sv['price'] * $nights;
+            } elseif ($sv['charge_type'] === 'per_pet') {
+                $total += $sv['price'] * $pet_count;
+            } else {
+                $total += $sv['price'];
+            }
         }
     }
     return $total;
@@ -470,7 +476,7 @@ function estimate_total($room_types, $selected_room_type, $check_in_date, $check
                                                     <p class="text-sm text-base-content/60 leading-snug">
                                                         <?php echo htmlspecialchars($sv['description']); ?>
 
-                                                        <div class="text-xs text-base-content/40 mt-1">
+                                                    <div class="text-xs text-base-content/40 mt-1">
                                                         <?php
                                                         if ($sv['charge_type'] === 'per_night') {
                                                             echo 'คิดค่าบริการต่อคืน';
@@ -587,9 +593,22 @@ function estimate_total($room_types, $selected_room_type, $check_in_date, $check
                                                 <?php
                                                 foreach ($services as $s) {
                                                     if (in_array($s['id'], $selected_services)) {
+                                                        // คำนวณราคาจริงตาม charge_type
+                                                        $s_nights = max(1, round((strtotime($check_out_date) - strtotime($check_in_date)) / 86400));
+                                                        $s_pets = max(1, count($selected_pets));
+                                                        if ($s['charge_type'] === 'per_night') {
+                                                            $s_total = $s['price'] * $s_nights;
+                                                            $s_label = '× ' . $s_nights . ' คืน';
+                                                        } elseif ($s['charge_type'] === 'per_pet') {
+                                                            $s_total = $s['price'] * $s_pets;
+                                                            $s_label = '× ' . $s_pets . ' ตัว';
+                                                        } else {
+                                                            $s_total = $s['price'];
+                                                            $s_label = 'ต่อการเข้าพัก';
+                                                        }
                                                         echo '<li class="flex justify-between items-center bg-base-200/50 rounded-lg p-3">';
-                                                        echo '<div class="flex items-center gap-2 font-medium"><i data-lucide="plus-circle" class="size-4 text-primary"></i> ' . htmlspecialchars($s['name']) . '</div>';
-                                                        echo '<div class="text-sm font-bold">฿' . number_format($s['price']) . '</div>';
+                                                        echo '<div class="flex items-center gap-2 font-medium"><i data-lucide="plus-circle" class="size-4 text-primary"></i> ' . htmlspecialchars($s['name']) . ' <span class="text-xs text-base-content/40">' . $s_label . '</span></div>';
+                                                        echo '<div class="text-sm font-bold">฿' . number_format($s_total) . '</div>';
                                                         echo '</li>';
                                                     }
                                                 }
@@ -609,7 +628,7 @@ function estimate_total($room_types, $selected_room_type, $check_in_date, $check
                                                     Peak Season</div>
                                             </div>
                                             <div class="text-4xl font-black text-white tracking-tight">
-                                                ฿<?php echo number_format(estimate_total($room_types, $selected_room_type, $check_in_date, $check_out_date, $services, $selected_services)); ?>
+                                                ฿<?php echo number_format(estimate_total($room_types, $selected_room_type, $check_in_date, $check_out_date, $services, $selected_services, $selected_pets)); ?>
                                             </div>
                                         </div>
                                     </div>

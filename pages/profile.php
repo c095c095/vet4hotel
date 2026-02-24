@@ -93,8 +93,7 @@ $initials = mb_substr($customer['first_name'] ?? 'U', 0, 1);
                         <div class="avatar placeholder">
                             <div
                                 class="bg-primary text-primary-content rounded-full w-16 h-16 ring ring-base-100 ring-offset-0 flex items-center justify-center shadow-lg">
-                                <span
-                                    class="text-2xl font-black">
+                                <span class="text-2xl font-black">
                                     <?php echo $initials; ?>
                                 </span>
                             </div>
@@ -105,7 +104,7 @@ $initials = mb_substr($customer['first_name'] ?? 'U', 0, 1);
                     <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
                         <div>
 
-                                                            <h2 class="text-xl font-bold text-base-content">
+                            <h2 class="text-xl font-bold text-base-content">
                                 <?php echo $full_name; ?>
                             </h2>
                             <div class="flex items-center gap-3 mt-1 text-sm text-base-content/50">
