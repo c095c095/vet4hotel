@@ -99,15 +99,12 @@ $action_btn_config = [
                     <?php $btn = $action_btn_config[$action] ?? null;
                     if (!$btn)
                         continue; ?>
-                    <form method="POST" action="?action=booking_status"
-                        onsubmit="return confirm('ยืนยันเปลี่ยนสถานะเป็น &quot;<?php echo $btn['label']; ?>&quot; ?')">
-                        <input type="hidden" name="booking_id" value="<?php echo $booking_id; ?>">
-                        <input type="hidden" name="new_status" value="<?php echo $action; ?>">
-                        <button type="submit" class="btn btn-sm <?php echo $btn['class']; ?> gap-1.5 shadow-sm">
-                            <i data-lucide="<?php echo $btn['icon']; ?>" class="size-4"></i>
-                            <?php echo $btn['label']; ?>
-                        </button>
-                    </form>
+                    <button type="button"
+                        onclick="openBookingStatusModal('<?php echo $booking_id; ?>', '<?php echo $action; ?>', '<?php echo $btn['label']; ?>', '<?php echo $btn['icon']; ?>', '', '<?php echo $btn['class']; ?>')"
+                        class="btn btn-sm <?php echo $btn['class']; ?> gap-1.5 shadow-sm">
+                        <i data-lucide="<?php echo $btn['icon']; ?>" class="size-4"></i>
+                        <?php echo $btn['label']; ?>
+                    </button>
                 <?php endforeach; ?>
             <?php endif; ?>
 
@@ -123,16 +120,12 @@ $action_btn_config = [
                     <?php foreach ($status_config as $s_key => $s_cfg): ?>
                         <?php if ($s_key !== $current_status): ?>
                             <li>
-                                <form method="POST" action="?action=booking_status" class="w-full"
-                                    onsubmit="return confirm('⚠️ ยืนยันการบังคับเปลี่ยนสถานะเป็น &quot;<?php echo $s_cfg['label']; ?>&quot; ?')">
-                                    <input type="hidden" name="booking_id" value="<?php echo $booking_id; ?>">
-                                    <input type="hidden" name="new_status" value="<?php echo $s_key; ?>">
-                                    <input type="hidden" name="force_override" value="1">
-                                    <button type="submit" class="w-full text-left flex items-center gap-2 py-1">
-                                        <i data-lucide="<?php echo $s_cfg['icon']; ?>" class="size-4"></i>
-                                        <?php echo $s_cfg['label']; ?>
-                                    </button>
-                                </form>
+                                <button type="button"
+                                    onclick="openBookingStatusModal('<?php echo $booking_id; ?>', '<?php echo $s_key; ?>', '<?php echo $s_cfg['label']; ?>', '<?php echo $s_cfg['icon']; ?>', '1', '')"
+                                    class="w-full text-left flex items-center gap-2 py-1">
+                                    <i data-lucide="<?php echo $s_cfg['icon']; ?>" class="size-4"></i>
+                                    <?php echo $s_cfg['label']; ?>
+                                </button>
                             </li>
                         <?php endif; ?>
                     <?php endforeach; ?>
@@ -638,15 +631,12 @@ $action_btn_config = [
                     <?php $btn = $action_btn_config[$action] ?? null;
                     if (!$btn)
                         continue; ?>
-                    <form method="POST" action="?action=booking_status"
-                        onsubmit="return confirm('ยืนยันเปลี่ยนสถานะเป็น &quot;<?php echo $btn['label']; ?>&quot; ?')">
-                        <input type="hidden" name="booking_id" value="<?php echo $booking_id; ?>">
-                        <input type="hidden" name="new_status" value="<?php echo $action; ?>">
-                        <button type="submit" class="btn btn-sm <?php echo $btn['class']; ?> gap-1.5 shadow-sm">
-                            <i data-lucide="<?php echo $btn['icon']; ?>" class="size-4"></i>
-                            <?php echo $btn['label']; ?>
-                        </button>
-                    </form>
+                    <button type="button"
+                        onclick="openBookingStatusModal('<?php echo $booking_id; ?>', '<?php echo $action; ?>', '<?php echo $btn['label']; ?>', '<?php echo $btn['icon']; ?>', '', '<?php echo $btn['class']; ?>')"
+                        class="btn btn-sm <?php echo $btn['class']; ?> gap-1.5 shadow-sm">
+                        <i data-lucide="<?php echo $btn['icon']; ?>" class="size-4"></i>
+                        <?php echo $btn['label']; ?>
+                    </button>
                 <?php endforeach; ?>
             <?php endif; ?>
 
@@ -662,16 +652,12 @@ $action_btn_config = [
                     <?php foreach ($status_config as $s_key => $s_cfg): ?>
                         <?php if ($s_key !== $current_status): ?>
                             <li>
-                                <form method="POST" action="?action=booking_status" class="w-full"
-                                    onsubmit="return confirm('⚠️ ยืนยันการบังคับเปลี่ยนสถานะเป็น &quot;<?php echo $s_cfg['label']; ?>&quot; ?')">
-                                    <input type="hidden" name="booking_id" value="<?php echo $booking_id; ?>">
-                                    <input type="hidden" name="new_status" value="<?php echo $s_key; ?>">
-                                    <input type="hidden" name="force_override" value="1">
-                                    <button type="submit" class="w-full text-left flex items-center gap-2 py-1">
-                                        <i data-lucide="<?php echo $s_cfg['icon']; ?>" class="size-4"></i>
-                                        <?php echo $s_cfg['label']; ?>
-                                    </button>
-                                </form>
+                                <button type="button"
+                                    onclick="openBookingStatusModal('<?php echo $booking_id; ?>', '<?php echo $s_key; ?>', '<?php echo $s_cfg['label']; ?>', '<?php echo $s_cfg['icon']; ?>', '1', '')"
+                                    class="w-full text-left flex items-center gap-2 py-1">
+                                    <i data-lucide="<?php echo $s_cfg['icon']; ?>" class="size-4"></i>
+                                    <?php echo $s_cfg['label']; ?>
+                                </button>
                             </li>
                         <?php endif; ?>
                     <?php endforeach; ?>
@@ -681,3 +667,91 @@ $action_btn_config = [
     </div>
 
 </div>
+
+<!-- ═══════════ CONFIRM BOOKING STATUS MODAL ═══════════ -->
+<dialog id="modal_confirm_booking_status" class="modal modal-bottom sm:modal-middle">
+    <div class="modal-box w-11/12 max-w-md">
+        <form method="dialog">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-3 top-3">✕</button>
+        </form>
+        <div class="text-center py-2">
+            <div id="bk_confirm_icon_wrap"
+                class="w-14 h-14 rounded-2xl mx-auto flex items-center justify-center mb-4 bg-warning/10">
+                <i data-lucide="alert-triangle" class="size-7 text-warning"></i>
+            </div>
+            <h3 class="font-bold text-lg mb-2" id="bk_confirm_title">ยืนยันการเปลี่ยนสถานะ</h3>
+            <p class="text-base-content/60" id="bk_confirm_message">ต้องการดำเนินการนี้ใช่หรือไม่?</p>
+        </div>
+        <form method="POST" action="?action=booking_status" id="bk_status_form">
+            <input type="hidden" name="booking_id" id="bk_confirm_booking_id">
+            <input type="hidden" name="new_status" id="bk_confirm_new_status">
+            <input type="hidden" name="force_override" id="bk_confirm_force" value="">
+            <div class="modal-action justify-center gap-3">
+                <button type="button" onclick="document.getElementById('modal_confirm_booking_status').close()"
+                    class="btn btn-ghost">ยกเลิก</button>
+                <button type="submit" id="bk_confirm_submit_btn" class="btn btn-warning gap-2">
+                    <i data-lucide="check" class="size-4"></i>
+                    ยืนยัน
+                </button>
+            </div>
+        </form>
+    </div>
+    <form method="dialog" class="modal-backdrop"><button>ปิด</button></form>
+</dialog>
+
+<script>
+    function openBookingStatusModal(bookingId, newStatus, statusLabel, iconName, forceOverride, btnClass) {
+        // Close any open dropdown
+        document.activeElement?.blur();
+
+        // Populate hidden fields
+        document.getElementById('bk_confirm_booking_id').value = bookingId;
+        document.getElementById('bk_confirm_new_status').value = newStatus;
+        document.getElementById('bk_confirm_force').value = forceOverride;
+
+        // Title and message
+        const isForce = forceOverride === '1';
+        document.getElementById('bk_confirm_title').textContent = isForce
+            ? '⚠️ ยืนยันการบังคับเปลี่ยนสถานะ'
+            : 'ยืนยันการเปลี่ยนสถานะ';
+        document.getElementById('bk_confirm_message').innerHTML = isForce
+            ? 'ต้องการบังคับเปลี่ยนสถานะเป็น <strong>"' + statusLabel + '"</strong> ใช่หรือไม่?<br><span class="text-warning text-xs">การดำเนินการนี้ข้ามลำดับสถานะปกติ</span>'
+            : 'ต้องการเปลี่ยนสถานะเป็น <strong>"' + statusLabel + '"</strong> ใช่หรือไม่?';
+
+        // Style the confirm button
+        const btn = document.getElementById('bk_confirm_submit_btn');
+        btn.className = 'btn gap-2';
+        if (btnClass) {
+            btnClass.split(' ').forEach(c => { if (c) btn.classList.add(c); });
+        } else {
+            // Fallback styling based on status
+            const styleMap = {
+                'confirmed': 'btn-success',
+                'checked_in': 'btn-primary',
+                'checked_out': 'btn-secondary',
+                'cancelled': 'btn-error',
+                'pending_payment': 'btn-warning',
+                'verifying_payment': 'btn-info'
+            };
+            btn.classList.add(styleMap[newStatus] || 'btn-warning');
+        }
+
+        // Style the icon wrapper
+        const iconWrap = document.getElementById('bk_confirm_icon_wrap');
+        iconWrap.className = 'w-14 h-14 rounded-2xl mx-auto flex items-center justify-center mb-4';
+        const bgMap = {
+            'confirmed': 'bg-success/10',
+            'checked_in': 'bg-primary/10',
+            'checked_out': 'bg-secondary/10',
+            'cancelled': 'bg-error/10',
+            'pending_payment': 'bg-warning/10',
+            'verifying_payment': 'bg-info/10'
+        };
+        iconWrap.classList.add(bgMap[newStatus] || 'bg-warning/10');
+
+        document.getElementById('modal_confirm_booking_status').showModal();
+
+        // Re-init icons
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+</script>

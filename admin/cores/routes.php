@@ -11,6 +11,9 @@ $pages = [
     "booking_create" => ["title" => "สร้างการจองใหม่", "file" => "pages/booking_create.php"],
     "booking_detail" => ["title" => "รายละเอียดการจอง", "file" => "pages/booking_detail.php"],
 
+    // --- Rooms ---
+    "rooms" => ["title" => "จัดการห้องพัก", "file" => "pages/rooms.php"],
+
     // --- Authentication ---
     "login" => ["title" => "เข้าสู่ระบบ", "file" => "pages/login.php"],
     "logout" => ["title" => "ออกจากระบบ", "file" => "cores/logout.php"],
