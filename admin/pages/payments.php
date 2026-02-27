@@ -152,13 +152,15 @@ $date_placeholder = date('Y-m-d');
                                             <div class="font-medium text-sm flex items-center gap-2">
                                                 <?php echo htmlspecialchars($p['first_name'] . ' ' . $p['last_name']); ?>
                                             </div>
-                                            <div class="text-xs text-base-content/60 mt-0.5 flex items-center gap-2">
+                                            <div class="text-xs text-base-content/60 mt-0.5 flex flex-col 2xl:flex-row items-center gap-2">
                                                 <a href="?page=booking_detail&id=<?php echo $p['booking_id']; ?>"
                                                     class="link link-primary font-mono font-semibold hover:underline">
                                                     <?php echo htmlspecialchars($p['booking_ref']); ?>
                                                 </a>
-                                                •
-                                                <?php echo htmlspecialchars($p['phone'] ?? '-'); ?>
+                                                <span class="hidden 2xl:inline">•</span>
+                                                <div>
+                                                    <?php echo htmlspecialchars($p['phone'] ?? '-'); ?>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -190,15 +192,17 @@ $date_placeholder = date('Y-m-d');
                                 </td>
 
                                 <td class="text-center">
-                                    <?php echo payment_status_badge_ui($p['status']); ?>
-
-                                    <?php if ($p['status'] === 'verified' && $p['verifier_first_name']): ?>
-                                        <div class="text-[10px] text-base-content/50 mt-1 whitespace-nowrap tooltip"
+                                    <div class="flex flex-col 2xl:flex-row gap-2 items-center">
+                                        <?php echo payment_status_badge_ui($p['status']); ?>
+                                        
+                                        <?php if ($p['status'] === 'verified' && $p['verifier_first_name']): ?>
+                                            <div class="text-[10px] text-base-content/50 mt-1 whitespace-nowrap tooltip"
                                             data-tip="ตรวจสอบโดย: <?php echo htmlspecialchars($p['verifier_first_name']); ?>">
                                             <i data-lucide="user-check" class="size-3 inline align-middle"></i>
                                             <?php echo htmlspecialchars($p['verifier_first_name']); ?>
                                         </div>
-                                    <?php endif; ?>
+                                        <?php endif; ?>
+                                    </div>
                                 </td>
 
                                 <td class="text-center">
