@@ -1,7 +1,14 @@
 <?php
+// ═══════════════════════════════════════════════════════════
+// ADMIN URL ROUTES — VET4 HOTEL
+// ═══════════════════════════════════════════════════════════
 
 $pages = [
     "home" => ["title" => "หน้าแรก", "file" => "pages/home.php"],
+
+    // --- Bookings ---
+    "bookings" => ["title" => "จัดการการจอง", "file" => "pages/bookings.php"],
+    "booking_create" => ["title" => "สร้างการจองใหม่", "file" => "pages/booking_create.php"],
 
     // --- Authentication ---
     "login" => ["title" => "เข้าสู่ระบบ", "file" => "pages/login.php"],
