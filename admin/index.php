@@ -34,6 +34,7 @@
                     <?php
                     if (file_exists($page_file)) {
                         include $page_file;
+                        include __DIR__ . '/includes/footer.php';
                     } else {
                         echo "<div class='container mt-5'>";
                         echo "<div class='alert alert-danger text-center'>";
@@ -57,7 +58,7 @@
         unset($_SESSION['msg_success'], $_SESSION['msg_error']);
 
         if ($msg_success): ?>
-            <div class="toast toast-top toast-center z-[9999]" id="flash-toast">
+            <div class="toast toast-top toast-center z-9999" id="flash-toast">
                 <div class="alert alert-success shadow-lg">
                     <i data-lucide="check-circle" class="size-5"></i>
                     <span><?php echo sanitize($msg_success); ?></span>
@@ -67,7 +68,7 @@
         <?php endif;
 
         if ($msg_error): ?>
-            <div class="toast toast-top toast-center z-[9999]" id="flash-toast-err">
+            <div class="toast toast-top toast-center z-9999" id="flash-toast-err">
                 <div class="alert alert-error shadow-lg">
                     <i data-lucide="alert-circle" class="size-5"></i>
                     <span><?php echo sanitize($msg_error); ?></span>
@@ -96,7 +97,7 @@
             unset($_SESSION['msg_success'], $_SESSION['msg_error']);
 
             if ($msg_success): ?>
-                <div class="toast toast-top toast-center z-[9999]" id="flash-toast">
+                <div class="toast toast-top toast-center z-9999" id="flash-toast">
                     <div class="alert alert-success shadow-lg">
                         <i data-lucide="check-circle" class="size-5"></i>
                         <span><?php echo sanitize($msg_success); ?></span>
@@ -106,7 +107,7 @@
             <?php endif;
 
             if ($msg_error): ?>
-                <div class="toast toast-top toast-center z-[9999]" id="flash-toast-err">
+                <div class="toast toast-top toast-center z-9999" id="flash-toast-err">
                     <div class="alert alert-error shadow-lg">
                         <i data-lucide="alert-circle" class="size-5"></i>
                         <span><?php echo sanitize($msg_error); ?></span>

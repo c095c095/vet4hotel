@@ -39,19 +39,12 @@ else
             <h1 class="text-2xl lg:text-3xl font-bold text-base-content">
                 <?php echo $greeting; ?>,
                 <?php echo sanitize(explode(' ', $employee_name)[0]); ?>
-                <span class="inline-block animate-bounce">👋</span>
             </h1>
             <p class="text-base-content/60 text-sm mt-1">
                 <i data-lucide="calendar" class="inline size-3.5 -mt-0.5"></i>
                 <?php echo date('l, j F Y'); ?> —
                 <?php echo SITE_NAME; ?> Admin Panel
             </p>
-        </div>
-        <div class="flex items-center gap-2">
-            <span class="badge badge-lg badge-outline gap-1.5">
-                <span class="w-2 h-2 rounded-full bg-success animate-pulse"></span>
-                ระบบทำงานปกติ
-            </span>
         </div>
     </div>
 
@@ -538,13 +531,5 @@ else
                 </div>
             <?php endif; ?>
         </div>
-    </div>
-
-    <!-- ═══════════ FOOTER ═══════════ -->
-    <div class="text-center py-4">
-        <p class="text-xs text-base-content/30">©
-            <?php echo date('Y'); ?>
-            <?php echo SITE_NAME; ?> — ระบบจัดการโรงแรมสัตว์เลี้ยง
-        </p>
     </div>
 </div>

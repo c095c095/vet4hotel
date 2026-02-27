@@ -1,7 +1,7 @@
 <?php
 // ═══════════════════════════════════════════════════════════
 // 404 ERROR PAGE — VET4 HOTEL
-// Displayed when a customer page is not found
+// Displayed when an admin page is not found
 // ═══════════════════════════════════════════════════════════
 ?>
 
@@ -12,7 +12,7 @@
             <div class="relative group">
                 <div class="absolute inset-0 bg-primary/20 blur-2xl rounded-full animate-pulse"></div>
                 <div
-                    class="w-32 h-32 bg-base-100 rounded-[2rem] shadow-xl flex items-center justify-center relative border border-base-200 rotate-12 group-hover:rotate-0 transition-transform duration-500 ease-out">
+                    class="w-32 h-32 bg-base-100 rounded-4xl shadow-xl flex items-center justify-center relative border border-base-200 rotate-12 group-hover:rotate-0 transition-transform duration-500 ease-out">
                     <i data-lucide="file-question" class="size-16 text-primary"></i>
                 </div>
             </div>
@@ -33,7 +33,7 @@
         <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
             <a href="?page=home" class="btn btn-primary shadow-lg shadow-primary/30 w-full sm:w-auto gap-2">
                 <i data-lucide="home" class="size-4"></i>
-                กลับสู่หน้าหลัก
+                กลับสู่หน้าหลัก (Dashboard)
             </a>
             <button onclick="window.history.back()" class="btn btn-outline bg-base-100 w-full sm:w-auto gap-2">
                 <i data-lucide="arrow-left" class="size-4"></i>
