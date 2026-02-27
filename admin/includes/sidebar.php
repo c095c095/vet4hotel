@@ -93,7 +93,7 @@ $role_label = $employee_role === 'admin' ? 'ผู้ดูแลระบบ' :
                         <?php echo $role_label; ?>
                     </span>
                 </div>
-                <a href="?action=logout"
+                <a href="?page=logout"
                     class="btn btn-ghost btn-sm btn-square text-base-content/50 hover:text-error tooltip tooltip-left"
                     data-tip="ออกจากระบบ">
                     <i data-lucide="log-out" class="size-4"></i>

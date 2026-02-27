@@ -14,12 +14,16 @@ $date_placeholder = date('Y-m-d');
     <!-- ═══════════ HEADER ═══════════ -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-base-content flex items-center gap-2">
-                <i data-lucide="credit-card" class="size-6 text-primary"></i>
+            <h1 class="text-2xl lg:text-3xl font-bold text-base-content flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                    <i data-lucide="credit-card" class="size-5 text-primary"></i>
+                </div>
                 จัดการการชำระเงิน
             </h1>
-            <p class="text-sm text-base-content/60 mt-1">ตรวจสอบและยืนยันสลิปการโอนเงิน คืนเงิน
-                หรือดูรายการประวัติทั้งหมด</p>
+            <p class="text-base-content/60 text-sm mt-1 ml-13">
+                ตรวจสอบและยืนยันสลิปการโอนเงิน คืนเงิน
+                หรือดูรายการประวัติทั้งหมด
+            </p>
         </div>
     </div>
 
