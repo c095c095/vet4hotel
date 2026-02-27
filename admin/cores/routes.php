@@ -9,6 +9,7 @@ $pages = [
     // --- Bookings ---
     "bookings" => ["title" => "จัดการการจอง", "file" => "pages/bookings.php"],
     "booking_create" => ["title" => "สร้างการจองใหม่", "file" => "pages/booking_create.php"],
+    "booking_detail" => ["title" => "รายละเอียดการจอง", "file" => "pages/booking_detail.php"],
 
     // --- Authentication ---
     "login" => ["title" => "เข้าสู่ระบบ", "file" => "pages/login.php"],

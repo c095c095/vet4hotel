@@ -144,7 +144,8 @@ function booking_status_badge_ui($status)
                                 <td>
                                     <div class="flex items-center gap-3">
                                         <div class="avatar placeholder hidden sm:flex">
-                                            <div class="bg-base-300 text-base-content w-8 h-8 rounded-full flex items-center justify-center">
+                                            <div
+                                                class="bg-base-300 text-base-content w-8 h-8 rounded-full flex items-center justify-center">
                                                 <span class="text-xs">
                                                     <?php echo mb_substr($b['first_name'], 0, 1); ?>
                                                 </span>
@@ -190,7 +191,7 @@ function booking_status_badge_ui($status)
                                     <?php echo booking_status_badge_ui($b['status']); ?>
                                 </td>
                                 <td class="text-center">
-                                    <a href="?page=booking_details&id=<?php echo $b['id']; ?>"
+                                    <a href="?page=booking_detail&id=<?php echo $b['id']; ?>"
                                         class="btn btn-sm btn-ghost btn-square text-base-content/50 hover:text-primary tooltip tooltip-left"
                                         data-tip="ดูรายละเอียด">
                                         <i data-lucide="eye" class="size-4"></i>
