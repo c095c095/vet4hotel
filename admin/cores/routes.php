@@ -18,6 +18,9 @@ $pages = [
     "login" => ["title" => "เข้าสู่ระบบ", "file" => "pages/login.php"],
     "logout" => ["title" => "ออกจากระบบ", "file" => "cores/logout.php"],
 
+    // --- Payments ---
+    "payments" => ["title" => "การชำระเงิน", "file" => "pages/payments.php"],
+
     // --- Setup ---
     "setup" => ["title" => "ตั้งค่าเริ่มต้น", "file" => "pages/setup.php"],
 

@@ -421,7 +421,7 @@ else
             <?php if (empty($pending_care_tasks)): ?>
                 <div class="text-center py-10 text-base-content/40">
                     <i data-lucide="check-circle-2" class="size-12 mx-auto mb-2 text-success/40"></i>
-                    <p class="font-medium text-success/60">เยี่ยม! ไม่มีงานค้าง 🎉</p>
+                    <p class="font-medium text-success/60">เยี่ยม! ไม่มีงานค้าง</p>
                 </div>
             <?php else: ?>
                 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2">

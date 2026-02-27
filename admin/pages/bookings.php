@@ -55,7 +55,7 @@ function booking_status_badge_ui($status)
                     <label class="label pt-0"><span class="label-text font-medium">ค้นหา</span></label>
                     <label class="input w-full">
                         <i data-lucide="search" class="h-[1em] opacity-50"></i>
-                        <input type="search" name="search" placeholder="Ref, ชื่อ, นามสกุล, เบอร์โทร..." />
+                        <input type="search" name="search" placeholder="Ref, ชื่อ, นามสกุล, เบอร์โทร..." value="<?php echo htmlspecialchars($search); ?>" />
                     </label>
                 </div>
 
