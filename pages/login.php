@@ -23,7 +23,7 @@ unset($_SESSION['success_msg']);
 ?>
 
 <section
-    class="min-h-[80vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-base-200/40 relative overflow-hidden">
+    class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-base-200/40 relative overflow-hidden">
     <!-- Decorative floating elements -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
         <div class="floating-paw absolute top-[10%] left-[10%] opacity-10 text-primary">
@@ -115,7 +115,7 @@ unset($_SESSION['success_msg']);
                                 <input type="password" id="password" name="password" class="grow pr-10"
                                     placeholder="••••••••" required autocomplete="current-password" />
                                 <button type="button"
-                                    class="absolute right-3 hover:text-primary transition-colors text-base-content/40"
+                                    class="absolute right-3 hover:text-primary transition-colors text-base-content/40 cursor-pointer"
                                     onclick="togglePassword()">
                                     <i data-lucide="eye" class="size-4" id="eye-icon"></i>
                                 </button>
