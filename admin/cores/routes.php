@@ -14,6 +14,9 @@ $pages = [
     // --- Rooms ---
     "rooms" => ["title" => "จัดการห้องพัก", "file" => "pages/rooms.php"],
 
+    // --- Customers ---
+    "customers" => ["title" => "จัดการลูกค้า", "file" => "pages/customers.php"],
+
     // --- Authentication ---
     "login" => ["title" => "เข้าสู่ระบบ", "file" => "pages/login.php"],
     "logout" => ["title" => "ออกจากระบบ", "file" => "cores/logout.php"],
