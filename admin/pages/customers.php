@@ -446,12 +446,27 @@ require_once __DIR__ . '/../cores/customers_data.php';
                 <form method="dialog">
                     <button class="btn btn-ghost hover:bg-base-300">ปิด</button>
                 </form>
-                <?php if ($c['booking_count'] > 0): ?>
-                    <a href="?page=bookings&search=<?php echo urlencode($c['phone']); ?>" class="btn btn-primary btn-sm gap-2">
-                        <i data-lucide="calendar-range" class="size-4"></i>
-                        ดูประวัติการจอง
-                    </a>
-                <?php endif; ?>
+                <div class="flex gap-2">
+                    <?php if ($c['is_active']): ?>
+                        <button type="button" class="btn btn-error btn-sm gap-2 text-white"
+                            onclick="openCustomerConfirmModal(<?php echo $c['id']; ?>, 'ban', '<?php echo htmlspecialchars($c['first_name'] . ' ' . $c['last_name']); ?>')">
+                            <i data-lucide="ban" class="size-4"></i> ระงับบัญชี
+                        </button>
+                    <?php else: ?>
+                        <button type="button" class="btn btn-success btn-sm gap-2 text-white"
+                            onclick="openCustomerConfirmModal(<?php echo $c['id']; ?>, 'unban', '<?php echo htmlspecialchars($c['first_name'] . ' ' . $c['last_name']); ?>')">
+                            <i data-lucide="check-circle" class="size-4"></i> ปลดระงับบัญชี
+                        </button>
+                    <?php endif; ?>
+
+                    <?php if ($c['booking_count'] > 0): ?>
+                        <a href="?page=bookings&search=<?php echo urlencode($c['phone']); ?>"
+                            class="btn btn-primary btn-sm gap-2">
+                            <i data-lucide="calendar-range" class="size-4"></i>
+                            ดูประวัติการจอง
+                        </a>
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
         <form method="dialog" class="modal-backdrop">
@@ -459,3 +474,82 @@ require_once __DIR__ . '/../cores/customers_data.php';
         </form>
     </dialog>
 <?php endforeach; ?>
+
+<!-- ═══════════ CONFIRM ACTION MODAL ═══════════ -->
+<dialog id="modal_confirm_customer" class="modal modal-bottom sm:modal-middle">
+    <div class="modal-box w-11/12 max-w-md">
+        <form method="dialog">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-3 top-3">✕</button>
+        </form>
+        <div class="text-center py-2">
+            <div id="customer_confirm_icon_wrap"
+                class="w-14 h-14 rounded-2xl mx-auto flex items-center justify-center mb-4 bg-error/10">
+                <i id="customer_confirm_icon" data-lucide="ban" class="size-7 text-error"></i>
+            </div>
+            <h3 class="font-bold text-lg mb-2" id="customer_confirm_title">ระงับบัญชีลูกค้า</h3>
+            <p class="text-base-content/60" id="customer_confirm_message">ต้องการยืนยันใช่หรือไม่?</p>
+        </div>
+        <form method="POST" action="?action=customer">
+            <input type="hidden" name="customer_id" id="customer_confirm_id">
+            <input type="hidden" name="customer_action" id="customer_confirm_action">
+            <div class="modal-action justify-center gap-3">
+                <button type="button" onclick="document.getElementById('modal_confirm_customer').close()"
+                    class="btn btn-ghost">ยกเลิก</button>
+                <button type="submit" id="customer_confirm_submit_btn" class="btn btn-error gap-2 text-white">
+                    <i id="customer_confirm_submit_icon" data-lucide="ban" class="size-4"></i>
+                    <span id="customer_confirm_submit_text">ยืนยันระงับบัญชี</span>
+                </button>
+            </div>
+        </form>
+    </div>
+    <form method="dialog" class="modal-backdrop"><button>ปิด</button></form>
+</dialog>
+
+<script>
+    function openCustomerConfirmModal(customerId, action, customerName) {
+        // Populate hidden fields
+        document.getElementById('customer_confirm_id').value = customerId;
+        document.getElementById('customer_confirm_action').value = action;
+
+        const titleEl = document.getElementById('customer_confirm_title');
+        const msgEl = document.getElementById('customer_confirm_message');
+        const btn = document.getElementById('customer_confirm_submit_btn');
+        const iconWrap = document.getElementById('customer_confirm_icon_wrap');
+        const icon = document.getElementById('customer_confirm_icon');
+        const submitIcon = document.getElementById('customer_confirm_submit_icon');
+        const submitText = document.getElementById('customer_confirm_submit_text');
+
+        if (action === 'ban') {
+            titleEl.textContent = 'ระงับบัญชีลูกค้า';
+            msgEl.innerHTML = 'ยืนยัน <strong class="text-error">"การระงับบัญชี"</strong> ลูกค้า <strong>' + customerName + '</strong> ใช่หรือไม่? ลูกค้าจะไม่สามารถเข้าสู่ระบบและจองห้องพักได้';
+
+            btn.className = 'btn gap-2 btn-error text-white';
+            iconWrap.className = 'w-14 h-14 rounded-2xl mx-auto flex items-center justify-center mb-4 bg-error/10';
+
+            icon.setAttribute('data-lucide', 'ban');
+            icon.className = 'size-7 text-error';
+
+            submitIcon.setAttribute('data-lucide', 'ban');
+            submitText.textContent = 'ยืนยันระงับบัญชี';
+        } else {
+            titleEl.textContent = 'ปลดระงับบัญชีลูกค้า';
+            msgEl.innerHTML = 'ยืนยัน <strong class="text-success">"การปลดระงับบัญชี"</strong> ลูกค้า <strong>' + customerName + '</strong> ใช่หรือไม่? ลูกค้าจะกลับมาใช้งานได้ตามปกติ';
+
+            btn.className = 'btn gap-2 btn-success text-white';
+            iconWrap.className = 'w-14 h-14 rounded-2xl mx-auto flex items-center justify-center mb-4 bg-success/10';
+
+            icon.setAttribute('data-lucide', 'check-circle-2');
+            icon.className = 'size-7 text-success';
+
+            submitIcon.setAttribute('data-lucide', 'check');
+            submitText.textContent = 'ยืนยันปลดระงับ';
+        }
+
+        // Must re-init lucide icons since we changed data-lucide attribute dynamically
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+
+        // Close the previous modal if it is open (so we don't stack dialogs improperly)
+        document.getElementById('modal_customer_' + customerId).close();
+        document.getElementById('modal_confirm_customer').showModal();
+    }
+</script>
