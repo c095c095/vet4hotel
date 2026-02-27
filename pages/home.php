@@ -341,8 +341,8 @@ $daily_timeline = [
                         <!-- Room image / placeholder -->
                         <div class="relative h-52 overflow-hidden">
                             <?php if (!empty($room['primary_image'])): ?>
-                                <img src="<?php echo htmlspecialchars($room['primary_image']); ?>"
-                                    alt="<?php echo htmlspecialchars($room['name']); ?>"
+                                <img src="<?php echo sanitize($room['primary_image']); ?>"
+                                    alt="<?php echo sanitize($room['name']); ?>"
                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
                             <?php else: ?>
                                 <div
@@ -362,10 +362,10 @@ $daily_timeline = [
                         <!-- Room info -->
                         <div class="p-5">
                             <h3 class="text-xl font-bold text-base-content group-hover:text-primary transition-colors mb-2">
-                                <?php echo htmlspecialchars($room['name']); ?>
+                                <?php echo sanitize($room['name']); ?>
                             </h3>
                             <p class="text-base-content/60 text-sm leading-relaxed mb-4 line-clamp-2">
-                                <?php echo htmlspecialchars($room['description'] ?? 'ห้องพักสะอาด ปลอดภัย พร้อมสิ่งอำนวยความสะดวกครบครัน'); ?>
+                                <?php echo sanitize($room['description'] ?? 'ห้องพักสะอาด ปลอดภัย พร้อมสิ่งอำนวยความสะดวกครบครัน'); ?>
                             </p>
 
                             <!-- Room features -->

@@ -231,7 +231,7 @@ $net_total = $grand_subtotal - $discount_amount;
                                         </div>
                                         <div>
                                             <h3 class="font-bold text-lg text-base-content">
-                                                <?php echo htmlspecialchars($ci['room_type']['name']); ?>
+                                                <?php echo sanitize($ci['room_type']['name']); ?>
                                             </h3>
                                             <div class="flex items-center gap-2 text-sm text-base-content/60 mt-0.5">
                                                 <i data-lucide="calendar" class="size-3.5"></i>
@@ -293,9 +293,9 @@ $net_total = $grand_subtotal - $discount_amount;
                                             <?php foreach ($ci['pets'] as $pet): ?>
                                                 <div class="badge badge-outline gap-1.5 py-3 px-3 border-primary/30 text-primary">
                                                     <i data-lucide="paw-print" class="size-3"></i>
-                                                    <?php echo htmlspecialchars($pet['name']); ?>
+                                                    <?php echo sanitize($pet['name']); ?>
                                                     <span class="text-[10px] text-base-content/40">(
-                                                        <?php echo htmlspecialchars($pet['species_name'] ?? ''); ?>)
+                                                        <?php echo sanitize($pet['species_name'] ?? ''); ?>)
                                                     </span>
                                                 </div>
                                             <?php endforeach; ?>
@@ -314,7 +314,7 @@ $net_total = $grand_subtotal - $discount_amount;
                                                         class="flex justify-between items-center text-sm bg-base-200/40 rounded-lg px-3 py-2">
                                                         <div class="flex items-center gap-2 text-base-content/70">
                                                             <i data-lucide="sparkles" class="size-3.5 text-accent"></i>
-                                                            <?php echo htmlspecialchars($svc['name']); ?>
+                                                            <?php echo sanitize($svc['name']); ?>
                                                             <span class="text-xs text-base-content/40">
                                                                 <?php echo $svc['label']; ?>
                                                             </span>
@@ -375,10 +375,10 @@ $net_total = $grand_subtotal - $discount_amount;
                                         </div>
                                         <div class="flex-1">
                                             <div class="font-bold text-success text-sm">
-                                                <?php echo htmlspecialchars($promo['code']); ?>
+                                                <?php echo sanitize($promo['code']); ?>
                                             </div>
                                             <div class="text-xs text-base-content/60 mt-0.5">
-                                                <?php echo htmlspecialchars($promo['title']); ?>
+                                                <?php echo sanitize($promo['title']); ?>
                                             </div>
                                             <div class="text-sm font-bold text-success mt-1">
                                                 -฿
@@ -421,7 +421,7 @@ $net_total = $grand_subtotal - $discount_amount;
                                     <?php foreach ($cart_items as $i => $ci): ?>
                                         <div class="flex justify-between text-sm">
                                             <span class="text-base-content/70 truncate max-w-[70%]">
-                                                <?php echo ($i + 1) . '. ' . htmlspecialchars($ci['room_type']['name']); ?>
+                                                <?php echo ($i + 1) . '. ' . sanitize($ci['room_type']['name']); ?>
                                                 <span class="text-xs text-base-content/40">(
                                                     <?php echo $ci['nights']; ?> คืน)
                                                 </span>

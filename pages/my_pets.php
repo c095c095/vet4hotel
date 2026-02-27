@@ -139,16 +139,16 @@ if (!empty($pets)) {
                         <div class="card-body p-6">
                             <div class="flex justify-between items-start mb-2">
                                 <h2 class="card-title text-2xl font-bold text-base-content">
-                                    <?php echo htmlspecialchars($pet['name']); ?>
+                                    <?php echo sanitize($pet['name']); ?>
                                 </h2>
                                 <div class="badge badge-outline opacity-70">
-                                    <?php echo htmlspecialchars($pet['species_name']); ?>
+                                    <?php echo sanitize($pet['species_name']); ?>
                                 </div>
                             </div>
                             <div class="grid grid-cols-2 gap-3 my-4">
                                 <div class="flex items-center gap-2 text-sm text-base-content/70">
                                     <i data-lucide="info" class="size-4 text-primary"></i>
-                                    <span><?php echo htmlspecialchars($pet['breed_name'] ?? 'ไม่ระบุสายพันธุ์'); ?></span>
+                                    <span><?php echo sanitize($pet['breed_name'] ?? 'ไม่ระบุสายพันธุ์'); ?></span>
                                 </div>
                                 <div class="flex items-center gap-2 text-sm text-base-content/70">
                                     <i data-lucide="calendar" class="size-4 text-primary"></i>
@@ -172,7 +172,7 @@ if (!empty($pets)) {
                                     class="alert alert-sm bg-success/10 border-success/20 text-success-content flex gap-2 py-2 mb-2">
                                     <i data-lucide="check-circle" class="size-4"></i>
                                     <span class="text-xs font-medium">วัคซีนครบถ้วน (หมดอายุ:
-                                        <?php echo htmlspecialchars($pet['next_vaccine_date']); ?>)</span>
+                                        <?php echo sanitize($pet['next_vaccine_date']); ?>)</span>
                                 </div>
                             <?php else: ?>
                                 <div
@@ -237,22 +237,22 @@ if (!empty($pets)) {
                                     </div>
                                     <div>
                                         <div class="text-xl font-bold text-base-content mb-1">
-                                            <?php echo htmlspecialchars($pet['name']); ?>
+                                            <?php echo sanitize($pet['name']); ?>
                                         </div>
                                         <div class="badge badge-primary badge-lg">
-                                            <?php echo htmlspecialchars($pet['species_name']); ?>
+                                            <?php echo sanitize($pet['species_name']); ?>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="space-y-3 mb-4">
                                     <div class="flex items-center gap-2 text-base-content/70">
                                         <i data-lucide="info" class="size-4"></i>
-                                        <span>สายพันธุ์: <?php echo htmlspecialchars($pet['breed_name'] ?? 'ไม่ระบุ'); ?></span>
+                                        <span>สายพันธุ์: <?php echo sanitize($pet['breed_name'] ?? 'ไม่ระบุ'); ?></span>
                                     </div>
                                     <div class="flex items-center gap-2 text-base-content/70">
                                         <i data-lucide="calendar" class="size-4"></i>
                                         <span>วันเกิด:
-                                            <?php echo $pet['dob'] ? htmlspecialchars($pet['dob']) : 'ไม่ระบุ'; ?></span>
+                                            <?php echo $pet['dob'] ? sanitize($pet['dob']) : 'ไม่ระบุ'; ?></span>
                                     </div>
                                     <div class="flex items-center gap-2 text-base-content/70">
                                         <i data-lucide="weight" class="size-4"></i>
@@ -271,7 +271,7 @@ if (!empty($pets)) {
                                             class="alert alert-sm bg-success/10 border-success/20 text-success-content flex gap-2 py-2 mb-2">
                                             <i data-lucide="check-circle" class="size-4"></i>
                                             <span class="text-xs font-medium">วัคซีนครบถ้วน (หมดอายุ:
-                                                <?php echo htmlspecialchars($pet['next_vaccine_date']); ?>)</span>
+                                                <?php echo sanitize($pet['next_vaccine_date']); ?>)</span>
                                         </div>
                                     <?php else: ?>
                                         <div
@@ -283,7 +283,7 @@ if (!empty($pets)) {
                                     <?php if ($pet['behavior_note']): ?>
                                         <div class="flex items-center gap-2 text-base-content/70">
                                             <i data-lucide="alert-circle" class="size-4 text-warning"></i>
-                                            <span>หมายเหตุ: <?php echo htmlspecialchars($pet['behavior_note']); ?></span>
+                                            <span>หมายเหตุ: <?php echo sanitize($pet['behavior_note']); ?></span>
                                         </div>
                                     <?php endif; ?>
                                     <?php if ($pet['is_aggressive']): ?>
@@ -320,7 +320,7 @@ if (!empty($pets)) {
                             <p class="text-base-content/60 text-sm mb-1">
                                 คุณต้องการลบข้อมูลของ
                                 <span
-                                    class="font-semibold text-base-content"><?php echo htmlspecialchars($pet['name']); ?></span>
+                                    class="font-semibold text-base-content"><?php echo sanitize($pet['name']); ?></span>
                                 หรือไม่?
                             </p>
                             <p class="text-xs text-base-content/40 mb-6">ข้อมูลจะถูกซ่อนจากระบบ
@@ -359,7 +359,7 @@ if (!empty($pets)) {
                                     </div>
                                     <div>
                                         <div class="font-bold text-base-content">บันทึกวัคซีน</div>
-                                        <div class="text-xs text-base-content/50"><?php echo htmlspecialchars($pet['name']); ?>
+                                        <div class="text-xs text-base-content/50"><?php echo sanitize($pet['name']); ?>
                                         </div>
                                     </div>
                                 </div>
@@ -393,7 +393,7 @@ if (!empty($pets)) {
                                                             class="size-4 shrink-0 <?php echo $isExpired ? 'text-error' : 'text-success'; ?>"></i>
                                                         <div class="min-w-0">
                                                             <div class="font-medium text-sm text-base-content truncate">
-                                                                <?php echo htmlspecialchars($rec['vaccine_name']); ?>
+                                                                <?php echo sanitize($rec['vaccine_name']); ?>
                                                             </div>
                                                             <div class="text-xs text-base-content/50">ฉีด: <?php echo $adminFmt; ?>
                                                                 &nbsp;|&nbsp; หมดอายุ: <?php echo $expiryFmt; ?></div>
@@ -447,7 +447,7 @@ if (!empty($pets)) {
                                                 <?php foreach ($vaccine_types as $vt): ?>
                                                     <?php if ($vt['species_id'] == $pet['species_id']): ?>
                                                         <option value="<?php echo $vt['id']; ?>">
-                                                            <?php echo htmlspecialchars($vt['name']); ?>
+                                                            <?php echo sanitize($vt['name']); ?>
                                                         </option>
                                                     <?php endif; ?>
                                                 <?php endforeach; ?>
@@ -580,7 +580,7 @@ if (!empty($pets)) {
                             onchange="filterBreeds(this.value)">
                             <option value="">-- เลือกชนิดสัตว์ --</option>
                             <?php foreach ($species_list as $sp): ?>
-                                <option value="<?php echo $sp['id']; ?>"><?php echo htmlspecialchars($sp['name']); ?>
+                                <option value="<?php echo $sp['id']; ?>"><?php echo sanitize($sp['name']); ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
@@ -591,7 +591,7 @@ if (!empty($pets)) {
                             <option value="">-- เลือกสายพันธุ์ --</option>
                             <?php foreach ($breeds_list as $br): ?>
                                 <option value="<?php echo $br['id']; ?>" data-species="<?php echo $br['species_id']; ?>">
-                                    <?php echo htmlspecialchars($br['name']); ?>
+                                    <?php echo sanitize($br['name']); ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
@@ -697,7 +697,7 @@ if (!empty($pets)) {
                             onchange="filterEditBreeds(this.value)">
                             <option value="">-- เลือกชนิดสัตว์ --</option>
                             <?php foreach ($species_list as $sp): ?>
-                                <option value="<?php echo $sp['id']; ?>"><?php echo htmlspecialchars($sp['name']); ?>
+                                <option value="<?php echo $sp['id']; ?>"><?php echo sanitize($sp['name']); ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
@@ -708,7 +708,7 @@ if (!empty($pets)) {
                             <option value="">-- เลือกสายพันธุ์ --</option>
                             <?php foreach ($breeds_list as $br): ?>
                                 <option value="<?php echo $br['id']; ?>" data-species="<?php echo $br['species_id']; ?>">
-                                    <?php echo htmlspecialchars($br['name']); ?>
+                                    <?php echo sanitize($br['name']); ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>

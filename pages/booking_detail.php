@@ -289,7 +289,7 @@ $latest_cout = !empty($items) ? max(array_column($items, 'check_out_date')) : nu
                             <div>
                                 <div class="flex items-center gap-2 flex-wrap">
                                     <h1 class="text-xl sm:text-2xl font-black text-base-content">
-                                        <?php echo htmlspecialchars($booking['booking_ref']); ?>
+                                        <?php echo sanitize($booking['booking_ref']); ?>
                                     </h1>
                                     <span class="badge <?php echo $sCfg['badge']; ?> gap-1.5 py-3 px-3">
                                         <i data-lucide="<?php echo $sCfg['icon']; ?>" class="size-3.5"></i>
@@ -376,8 +376,8 @@ $latest_cout = !empty($items) ? max(array_column($items, 'check_out_date')) : nu
                                 <!-- Room image -->
                                 <?php if ($item['room_image']): ?>
                                     <div class="w-16 h-16 rounded-xl overflow-hidden shrink-0 shadow-sm border border-base-200">
-                                        <img src="<?php echo htmlspecialchars($item['room_image']); ?>"
-                                            alt="<?php echo htmlspecialchars($item['room_type_name']); ?>"
+                                        <img src="<?php echo sanitize($item['room_image']); ?>"
+                                            alt="<?php echo sanitize($item['room_type_name']); ?>"
                                             class="w-full h-full object-cover">
                                     </div>
                                 <?php else: ?>
@@ -387,15 +387,15 @@ $latest_cout = !empty($items) ? max(array_column($items, 'check_out_date')) : nu
                                 <?php endif; ?>
                                 <div>
                                     <h3 class="font-bold text-lg text-base-content leading-tight">
-                                        <?php echo htmlspecialchars($item['room_type_name']); ?>
+                                        <?php echo sanitize($item['room_type_name']); ?>
                                     </h3>
                                     <div class="text-xs text-base-content/50 mt-0.5 flex items-center gap-1.5 flex-wrap">
                                         <span class="inline-flex items-center gap-1">
                                             <i data-lucide="door-open" class="size-3"></i>
-                                            ห้อง <?php echo htmlspecialchars($item['room_number']); ?>
+                                            ห้อง <?php echo sanitize($item['room_number']); ?>
                                         </span>
                                         <span>·</span>
-                                        <span>ชั้น <?php echo htmlspecialchars($item['floor_level']); ?></span>
+                                        <span>ชั้น <?php echo sanitize($item['floor_level']); ?></span>
                                         <?php if ($item['size_sqm']): ?>
                                             <span>·</span>
                                             <span><?php echo number_format($item['size_sqm'], 0); ?> ตร.ม.</span>
@@ -466,10 +466,10 @@ $latest_cout = !empty($items) ? max(array_column($items, 'check_out_date')) : nu
                                                 </div>
                                                 <div>
                                                     <div class="font-semibold text-sm text-base-content leading-tight">
-                                                        <?php echo htmlspecialchars($pet['pet_name']); ?>
+                                                        <?php echo sanitize($pet['pet_name']); ?>
                                                     </div>
                                                     <div class="text-[10px] text-base-content/40">
-                                                        <?php echo htmlspecialchars($pet['breed_name'] ?? $pet['species_name']); ?>
+                                                        <?php echo sanitize($pet['breed_name'] ?? $pet['species_name']); ?>
                                                     </div>
                                                 </div>
                                             </div>
@@ -499,11 +499,11 @@ $latest_cout = !empty($items) ? max(array_column($items, 'check_out_date')) : nu
                                                 <div class="flex items-center gap-2 text-base-content/70 min-w-0">
                                                     <i data-lucide="plus-circle" class="size-3.5 text-accent shrink-0"></i>
                                                     <span class="truncate">
-                                                        <?php echo htmlspecialchars($svc['service_name']); ?>
+                                                        <?php echo sanitize($svc['service_name']); ?>
                                                     </span>
                                                     <?php if ($svc['pet_name']): ?>
                                                         <span
-                                                            class="text-xs text-base-content/40">(<?php echo htmlspecialchars($svc['pet_name']); ?>)</span>
+                                                            class="text-xs text-base-content/40">(<?php echo sanitize($svc['pet_name']); ?>)</span>
                                                     <?php endif; ?>
                                                     <span
                                                         class="badge badge-ghost badge-xs shrink-0"><?php echo $chargeLabel; ?></span>
@@ -555,10 +555,10 @@ $latest_cout = !empty($items) ? max(array_column($items, 'check_out_date')) : nu
                             <div class="flex items-center justify-between text-sm bg-base-200/40 rounded-lg px-3 py-2.5">
                                 <div class="flex items-center gap-2 text-base-content/70">
                                     <i data-lucide="plus-circle" class="size-3.5 text-accent"></i>
-                                    <span><?php echo htmlspecialchars($svc['service_name']); ?></span>
+                                    <span><?php echo sanitize($svc['service_name']); ?></span>
                                     <?php if ($svc['pet_name']): ?>
                                         <span
-                                            class="text-xs text-base-content/40">(<?php echo htmlspecialchars($svc['pet_name']); ?>)</span>
+                                            class="text-xs text-base-content/40">(<?php echo sanitize($svc['pet_name']); ?>)</span>
                                     <?php endif; ?>
                                     <span class="badge badge-ghost badge-xs"><?php echo $chargeLabel; ?></span>
                                 </div>
@@ -597,7 +597,7 @@ $latest_cout = !empty($items) ? max(array_column($items, 'check_out_date')) : nu
                                 <div class="text-xs text-base-content/60 space-y-1">
                                     <div class="flex items-center gap-1.5">
                                         <i data-lucide="map-pin" class="size-3"></i>
-                                        <?php echo htmlspecialchars($tr['address']); ?>
+                                        <?php echo sanitize($tr['address']); ?>
                                     </div>
                                     <div class="flex items-center gap-1.5">
                                         <i data-lucide="clock" class="size-3"></i>
@@ -612,9 +612,9 @@ $latest_cout = !empty($items) ? max(array_column($items, 'check_out_date')) : nu
                                     <?php if ($tr['driver_name']): ?>
                                         <div class="flex items-center gap-1.5">
                                             <i data-lucide="user" class="size-3"></i>
-                                            <?php echo htmlspecialchars($tr['driver_name']); ?>
+                                            <?php echo sanitize($tr['driver_name']); ?>
                                             <?php if ($tr['driver_phone']): ?>
-                                                · <?php echo htmlspecialchars($tr['driver_phone']); ?>
+                                                · <?php echo sanitize($tr['driver_phone']); ?>
                                             <?php endif; ?>
                                         </div>
                                     <?php endif; ?>
@@ -662,10 +662,10 @@ $latest_cout = !empty($items) ? max(array_column($items, 'check_out_date')) : nu
                                         <div class="text-[10px] text-base-content/40 mt-0.5">
                                             <?php echo thaiDateTime_d($pay['paid_at'] ?? $pay['created_at']); ?>
                                             <?php if ($pay['channel_name']): ?>
-                                                · <?php echo htmlspecialchars($pay['channel_name']); ?>
+                                                · <?php echo sanitize($pay['channel_name']); ?>
                                             <?php endif; ?>
                                             <?php if ($pay['transaction_ref']): ?>
-                                                · Ref: <?php echo htmlspecialchars($pay['transaction_ref']); ?>
+                                                · Ref: <?php echo sanitize($pay['transaction_ref']); ?>
                                             <?php endif; ?>
                                         </div>
                                     </div>
@@ -697,7 +697,7 @@ $latest_cout = !empty($items) ? max(array_column($items, 'check_out_date')) : nu
                         <i data-lucide="message-square" class="size-4"></i> คำขอพิเศษ
                     </h3>
                     <div class="bg-base-200/40 rounded-xl px-4 py-3 text-sm text-base-content/70 italic">
-                        "<?php echo nl2br(htmlspecialchars($booking['special_requests'])); ?>"
+                        "<?php echo nl2br(sanitize($booking['special_requests'])); ?>"
                     </div>
                 </div>
             </div>
@@ -743,7 +743,7 @@ $latest_cout = !empty($items) ? max(array_column($items, 'check_out_date')) : nu
                                     ส่วนลด
                                     <?php if ($booking['promo_code']): ?>
                                         <span
-                                            class="badge badge-success badge-sm badge-outline"><?php echo htmlspecialchars($booking['promo_code']); ?></span>
+                                            class="badge badge-success badge-sm badge-outline"><?php echo sanitize($booking['promo_code']); ?></span>
                                     <?php endif; ?>
                                 </span>
                                 <span class="font-bold">-฿<?php echo number_format($booking['discount_amount']); ?></span>

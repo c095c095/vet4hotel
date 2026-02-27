@@ -88,7 +88,7 @@ if (isset($_POST['apply_promo'])) {
         }
 
         $_SESSION['booking_promo'] = $promo;
-        $_SESSION['msg_success'] = 'ใช้โค้ดส่วนลด "' . htmlspecialchars($promo['title']) . '" สำเร็จ!';
+        $_SESSION['msg_success'] = 'ใช้โค้ดส่วนลด "' . sanitize($promo['title']) . '" สำเร็จ!';
 
     } catch (PDOException $e) {
         $_SESSION['msg_error'] = 'เกิดข้อผิดพลาดในการตรวจสอบโค้ด';

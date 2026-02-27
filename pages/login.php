@@ -73,20 +73,20 @@ unset($_SESSION['success_msg']);
                     <?php if (!empty($error) || isset($_GET['error'])): ?>
                         <div class="alert alert-error text-sm rounded-xl mb-6 py-3">
                             <i data-lucide="alert-circle" class="size-4"></i>
-                            <span><?php echo htmlspecialchars($error ?: ($_GET['error'] ?? 'เกิดข้อผิดพลาด')); ?></span>
+                            <span><?php echo sanitize($error ?: ($_GET['error'] ?? 'เกิดข้อผิดพลาด')); ?></span>
                         </div>
                     <?php endif; ?>
 
                     <?php if (!empty($success) || isset($_GET['registered'])): ?>
                         <div class="alert alert-success text-sm rounded-xl mb-6 py-3">
                             <i data-lucide="check-circle" class="size-4"></i>
-                            <span><?php echo htmlspecialchars($success ?: 'สมัครสมาชิกสำเร็จ กรุณาเข้าสู่ระบบ'); ?></span>
+                            <span><?php echo sanitize($success ?: 'สมัครสมาชิกสำเร็จ กรุณาเข้าสู่ระบบ'); ?></span>
                         </div>
                     <?php endif; ?>
 
                     <form action="?action=login" method="POST" class="space-y-5">
                         <?php if (!empty($_GET['redirect'])): ?>
-                            <input type="hidden" name="redirect" value="<?php echo htmlspecialchars($_GET['redirect']); ?>">
+                            <input type="hidden" name="redirect" value="<?php echo sanitize($_GET['redirect']); ?>">
                         <?php endif; ?>
                         <!-- Email Input -->
                         <div class="form-control">
@@ -98,7 +98,7 @@ unset($_SESSION['success_msg']);
                                 <i data-lucide="mail" class="size-4 text-base-content/40"></i>
                                 <input type="email" id="email" name="email" class="grow" placeholder="your@email.com"
                                     required autocomplete="email"
-                                    value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>" />
+                                    value="<?php echo sanitize($_POST['email'] ?? ''); ?>" />
                             </label>
                         </div>
 
@@ -150,7 +150,7 @@ unset($_SESSION['success_msg']);
                             $register_url .= '&redirect=' . urlencode($_GET['redirect']);
                         }
                         ?>
-                        <a href="<?php echo htmlspecialchars($register_url); ?>"
+                        <a href="<?php echo sanitize($register_url); ?>"
                             class="text-primary font-bold hover:underline">สมัครสมาชิกที่นี่</a>
                     </p>
                 </div>

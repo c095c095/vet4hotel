@@ -237,7 +237,7 @@ foreach ($items as $item) {
                                     <div>
                                         <div class="flex items-center gap-2 flex-wrap">
                                             <h2 class="text-xl font-black text-base-content">
-                                                <?php echo htmlspecialchars($booking['booking_ref']); ?>
+                                                <?php echo sanitize($booking['booking_ref']); ?>
                                             </h2>
                                             <span class="badge badge-warning gap-1.5 py-3 px-3">
                                                 <i data-lucide="clock" class="size-3.5"></i>
@@ -304,8 +304,8 @@ foreach ($items as $item) {
                                 <!-- Room image / icon -->
                                 <?php if ($item['room_image']): ?>
                                     <div class="w-16 h-16 rounded-xl overflow-hidden shrink-0 shadow-sm border border-base-200">
-                                        <img src="<?php echo htmlspecialchars($item['room_image']); ?>"
-                                            alt="<?php echo htmlspecialchars($item['room_type_name']); ?>"
+                                        <img src="<?php echo sanitize($item['room_image']); ?>"
+                                            alt="<?php echo sanitize($item['room_type_name']); ?>"
                                             class="w-full h-full object-cover">
                                     </div>
                                 <?php else: ?>
@@ -318,12 +318,12 @@ foreach ($items as $item) {
                                     <div class="flex items-start justify-between gap-2">
                                         <div>
                                             <h3 class="font-bold text-base text-base-content leading-tight">
-                                                <?php echo htmlspecialchars($item['room_type_name']); ?>
+                                                <?php echo sanitize($item['room_type_name']); ?>
                                             </h3>
                                             <div class="text-xs text-base-content/50 mt-0.5 flex items-center gap-1.5">
                                                 <i data-lucide="door-open" class="size-3"></i>
                                                 ห้อง
-                                                <?php echo htmlspecialchars($item['room_number']); ?>
+                                                <?php echo sanitize($item['room_number']); ?>
                                             </div>
                                         </div>
                                         <div class="text-right shrink-0">
@@ -355,7 +355,7 @@ foreach ($items as $item) {
                                                 <span
                                                     class="badge badge-outline badge-sm gap-1 border-primary/25 text-primary py-2.5">
                                                     <i data-lucide="paw-print" class="size-2.5"></i>
-                                                    <?php echo htmlspecialchars($pet['pet_name']); ?>
+                                                    <?php echo sanitize($pet['pet_name']); ?>
                                                 </span>
                                             <?php endforeach; ?>
                                         </div>
@@ -370,7 +370,7 @@ foreach ($items as $item) {
                                                 <span
                                                     class="badge badge-accent badge-outline badge-sm gap-1 py-2.5 border-accent/25">
                                                     <i data-lucide="sparkles" class="size-2.5"></i>
-                                                    <?php echo htmlspecialchars($bsvc['service_name']); ?>
+                                                    <?php echo sanitize($bsvc['service_name']); ?>
                                                     <span
                                                         class="text-[10px] text-base-content/50">฿<?php echo number_format($bsvc['total_price']); ?></span>
                                                 </span>
@@ -429,7 +429,7 @@ foreach ($items as $item) {
                                             ส่วนลด
                                             <?php if ($booking['promo_code']): ?>
                                                 <span class="badge badge-success badge-sm badge-outline">
-                                                    <?php echo htmlspecialchars($booking['promo_code']); ?>
+                                                    <?php echo sanitize($booking['promo_code']); ?>
                                                 </span>
                                             <?php endif; ?>
                                         </span>
@@ -501,23 +501,23 @@ foreach ($items as $item) {
                                                 onchange="document.getElementById('payment_channel_id').value = this.value;">
                                             <div class="flex-1 min-w-0">
                                                 <div class="font-bold text-sm text-base-content">
-                                                    <?php echo htmlspecialchars($channel['name']); ?>
+                                                    <?php echo sanitize($channel['name']); ?>
                                                 </div>
                                                 <?php if ($channel['bank_name']): ?>
                                                     <div class="text-xs text-base-content/50 mt-0.5">
-                                                        <?php echo htmlspecialchars($channel['bank_name']); ?>
+                                                        <?php echo sanitize($channel['bank_name']); ?>
                                                     </div>
                                                 <?php endif; ?>
                                                 <?php if ($channel['account_name'] || $channel['account_number']): ?>
                                                     <div class="mt-1.5 bg-base-200/60 rounded-lg px-3 py-2">
                                                         <?php if ($channel['account_name']): ?>
                                                             <div class="text-xs text-base-content/60 font-medium">
-                                                                <?php echo htmlspecialchars($channel['account_name']); ?>
+                                                                <?php echo sanitize($channel['account_name']); ?>
                                                             </div>
                                                         <?php endif; ?>
                                                         <?php if ($channel['account_number']): ?>
                                                             <div class="text-sm font-bold text-base-content tracking-wide mt-0.5">
-                                                                <?php echo htmlspecialchars($channel['account_number']); ?>
+                                                                <?php echo sanitize($channel['account_number']); ?>
                                                             </div>
                                                         <?php endif; ?>
                                                     </div>
@@ -530,7 +530,7 @@ foreach ($items as $item) {
                                                 <?php endif; ?>
                                             </div>
                                             <div class="bg-primary/10 p-2 rounded-lg shrink-0">
-                                                <i data-lucide="<?php echo htmlspecialchars($ch_icon); ?>"
+                                                <i data-lucide="<?php echo sanitize($ch_icon); ?>"
                                                     class="size-5 text-primary"></i>
                                             </div>
                                         </label>

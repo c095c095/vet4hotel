@@ -40,7 +40,7 @@ unset($_SESSION['form_data']);
             $login_url .= '&redirect=' . urlencode($_GET['redirect']);
         }
         ?>
-        <a href="<?php echo htmlspecialchars($login_url); ?>"
+        <a href="<?php echo sanitize($login_url); ?>"
             class="inline-flex items-center gap-2 text-sm text-base-content/60 hover:text-primary transition-colors mb-4">
             <i data-lucide="arrow-left" class="size-4"></i>
             กลับสู่หน้าล็อกอิน
@@ -61,14 +61,14 @@ unset($_SESSION['form_data']);
                 <div class="alert alert-error text-sm rounded-xl mb-6 py-3">
                     <i data-lucide="alert-circle" class="size-4"></i>
                     <span>
-                        <?php echo htmlspecialchars($error ?: ($_GET['error'] ?? 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง')); ?>
+                        <?php echo sanitize($error ?: ($_GET['error'] ?? 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง')); ?>
                     </span>
                 </div>
             <?php endif; ?>
 
             <form action="?action=register" method="POST" class="space-y-4">
                 <?php if (!empty($_GET['redirect'])): ?>
-                    <input type="hidden" name="redirect" value="<?php echo htmlspecialchars($_GET['redirect']); ?>">
+                    <input type="hidden" name="redirect" value="<?php echo sanitize($_GET['redirect']); ?>">
                 <?php endif; ?>
                 <!-- Name Row -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -81,7 +81,7 @@ unset($_SESSION['form_data']);
                             class="input input-bordered flex items-center gap-3 rounded-xl focus-within:outline-primary/50 focus-within:border-primary transition-colors bg-base-100/50">
                             <i data-lucide="user" class="size-4 text-base-content/40"></i>
                             <input type="text" id="first_name" name="first_name" class="grow" placeholder="ชื่อ"
-                                value="<?php echo htmlspecialchars($form_data['first_name'] ?? ''); ?>" required />
+                                value="<?php echo sanitize($form_data['first_name'] ?? ''); ?>" required />
                         </label>
                     </div>
                     <div class="form-control">
@@ -92,7 +92,7 @@ unset($_SESSION['form_data']);
                         <label
                             class="input input-bordered flex items-center gap-3 rounded-xl focus-within:outline-primary/50 focus-within:border-primary transition-colors bg-base-100/50">
                             <input type="text" id="last_name" name="last_name" class="grow" placeholder="นามสกุล"
-                                value="<?php echo htmlspecialchars($form_data['last_name'] ?? ''); ?>" required />
+                                value="<?php echo sanitize($form_data['last_name'] ?? ''); ?>" required />
                         </label>
                     </div>
                 </div>
@@ -108,7 +108,7 @@ unset($_SESSION['form_data']);
                         <i data-lucide="phone" class="size-4 text-base-content/40"></i>
                         <input type="tel" id="phone" name="phone" class="grow" placeholder="08xxxxxxxx" required
                             pattern="[0-9]{9,10}" title="กรุณากรอกเบอร์โทรศัพท์ 9-10 หลัก"
-                            value="<?php echo htmlspecialchars($form_data['phone'] ?? ''); ?>" />
+                            value="<?php echo sanitize($form_data['phone'] ?? ''); ?>" />
                     </label>
                 </div>
 
@@ -122,7 +122,7 @@ unset($_SESSION['form_data']);
                         class="input input-bordered flex items-center gap-3 rounded-xl focus-within:outline-primary/50 focus-within:border-primary transition-colors bg-base-100/50">
                         <i data-lucide="mail" class="size-4 text-base-content/40"></i>
                         <input type="email" id="email" name="email" class="grow" placeholder="your@email.com" required
-                            autocomplete="email" value="<?php echo htmlspecialchars($form_data['email'] ?? ''); ?>" />
+                            autocomplete="email" value="<?php echo sanitize($form_data['email'] ?? ''); ?>" />
                     </label>
                 </div>
 
@@ -190,7 +190,7 @@ unset($_SESSION['form_data']);
             <!-- Login Link -->
             <p class="text-center text-sm text-base-content/70">
                 มีบัญชีอยู่แล้วใช่หรือไม่?
-                <a href="<?php echo htmlspecialchars($login_url); ?>"
+                <a href="<?php echo sanitize($login_url); ?>"
                     class="text-primary font-bold hover:underline">เข้าสู่ระบบที่นี่</a>
             </p>
         </div>

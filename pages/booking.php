@@ -162,7 +162,7 @@ function estimate_total($room_types, $selected_room_type, $check_in_date, $check
                     <div
                         class="alert alert-error mb-6 shadow-sm border border-error/20 flex items-start animate-in fade-in slide-in-from-top-2">
                         <i data-lucide="alert-triangle" class="size-5 mt-0.5"></i>
-                        <span><?php echo htmlspecialchars($_SESSION['booking_error']); ?></span>
+                        <span><?php echo sanitize($_SESSION['booking_error']); ?></span>
                     </div>
                     <?php unset($_SESSION['booking_error']); ?>
                 <?php endif; ?>
@@ -232,7 +232,7 @@ function estimate_total($room_types, $selected_room_type, $check_in_date, $check
                                         <input type="date" id="check_in_date" name="check_in_date"
                                             class="input input-bordered input-lg w-full bg-base-100 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all font-medium"
                                             min="<?php echo date('Y-m-d'); ?>"
-                                            value="<?php echo htmlspecialchars($check_in_date); ?>" required>
+                                            value="<?php echo sanitize($check_in_date); ?>" required>
                                     </div>
                                     <div class="form-control w-full">
                                         <label class="label font-medium text-base-content justify-start gap-2"
@@ -243,7 +243,7 @@ function estimate_total($room_types, $selected_room_type, $check_in_date, $check
                                         <input type="date" id="check_out_date" name="check_out_date"
                                             class="input input-bordered input-lg w-full bg-base-100 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all font-medium"
                                             min="<?php echo date('Y-m-d'); ?>"
-                                            value="<?php echo htmlspecialchars($check_out_date); ?>" required>
+                                            value="<?php echo sanitize($check_out_date); ?>" required>
                                     </div>
                                 </div>
                             </div>
@@ -309,7 +309,7 @@ function estimate_total($room_types, $selected_room_type, $check_in_date, $check
                                                     <div class="flex justify-between items-start mb-2">
                                                         <h3
                                                             class="font-bold text-lg text-base-content group-hover:text-primary transition-colors">
-                                                            <?php echo htmlspecialchars($rt['name']); ?>
+                                                            <?php echo sanitize($rt['name']); ?>
                                                         </h3>
                                                         <div class="badge badge-success badge-sm gap-1">
                                                             <i data-lucide="check-circle" class="size-3"></i> ว่าง
@@ -317,12 +317,12 @@ function estimate_total($room_types, $selected_room_type, $check_in_date, $check
                                                         </div>
                                                     </div>
                                                     <p class="text-sm text-base-content/70 line-clamp-2 mb-3">
-                                                        <?php echo htmlspecialchars($rt['description']); ?>
+                                                        <?php echo sanitize($rt['description']); ?>
                                                     </p>
                                                     <div class="flex flex-wrap gap-2 text-xs text-base-content/60 mb-3">
                                                         <div class="flex items-center gap-1 bg-base-200 px-2 py-1 rounded-md">
                                                             <i data-lucide="maximize" class="size-3"></i>
-                                                            <?php echo htmlspecialchars($rt['size_sqm']); ?> ตร.ม.
+                                                            <?php echo sanitize($rt['size_sqm']); ?> ตร.ม.
                                                         </div>
                                                         <div class="flex items-center gap-1 bg-base-200 px-2 py-1 rounded-md">
                                                             <i data-lucide="users" class="size-3"></i> สูงสุด
@@ -395,12 +395,12 @@ function estimate_total($room_types, $selected_room_type, $check_in_date, $check
                                                     </div>
                                                 </div>
                                                 <span class="font-medium truncate w-full"
-                                                    title="<?php echo htmlspecialchars($pet['name']); ?>"><?php echo htmlspecialchars($pet['name']); ?></span>
+                                                    title="<?php echo sanitize($pet['name']); ?>"><?php echo sanitize($pet['name']); ?></span>
                                                 <span class="text-[10px] text-base-content/50 uppercase tracking-wider">
                                                     <?php
                                                     $species_text = $pet['species'] ?? 'Pet';
                                                     $breed_text = $pet['breed'] ?? '';
-                                                    echo htmlspecialchars($species_text . ($breed_text ? ' • ' . $breed_text : ''));
+                                                    echo sanitize($species_text . ($breed_text ? ' • ' . $breed_text : ''));
                                                     ?>
                                                 </span>
                                             </div>
@@ -466,7 +466,7 @@ function estimate_total($room_types, $selected_room_type, $check_in_date, $check
                                                     <div class="flex justify-between items-start mb-1 gap-2">
                                                         <h4
                                                             class="font-bold text-base-content group-hover:text-primary transition-colors leading-tight">
-                                                            <?php echo htmlspecialchars($sv['name']); ?>
+                                                            <?php echo sanitize($sv['name']); ?>
                                                         </h4>
                                                         <div
                                                             class="text-primary font-bold whitespace-nowrap bg-primary/10 px-2 py-0.5 rounded-md text-sm">
@@ -474,7 +474,7 @@ function estimate_total($room_types, $selected_room_type, $check_in_date, $check
                                                         </div>
                                                     </div>
                                                     <p class="text-sm text-base-content/60 leading-snug">
-                                                        <?php echo htmlspecialchars($sv['description']); ?>
+                                                        <?php echo sanitize($sv['description']); ?>
 
                                                     <div class="text-xs text-base-content/40 mt-1">
                                                         <?php
@@ -556,7 +556,7 @@ function estimate_total($room_types, $selected_room_type, $check_in_date, $check
                                                     <div class="font-bold text-base-content text-lg">
                                                         <?php foreach ($room_types as $rt) {
                                                             if ($rt['id'] == $selected_room_type) {
-                                                                echo htmlspecialchars($rt['name']);
+                                                                echo sanitize($rt['name']);
                                                                 $selected_rt_price = $rt['base_price_per_night'];
                                                                 break;
                                                             }
@@ -575,7 +575,7 @@ function estimate_total($room_types, $selected_room_type, $check_in_date, $check
                                                 <?php
                                                 foreach ($pets as $p) {
                                                     if (in_array($p['id'], $selected_pets)) {
-                                                        echo '<div class="badge badge-accent badge-outline gap-1 py-3 px-3"><i data-lucide="paw-print" class="size-3"></i> ' . htmlspecialchars($p['name']) . '</div>';
+                                                        echo '<div class="badge badge-accent badge-outline gap-1 py-3 px-3"><i data-lucide="paw-print" class="size-3"></i> ' . sanitize($p['name']) . '</div>';
                                                     }
                                                 }
                                                 ?>
@@ -607,7 +607,7 @@ function estimate_total($room_types, $selected_room_type, $check_in_date, $check
                                                             $s_label = 'ต่อการเข้าพัก';
                                                         }
                                                         echo '<li class="flex justify-between items-center bg-base-200/50 rounded-lg p-3">';
-                                                        echo '<div class="flex items-center gap-2 font-medium"><i data-lucide="plus-circle" class="size-4 text-primary"></i> ' . htmlspecialchars($s['name']) . ' <span class="text-xs text-base-content/40">' . $s_label . '</span></div>';
+                                                        echo '<div class="flex items-center gap-2 font-medium"><i data-lucide="plus-circle" class="size-4 text-primary"></i> ' . sanitize($s['name']) . ' <span class="text-xs text-base-content/40">' . $s_label . '</span></div>';
                                                         echo '<div class="text-sm font-bold">฿' . number_format($s_total) . '</div>';
                                                         echo '</li>';
                                                     }

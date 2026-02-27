@@ -327,7 +327,7 @@ function nightsCount($cin, $cout)
                                     <div>
                                         <div class="flex items-center gap-2 flex-wrap">
                                             <h3 class="font-bold text-lg text-base-content">
-                                                <?php echo htmlspecialchars($booking['booking_ref']); ?>
+                                                <?php echo sanitize($booking['booking_ref']); ?>
                                             </h3>
                                             <span class="badge <?php echo $sCfg['badge']; ?> badge-sm gap-1">
                                                 <i data-lucide="<?php echo $sCfg['icon']; ?>" class="size-3"></i>
@@ -384,7 +384,7 @@ function nightsCount($cin, $cout)
                                                 $room_names = array_unique(array_column($items, 'room_type_name'));
                                                 echo count($items) . ' ห้อง';
                                                 if (!empty($room_names)) {
-                                                    echo ' <span class="font-normal text-base-content/60">(' . htmlspecialchars(implode(', ', $room_names)) . ')</span>';
+                                                    echo ' <span class="font-normal text-base-content/60">(' . sanitize(implode(', ', $room_names)) . ')</span>';
                                                 }
                                                 ?>
                                             </div>
@@ -408,9 +408,9 @@ function nightsCount($cin, $cout)
                                                     <?php else: ?>
                                                         <i data-lucide="paw-print" class="size-3"></i>
                                                     <?php endif; ?>
-                                                    <?php echo htmlspecialchars($pet['pet_name']); ?>
+                                                    <?php echo sanitize($pet['pet_name']); ?>
                                                     <span
-                                                        class="text-[10px] text-base-content/40">(<?php echo htmlspecialchars($pet['species_name']); ?>)</span>
+                                                        class="text-[10px] text-base-content/40">(<?php echo sanitize($pet['species_name']); ?>)</span>
                                                 </div>
                                             <?php endforeach; ?>
                                         </div>
@@ -434,7 +434,7 @@ function nightsCount($cin, $cout)
                                             <span class="text-base-content/70">โค้ดส่วนลด</span>
                                             <?php if ($booking['promo_code']): ?>
                                                 <span
-                                                    class="font-bold text-success ml-1"><?php echo htmlspecialchars($booking['promo_code']); ?></span>
+                                                    class="font-bold text-success ml-1"><?php echo sanitize($booking['promo_code']); ?></span>
                                             <?php endif; ?>
                                         </div>
                                         <span

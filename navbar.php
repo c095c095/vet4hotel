@@ -112,7 +112,7 @@ $user_menu_items = [
                                 </div>
                                 <div>
                                     <p class="font-semibold text-primary text-sm">
-                                        <?php echo htmlspecialchars($customer_name); ?>
+                                        <?php echo sanitize($customer_name); ?>
                                     </p>
                                     <p class="text-xs text-base-content/60">สมาชิก</p>
                                 </div>
@@ -224,7 +224,7 @@ $user_menu_items = [
                     </div>
                     <div class="flex-1">
                         <p class="font-semibold text-primary">
-                            <?php echo htmlspecialchars($customer_name); ?>
+                            <?php echo sanitize($customer_name); ?>
                         </p>
                         <p class="text-xs text-base-content/60">ดูโปรไฟล์</p>
                     </div>

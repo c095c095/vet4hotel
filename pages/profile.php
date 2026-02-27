@@ -57,7 +57,7 @@ function thaiDateFull_profile($date)
 }
 
 $stats['member_since'] = thaiDateFull_profile($customer['created_at']);
-$full_name = htmlspecialchars(($customer['first_name'] ?? '') . ' ' . ($customer['last_name'] ?? ''));
+$full_name = sanitize(($customer['first_name'] ?? '') . ' ' . ($customer['last_name'] ?? ''));
 $initials = mb_substr($customer['first_name'] ?? 'U', 0, 1);
 ?>
 
@@ -110,7 +110,7 @@ $initials = mb_substr($customer['first_name'] ?? 'U', 0, 1);
                             <div class="flex items-center gap-3 mt-1 text-sm text-base-content/50">
                                 <span class="flex items-center gap-1">
                                     <i data-lucide="mail" class="size-3.5"></i>
-                                    <?php echo htmlspecialchars($customer['email']); ?>
+                                    <?php echo sanitize($customer['email']); ?>
                                 </span>
                                 <span class="flex items-center gap-1">
                                     <i data-lucide="calendar" class="size-3.5"></i>
@@ -174,7 +174,7 @@ $initials = mb_substr($customer['first_name'] ?? 'U', 0, 1);
                                     class="input input-bordered flex items-center gap-2 focus-within:border-primary bg-base-100/50">
                                     <i data-lucide="user" class="size-4 text-base-content/40"></i>
                                     <input type="text" name="first_name" class="grow" required
-                                        value="<?php echo htmlspecialchars($customer['first_name']); ?>"
+                                        value="<?php echo sanitize($customer['first_name']); ?>"
                                         placeholder="ชื่อ">
                                 </label>
                             </div>
@@ -186,7 +186,7 @@ $initials = mb_substr($customer['first_name'] ?? 'U', 0, 1);
                                 <label
                                     class="input input-bordered flex items-center gap-2 focus-within:border-primary bg-base-100/50">
                                     <input type="text" name="last_name" class="grow" required
-                                        value="<?php echo htmlspecialchars($customer['last_name']); ?>"
+                                        value="<?php echo sanitize($customer['last_name']); ?>"
                                         placeholder="นามสกุล">
                                 </label>
                             </div>
@@ -202,7 +202,7 @@ $initials = mb_substr($customer['first_name'] ?? 'U', 0, 1);
                                 class="input input-bordered flex items-center gap-2 w-full focus-within:border-primary bg-base-100/50">
                                 <i data-lucide="phone" class="size-4 text-base-content/40"></i>
                                 <input type="tel" name="phone" class="grow" required pattern="[0-9]{9,10}"
-                                    value="<?php echo htmlspecialchars($customer['phone']); ?>"
+                                    value="<?php echo sanitize($customer['phone']); ?>"
                                     placeholder="08xxxxxxxx">
                             </label>
                         </div>
@@ -217,7 +217,7 @@ $initials = mb_substr($customer['first_name'] ?? 'U', 0, 1);
                                 class="input input-bordered flex items-center gap-2 w-full bg-base-200/50 cursor-not-allowed">
                                 <i data-lucide="mail" class="size-4 text-base-content/30"></i>
                                 <input type="email" class="grow cursor-not-allowed" disabled
-                                    value="<?php echo htmlspecialchars($customer['email']); ?>">
+                                    value="<?php echo sanitize($customer['email']); ?>">
                                 <i data-lucide="lock" class="size-3.5 text-base-content/20"></i>
                             </label>
                         </div>
@@ -230,7 +230,7 @@ $initials = mb_substr($customer['first_name'] ?? 'U', 0, 1);
                             <textarea name="address"
                                 class="textarea textarea-bordered w-full focus:border-primary bg-base-100/50 resize-none"
                                 rows="3"
-                                placeholder="บ้านเลขที่ ซอย ถนน ตำบล อำเภอ จังหวัด รหัสไปรษณีย์"><?php echo htmlspecialchars($customer['address'] ?? ''); ?></textarea>
+                                placeholder="บ้านเลขที่ ซอย ถนน ตำบล อำเภอ จังหวัด รหัสไปรษณีย์"><?php echo sanitize($customer['address'] ?? ''); ?></textarea>
                         </div>
 
                         <button type="submit"
@@ -267,7 +267,7 @@ $initials = mb_substr($customer['first_name'] ?? 'U', 0, 1);
                                     class="input input-bordered flex items-center gap-2 w-full focus-within:border-primary bg-base-100/50">
                                     <i data-lucide="user-check" class="size-4 text-base-content/40"></i>
                                     <input type="text" name="emergency_contact_name" class="grow"
-                                        value="<?php echo htmlspecialchars($customer['emergency_contact_name'] ?? ''); ?>"
+                                        value="<?php echo sanitize($customer['emergency_contact_name'] ?? ''); ?>"
                                         placeholder="ชื่อ-นามสกุล ผู้ที่ติดต่อได้">
                                 </label>
                             </div>
@@ -280,7 +280,7 @@ $initials = mb_substr($customer['first_name'] ?? 'U', 0, 1);
                                     class="input input-bordered flex items-center gap-2 w-full focus-within:border-primary bg-base-100/50">
                                     <i data-lucide="phone-call" class="size-4 text-base-content/40"></i>
                                     <input type="tel" name="emergency_contact_phone" class="grow" pattern="[0-9]{9,10}"
-                                        value="<?php echo htmlspecialchars($customer['emergency_contact_phone'] ?? ''); ?>"
+                                        value="<?php echo sanitize($customer['emergency_contact_phone'] ?? ''); ?>"
                                         placeholder="08xxxxxxxx">
                                 </label>
                             </div>

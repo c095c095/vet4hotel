@@ -38,7 +38,7 @@ try {
         $delStmt = $pdo->prepare("UPDATE pets SET deleted_at = NOW() WHERE id = ? AND customer_id = ?");
         $delStmt->execute([$pet_id, $customer_id]);
 
-        $_SESSION['msg_success'] = "ลบข้อมูลของ " . htmlspecialchars($pet['name']) . " เรียบร้อยแล้ว";
+        $_SESSION['msg_success'] = "ลบข้อมูลของ " . sanitize($pet['name']) . " เรียบร้อยแล้ว";
         header("Location: ?page=my_pets");
         exit();
     }
@@ -106,7 +106,7 @@ try {
             ':customer_id' => $customer_id,
         ]);
 
-        $_SESSION['msg_success'] = "แก้ไขข้อมูลของ " . htmlspecialchars($name) . " เรียบร้อยแล้ว!";
+        $_SESSION['msg_success'] = "แก้ไขข้อมูลของ " . sanitize($name) . " เรียบร้อยแล้ว!";
         header("Location: ?page=my_pets");
         exit();
     }
@@ -139,7 +139,7 @@ try {
         ':vet_phone' => $vet_phone,
     ]);
 
-    $_SESSION['msg_success'] = "เพิ่มข้อมูลของ " . htmlspecialchars($name) . " เรียบร้อยแล้ว!";
+    $_SESSION['msg_success'] = "เพิ่มข้อมูลของ " . sanitize($name) . " เรียบร้อยแล้ว!";
     header("Location: ?page=my_pets");
     exit();
 

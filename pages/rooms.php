@@ -88,8 +88,8 @@ try {
                     <div class="card bg-base-100 shadow-xl border border-base-200 hover:shadow-2xl hover:border-primary/30 transition-all duration-300 group">
                         <?php if (!empty($room['primary_image'])): ?>
                             <figure class="h-56 bg-base-200 overflow-hidden relative">
-                                <img src="<?php echo htmlspecialchars($room['primary_image']); ?>"
-                                    alt="<?php echo htmlspecialchars($room['name']); ?>"
+                                <img src="<?php echo sanitize($room['primary_image']); ?>"
+                                    alt="<?php echo sanitize($room['name']); ?>"
                                     class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                                 <div class="absolute top-4 right-4 bg-base-100/90 backdrop-blur-sm rounded-xl px-3 py-1.5 shadow-lg">
                                     <span class="text-primary font-bold text-lg">฿<?php echo number_format($room['base_price_per_night']); ?></span>
@@ -107,16 +107,16 @@ try {
                         <?php endif; ?>
                         <div class="card-body flex flex-col">
                             <h2 class="card-title text-base-content mb-2 group-hover:text-primary transition-colors">
-                                <?php echo htmlspecialchars($room['name']); ?>
+                                <?php echo sanitize($room['name']); ?>
                             </h2>
                             <p class="text-base-content/70 text-sm mb-4 line-clamp-2">
-                                <?php echo htmlspecialchars($room['description'] ?? 'ห้องพักสะอาด ปลอดภัย พร้อมสิ่งอำนวยความสะดวกครบครัน'); ?>
+                                <?php echo sanitize($room['description'] ?? 'ห้องพักสะอาด ปลอดภัย พร้อมสิ่งอำนวยความสะดวกครบครัน'); ?>
                             </p>
                             <div class="flex flex-wrap gap-2 mb-4">
                                 <?php if (!empty($room['size_sqm'])): ?>
                                     <span class="inline-flex items-center gap-1 bg-base-200/60 rounded-lg px-3 py-1 text-xs text-base-content/70">
                                         <i data-lucide="ruler" class="size-4"></i>
-                                        <?php echo htmlspecialchars($room['size_sqm']); ?> ตร.ม.
+                                        <?php echo sanitize($room['size_sqm']); ?> ตร.ม.
                                     </span>
                                 <?php endif; ?>
                                 <span class="inline-flex items-center gap-1 bg-base-200/60 rounded-lg px-3 py-1 text-xs text-base-content/70">
@@ -138,9 +138,9 @@ try {
                                                 }
                                             ?>
                                             <?php if (!empty($icon)): ?>
-                                                <i data-lucide="<?php echo htmlspecialchars($icon); ?>" class="size-4"></i>
+                                                <i data-lucide="<?php echo sanitize($icon); ?>" class="size-4"></i>
                                             <?php endif; ?>
-                                            <?php echo htmlspecialchars($am['name']); ?>
+                                            <?php echo sanitize($am['name']); ?>
                                         </span>
                                     <?php endforeach; ?>
                                 </div>
