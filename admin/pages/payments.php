@@ -34,7 +34,8 @@ $date_placeholder = date('Y-m-d');
                     <label class="label pt-0"><span class="label-text font-medium">ค้นหา</span></label>
                     <label class="input w-full">
                         <i data-lucide="search" class="h-[1em] opacity-50"></i>
-                        <input type="search" name="search" value="<?php echo htmlspecialchars($search); ?>" placeholder="รหัสการจอง, ชื่อลูกค้า, เบอร์โทร..." />
+                        <input type="search" name="search" value="<?php echo htmlspecialchars($search); ?>"
+                            placeholder="รหัสการจอง, ชื่อลูกค้า, เบอร์โทร..." />
                     </label>
                 </div>
 
@@ -406,23 +407,17 @@ $date_placeholder = date('Y-m-d');
 
                     <?php if ($p['status'] === 'pending'): ?>
                         <div class="flex gap-2">
-                            <form action="?action=payment" method="POST"
-                                onsubmit="return confirm('ยืนยัน \u0022การปฏิเสธ\u0022 รายการชำระเงินนี้ใช่หรือไม่?');">
-                                <input type="hidden" name="payment_id" value="<?php echo $p['id']; ?>">
-                                <input type="hidden" name="payment_action" value="reject">
-                                <button type="submit" class="btn btn-error text-white">
-                                    <i data-lucide="x" class="size-4"></i> ปฏิเสธ
-                                </button>
-                            </form>
+                            <button type="button"
+                                onclick="openPaymentConfirmModal(<?php echo $p['id']; ?>, 'reject', '<?php echo number_format($p['amount'], 2); ?>')"
+                                class="btn btn-error text-white">
+                                <i data-lucide="x" class="size-4"></i> ปฏิเสธ
+                            </button>
 
-                            <form action="?action=payment" method="POST"
-                                onsubmit="return confirm('ตรวจสอบและ \u0022ยืนยัน\u0022 การชำระเงินยอด ฿<?php echo number_format($p['amount'], 2); ?> ถูกต้องหรือไม่?');">
-                                <input type="hidden" name="payment_id" value="<?php echo $p['id']; ?>">
-                                <input type="hidden" name="payment_action" value="verify">
-                                <button type="submit" class="btn btn-success text-white">
-                                    <i data-lucide="check" class="size-4"></i> ยืนยันว่าถูกต้อง
-                                </button>
-                            </form>
+                            <button type="button"
+                                onclick="openPaymentConfirmModal(<?php echo $p['id']; ?>, 'verify', '<?php echo number_format($p['amount'], 2); ?>')"
+                                class="btn btn-success text-white">
+                                <i data-lucide="check" class="size-4"></i> ยืนยันว่าถูกต้อง
+                            </button>
                         </div>
                     <?php endif; ?>
                 </div>
@@ -433,3 +428,80 @@ $date_placeholder = date('Y-m-d');
         </dialog>
     <?php endforeach; ?>
 </div>
+
+<!-- ═══════════ CONFIRM ACTION MODAL ═══════════ -->
+<dialog id="modal_confirm_payment" class="modal modal-bottom sm:modal-middle">
+    <div class="modal-box w-11/12 max-w-md">
+        <form method="dialog">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-3 top-3">✕</button>
+        </form>
+        <div class="text-center py-2">
+            <div id="payment_confirm_icon_wrap"
+                class="w-14 h-14 rounded-2xl mx-auto flex items-center justify-center mb-4 bg-warning/10">
+                <i id="payment_confirm_icon" data-lucide="alert-triangle" class="size-7 text-warning"></i>
+            </div>
+            <h3 class="font-bold text-lg mb-2" id="payment_confirm_title">ยืนยันการทำรายการ</h3>
+            <p class="text-base-content/60" id="payment_confirm_message">ต้องการยืนยันใช่หรือไม่?</p>
+        </div>
+        <form method="POST" action="?action=payment" id="payment_status_form">
+            <input type="hidden" name="payment_id" id="payment_confirm_id">
+            <input type="hidden" name="payment_action" id="payment_confirm_action">
+            <div class="modal-action justify-center gap-3">
+                <button type="button" onclick="document.getElementById('modal_confirm_payment').close()"
+                    class="btn btn-ghost">ยกเลิก</button>
+                <button type="submit" id="payment_confirm_submit_btn" class="btn btn-warning gap-2">
+                    <i id="payment_confirm_submit_icon" data-lucide="check" class="size-4"></i>
+                    <span id="payment_confirm_submit_text">ยืนยัน</span>
+                </button>
+            </div>
+        </form>
+    </div>
+    <form method="dialog" class="modal-backdrop"><button>ปิด</button></form>
+</dialog>
+
+<script>
+    function openPaymentConfirmModal(paymentId, action, amountFormatted) {
+        // Populate hidden fields
+        document.getElementById('payment_confirm_id').value = paymentId;
+        document.getElementById('payment_confirm_action').value = action;
+
+        const titleEl = document.getElementById('payment_confirm_title');
+        const msgEl = document.getElementById('payment_confirm_message');
+        const btn = document.getElementById('payment_confirm_submit_btn');
+        const iconWrap = document.getElementById('payment_confirm_icon_wrap');
+        const icon = document.getElementById('payment_confirm_icon');
+        const submitIcon = document.getElementById('payment_confirm_submit_icon');
+        const submitText = document.getElementById('payment_confirm_submit_text');
+
+        if (action === 'verify') {
+            titleEl.textContent = 'ยืนยันการชำระเงิน';
+            msgEl.innerHTML = 'ตรวจสอบและ <strong class="text-success">"ยืนยัน"</strong> การชำระเงินยอด <strong>฿' + amountFormatted + '</strong> ถูกต้องหรือไม่?';
+
+            btn.className = 'btn gap-2 btn-success text-white';
+            iconWrap.className = 'w-14 h-14 rounded-2xl mx-auto flex items-center justify-center mb-4 bg-success/10';
+
+            icon.setAttribute('data-lucide', 'check-circle-2');
+            icon.className = 'size-7 text-success';
+
+            submitIcon.setAttribute('data-lucide', 'check');
+            submitText.textContent = 'ยืนยันว่าถูกต้อง';
+        } else {
+            titleEl.textContent = 'ปฏิเสธการชำระเงิน';
+            msgEl.innerHTML = 'ยืนยัน <strong class="text-error">"การปฏิเสธ"</strong> รายการชำระเงินยอด <strong>฿' + amountFormatted + '</strong> ใช่หรือไม่?';
+
+            btn.className = 'btn gap-2 btn-error text-white';
+            iconWrap.className = 'w-14 h-14 rounded-2xl mx-auto flex items-center justify-center mb-4 bg-error/10';
+
+            icon.setAttribute('data-lucide', 'x-circle');
+            icon.className = 'size-7 text-error';
+
+            submitIcon.setAttribute('data-lucide', 'x');
+            submitText.textContent = 'ปฏิเสธ';
+        }
+
+        // Must re-init lucide icons since we changed data-lucide attribute dynamically
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+
+        document.getElementById('modal_confirm_payment').showModal();
+    }
+</script>
