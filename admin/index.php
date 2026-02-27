@@ -20,55 +20,103 @@
     <script src="https://cdn.jsdelivr.net/npm/theme-change@2.0.2/index.js"></script>
 </head>
 
-<body>
+<body class="bg-base-200/50">
     <?php if (!in_array($current_page, ['login', 'setup'])): ?>
-        <?php // include 'navbar.php'; ?>
-    <?php endif; ?>
-    <main class="min-vh-100">
+        <!-- ═══ Drawer Layout (sidebar + content) ═══ -->
+        <div class="drawer lg:drawer-open">
+            <input id="admin-drawer" type="checkbox" class="drawer-toggle" />
+
+            <!-- Main Content -->
+            <div class="drawer-content flex flex-col min-h-screen">
+                <?php include __DIR__ . '/includes/navbar.php'; ?>
+
+                <main class="flex-1">
+                    <?php
+                    if (file_exists($page_file)) {
+                        include $page_file;
+                    } else {
+                        echo "<div class='container mt-5'>";
+                        echo "<div class='alert alert-danger text-center'>";
+                        echo "<h3>พบข้อผิดพลาด 404</h3>";
+                        echo "<p>ไม่พบไฟล์: <strong>" . sanitize($page_file) . "</strong> ในระบบ</p>";
+                        echo "</div>";
+                        echo "</div>";
+                    }
+                    ?>
+                </main>
+            </div>
+
+            <!-- Sidebar (inside drawer) -->
+            <?php include __DIR__ . '/includes/sidebar.php'; ?>
+        </div>
+
         <?php
-        if (file_exists($page_file)) {
-            include $page_file;
+        // Flash messages
+        $msg_success = $_SESSION['msg_success'] ?? null;
+        $msg_error = $_SESSION['msg_error'] ?? null;
+        unset($_SESSION['msg_success'], $_SESSION['msg_error']);
+
+        if ($msg_success): ?>
+            <div class="toast toast-top toast-center z-[9999]" id="flash-toast">
+                <div class="alert alert-success shadow-lg">
+                    <i data-lucide="check-circle" class="size-5"></i>
+                    <span><?php echo sanitize($msg_success); ?></span>
+                </div>
+            </div>
+            <script>setTimeout(() => { const t = document.getElementById('flash-toast'); if (t) t.remove(); }, 4000);</script>
+        <?php endif;
+
+        if ($msg_error): ?>
+            <div class="toast toast-top toast-center z-[9999]" id="flash-toast-err">
+                <div class="alert alert-error shadow-lg">
+                    <i data-lucide="alert-circle" class="size-5"></i>
+                    <span><?php echo sanitize($msg_error); ?></span>
+                </div>
+            </div>
+            <script>setTimeout(() => { const t = document.getElementById('flash-toast-err'); if (t) t.remove(); }, 5000);</script>
+        <?php endif; ?>
+
+    <?php else: ?>
+        <!-- Login / Setup Pages (no sidebar) -->
+        <main class="min-h-screen">
+            <?php
+            if (file_exists($page_file)) {
+                include $page_file;
+            } else {
+                echo "<div class='container mt-5'>";
+                echo "<div class='alert alert-danger text-center'>";
+                echo "<h3>พบข้อผิดพลาด 404</h3>";
+                echo "<p>ไม่พบไฟล์: <strong>" . sanitize($page_file) . "</strong> ในระบบ</p>";
+                echo "</div>";
+                echo "</div>";
+            }
 
             $msg_success = $_SESSION['msg_success'] ?? null;
             $msg_error = $_SESSION['msg_error'] ?? null;
             unset($_SESSION['msg_success'], $_SESSION['msg_error']);
 
-            if ($msg_success) {
-                ?>
-                <div class="toast toast-top toast-center z-9999" id="flash-toast">
+            if ($msg_success): ?>
+                <div class="toast toast-top toast-center z-[9999]" id="flash-toast">
                     <div class="alert alert-success shadow-lg">
                         <i data-lucide="check-circle" class="size-5"></i>
                         <span><?php echo sanitize($msg_success); ?></span>
                     </div>
                 </div>
                 <script>setTimeout(() => { const t = document.getElementById('flash-toast'); if (t) t.remove(); }, 4000);</script>
-                <?php
-            }
+            <?php endif;
 
-            if ($msg_error) {
-                ?>
-                <div class="toast toast-top toast-center z-9999" id="flash-toast-err">
+            if ($msg_error): ?>
+                <div class="toast toast-top toast-center z-[9999]" id="flash-toast-err">
                     <div class="alert alert-error shadow-lg">
                         <i data-lucide="alert-circle" class="size-5"></i>
                         <span><?php echo sanitize($msg_error); ?></span>
                     </div>
                 </div>
                 <script>setTimeout(() => { const t = document.getElementById('flash-toast-err'); if (t) t.remove(); }, 5000);</script>
-                <?php
-            }
-        } else {
-            echo "<div class='container mt-5'>";
-            echo "<div class='alert alert-danger text-center'>";
-            echo "<h3>พบข้อผิดพลาด 404</h3>";
-            echo "<p>ไม่พบไฟล์: <strong>" . sanitize($page_file) . "</strong> ในระบบ</p>";
-            echo "</div>";
-            echo "</div>";
-        }
-        ?>
-    </main>
-    <?php if (!in_array($current_page, ['login', 'setup'])): ?>
-        <?php // include 'footer.php'; ?>
+            <?php endif; ?>
+        </main>
     <?php endif; ?>
+
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
         lucide.createIcons();
