@@ -3614,6 +3614,9 @@
   .h-96 {
     height: calc(var(--spacing) * 96);
   }
+  .h-\[1em\] {
+    height: 1em;
+  }
   .h-full {
     height: 100%;
   }
@@ -5269,6 +5272,9 @@
     @supports (color: color-mix(in lab, red, red)) {
       color: color-mix(in oklab, var(--color-base-content) 80%, transparent);
     }
+  }
+  .text-black {
+    color: var(--color-black);
   }
   .text-blue-300 {
     color: var(--color-blue-300);

@@ -53,12 +53,10 @@ function booking_status_badge_ui($status)
                 <!-- Search -->
                 <div class="form-control flex-1">
                     <label class="label pt-0"><span class="label-text font-medium">ค้นหา</span></label>
-                    <div class="relative">
-                        <i data-lucide="search" class="size-4 absolute left-3 top-3 text-base-content/50"></i>
-                        <input type="text" name="search" placeholder="Ref, ชื่อ, นามสกุล, เบอร์โทร..."
-                            class="input input-bordered w-full pl-10 focus:input-primary transition-colors"
-                            value="<?php echo htmlspecialchars($search); ?>" />
-                    </div>
+                    <label class="input w-full">
+                        <i data-lucide="search" class="h-[1em] opacity-50"></i>
+                        <input type="search" name="search" placeholder="Ref, ชื่อ, นามสกุล, เบอร์โทร..." />
+                    </label>
                 </div>
 
                 <!-- Status Filter -->
@@ -146,7 +144,7 @@ function booking_status_badge_ui($status)
                                 <td>
                                     <div class="flex items-center gap-3">
                                         <div class="avatar placeholder hidden sm:flex">
-                                            <div class="bg-base-300 text-base-content w-8 h-8 rounded-full">
+                                            <div class="bg-base-300 text-base-content w-8 h-8 rounded-full flex items-center justify-center">
                                                 <span class="text-xs">
                                                     <?php echo mb_substr($b['first_name'], 0, 1); ?>
                                                 </span>
