@@ -21,7 +21,7 @@
 </head>
 
 <body>
-    <?php if (!in_array($current_page, ['login'])): ?>
+    <?php if (!in_array($current_page, ['login', 'setup'])): ?>
         <?php // include 'navbar.php'; ?>
     <?php endif; ?>
     <main class="min-vh-100">
@@ -66,7 +66,7 @@
         }
         ?>
     </main>
-    <?php if (!in_array($current_page, ['login'])): ?>
+    <?php if (!in_array($current_page, ['login', 'setup'])): ?>
         <?php // include 'footer.php'; ?>
     <?php endif; ?>
     <script src="https://unpkg.com/lucide@latest"></script>

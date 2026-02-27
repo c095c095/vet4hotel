@@ -14,9 +14,18 @@ $error = $_SESSION['error_msg'] ?? '';
 unset($_SESSION['error_msg']);
 $success = $_SESSION['success_msg'] ?? '';
 unset($_SESSION['success_msg']);
+
+// check admin is exist if not redirect to setup page
+$stmt = $pdo->query("SELECT COUNT(*) FROM employees WHERE role='admin'");
+$employee_count = $stmt->fetchColumn();
+
+if ($employee_count == 0) {
+    header("Location: ?page=setup");
+    exit();
+}
 ?>
 
-<section class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-base-200 relative overflow-hidden">
+<section class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden bg-base-100 md:bg-base-200">
     <!-- Decorative background elements -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
         <div class="absolute top-0 left-0 w-full h-full bg-linear-to-br from-primary/5 via-transparent to-secondary/5"></div>
@@ -35,7 +44,7 @@ unset($_SESSION['success_msg']);
             กลับสู่หน้าเว็บไซต์
         </a>
 
-        <div class="bg-base-100 rounded-2xl shadow-xl border border-base-200 overflow-hidden">
+        <div class="md:bg-base-100 rounded-2xl md:shadow-xl md:border border-base-200 overflow-hidden">
             <div class="p-8 sm:p-10">
                 <!-- Logo & Header -->
                 <div class="text-center mb-8">

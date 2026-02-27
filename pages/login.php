@@ -23,7 +23,7 @@ unset($_SESSION['success_msg']);
 ?>
 
 <section
-    class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-base-200/40 relative overflow-hidden">
+    class="min-h-screen flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-base-200/40 relative overflow-hidden">
     <!-- Decorative floating elements -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
         <div class="floating-paw absolute top-[10%] left-[10%] opacity-10 text-primary">
@@ -156,6 +156,10 @@ unset($_SESSION['success_msg']);
                 </div>
             </div>
         </div>
+    </div>
+
+    <div class="max-w-4xl w-full mx-auto mt-4 text-center md:text-end">
+        <a href="./admin" class="text-base-content/60 hover:text-primary font-medium transition-colors">สำหรับพนักงาน</a>
     </div>
 </section>
 

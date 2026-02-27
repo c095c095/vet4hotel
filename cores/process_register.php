@@ -36,6 +36,10 @@ if (empty($first_name) || empty($last_name) || empty($phone) || empty($email) ||
     $_SESSION['error_msg'] = "กรุณากรอกข้อมูลให้ครบถ้วน";
     header("Location: " . $redirect_back);
     exit();
+} elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    $_SESSION['error_msg'] = "รูปแบบอีเมลไม่ถูกต้อง";
+    header("Location: " . $redirect_back);
+    exit();
 } elseif ($password !== $confirm_password) {
     $_SESSION['error_msg'] = "รหัสผ่านและการยืนยันรหัสผ่านไม่ตรงกัน";
     header("Location: " . $redirect_back);

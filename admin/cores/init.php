@@ -24,9 +24,10 @@ if (!array_key_exists($current_page, $pages)) {
     $current_page = '404';
 }
 
-$ignore_redirect_pages = ['logout'];
+$ignore_redirect_pages = ['logout', 'setup'];
+$public_pages = ['login', 'setup'];
 
-if (!isset($_SESSION['employee_id']) && $current_page !== 'login') {
+if (!isset($_SESSION['employee_id']) && !in_array($current_page, $public_pages)) {
     if (in_array($current_page, $ignore_redirect_pages) || empty($_GET['page'])) {
         header("Location: ?page=login");
     } else {
