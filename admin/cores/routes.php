@@ -30,6 +30,9 @@ $pages = [
     // --- Services ---
     "services" => ["title" => "บริการเสริม", "file" => "pages/services.php"],
 
+    // --- Daily Care Tasks ---
+    "care_tasks" => ["title" => "งานดูแลรายวัน", "file" => "pages/care_tasks.php"],
+
     // --- Setup ---
     "setup" => ["title" => "ตั้งค่าเริ่มต้น", "file" => "pages/setup.php"],
 
