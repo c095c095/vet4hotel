@@ -119,6 +119,9 @@ $pets = $stmt->fetchAll();
 // 6. Fetch all species for filter dropdown
 $species_list = $pdo->query("SELECT id, name FROM species ORDER BY name ASC")->fetchAll();
 
+// 6.1. Fetch all active customers for Add Pet modal
+$customers_list = $pdo->query("SELECT id, first_name, last_name, phone FROM customers WHERE is_active = 1 AND deleted_at IS NULL ORDER BY first_name ASC")->fetchAll();
+
 // 7. Fetch all breeds grouped by species (for edit modal)
 $breeds_by_species = [];
 $breeds_all = $pdo->query("SELECT id, species_id, name FROM breeds ORDER BY name ASC")->fetchAll();

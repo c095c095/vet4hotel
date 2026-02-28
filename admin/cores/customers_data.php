@@ -111,6 +111,15 @@ while ($row = $sq->fetch()) {
 }
 $status_counts['all'] = ($status_counts['active'] ?? 0) + ($status_counts['inactive'] ?? 0);
 
+// 7.1 Fetch data for Add Pet form (used in the Add Pet modal inside customer details)
+$species_list = $pdo->query("SELECT id, name FROM species ORDER BY name ASC")->fetchAll();
+
+$breeds_by_species = [];
+$breeds_all = $pdo->query("SELECT id, species_id, name FROM breeds ORDER BY name ASC")->fetchAll();
+foreach ($breeds_all as $br) {
+    $breeds_by_species[$br['species_id']][] = $br;
+}
+
 // 8. Summary Stats
 $stats = [];
 

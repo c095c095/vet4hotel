@@ -19,6 +19,96 @@ if (!isset($_SESSION['employee_id'])) {
 }
 
 $sub_action = trim($_POST['sub_action'] ?? '');
+$origin_page = trim($_POST['origin_page'] ?? 'pets'); // Support redirecting back to source page
+
+// Helper to handle redirection dynamically
+function redirectBack($origin_page, $customer_id = null)
+{
+    if ($origin_page === 'customers' && $customer_id) {
+        header("Location: ?page=customers"); // Could append search filter here if needed later
+    } else {
+        header("Location: ?page=pets");
+    }
+    exit();
+}
+
+// ─── ADD PET ───
+if ($sub_action === 'add') {
+    $customer_id = (int) ($_POST['customer_id'] ?? 0);
+    $name = trim($_POST['name'] ?? '');
+    $species_id = (int) ($_POST['species_id'] ?? 0);
+    $breed_id = !empty($_POST['breed_id']) ? (int) $_POST['breed_id'] : null;
+    $dob = trim($_POST['dob'] ?? '') ?: null;
+    $weight_kg = isset($_POST['weight_kg']) && $_POST['weight_kg'] !== '' ? (float) $_POST['weight_kg'] : null;
+    $gender = trim($_POST['gender'] ?? 'unknown');
+    $vet_name = trim($_POST['vet_name'] ?? '') ?: null;
+    $vet_phone = trim($_POST['vet_phone'] ?? '') ?: null;
+    $is_aggressive = isset($_POST['is_aggressive']) ? 1 : 0;
+    $behavior_note = trim($_POST['behavior_note'] ?? '') ?: null;
+
+    // Validation
+    $errors = [];
+    if ($customer_id <= 0) {
+        $errors[] = "กรุณาเลือกเจ้าของสัตว์เลี้ยง";
+    }
+    if (empty($name)) {
+        $errors[] = "กรุณากรอกชื่อสัตว์เลี้ยง";
+    }
+    if ($species_id <= 0) {
+        $errors[] = "กรุณาเลือกชนิดสัตว์";
+    }
+    if (!in_array($gender, ['male', 'female', 'spayed', 'neutered', 'unknown'])) {
+        $errors[] = "เพศไม่ถูกต้อง";
+    }
+    if ($weight_kg !== null && $weight_kg < 0) {
+        $errors[] = "น้ำหนักต้องไม่ต่ำกว่า 0";
+    }
+
+    // Verify customer exists
+    if (empty($errors)) {
+        $stmt = $pdo->prepare("SELECT id FROM customers WHERE id = :id AND deleted_at IS NULL");
+        $stmt->execute([':id' => $customer_id]);
+        if (!$stmt->fetch()) {
+            $errors[] = "ไม่พบข้อมูลเจ้าของสัตว์เลี้ยงในระบบ";
+        }
+    }
+
+    if (!empty($errors)) {
+        $_SESSION['msg_error'] = implode("<br>", $errors);
+        redirectBack($origin_page, $customer_id);
+    }
+
+    try {
+        $stmt = $pdo->prepare(
+            "INSERT INTO pets (
+                customer_id, name, species_id, breed_id, dob, weight_kg, gender, 
+                vet_name, vet_phone, is_aggressive, behavior_note, created_at, updated_at
+            ) VALUES (
+                :customer_id, :name, :species_id, :breed_id, :dob, :weight_kg, :gender, 
+                :vet_name, :vet_phone, :is_aggressive, :behavior_note, NOW(), NOW()
+            )"
+        );
+        $stmt->execute([
+            ':customer_id' => $customer_id,
+            ':name' => $name,
+            ':species_id' => $species_id,
+            ':breed_id' => $breed_id,
+            ':dob' => $dob,
+            ':weight_kg' => $weight_kg,
+            ':gender' => $gender,
+            ':vet_name' => $vet_name,
+            ':vet_phone' => $vet_phone,
+            ':is_aggressive' => $is_aggressive,
+            ':behavior_note' => $behavior_note,
+        ]);
+
+        $_SESSION['msg_success'] = "เพิ่ม \"{$name}\" เข้าสู่ระบบสำเร็จแล้ว";
+    } catch (PDOException $e) {
+        $_SESSION['msg_error'] = "เกิดข้อผิดพลาด: ไม่สามารถเพิ่มสัตว์เลี้ยงได้";
+    }
+
+    redirectBack($origin_page, $customer_id);
+}
 
 // ─── EDIT PET ───
 if ($sub_action === 'edit') {

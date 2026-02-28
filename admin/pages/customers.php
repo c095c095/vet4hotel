@@ -401,10 +401,15 @@ require_once __DIR__ . '/../cores/customers_data.php';
 
                 <!-- Pets Section -->
                 <div>
-                    <div class="text-sm font-semibold mb-3 border-b border-base-200 pb-2 flex items-center gap-2">
-                        <i data-lucide="paw-print" class="size-4 text-primary"></i>
-                        สัตว์เลี้ยง (
-                        <?php echo $c['pet_count']; ?>)
+                    <div class="text-sm font-semibold mb-3 border-b border-base-200 pb-2 flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="paw-print" class="size-4 text-primary"></i>
+                            สัตว์เลี้ยง (<?php echo $c['pet_count']; ?>)
+                        </div>
+                        <button type="button" class="btn btn-xs btn-outline btn-primary gap-1"
+                            onclick="openAddPetCustomerModal(<?php echo $c['id']; ?>, '<?php echo htmlspecialchars(addslashes($c['first_name'] . ' ' . $c['last_name'])); ?>')">
+                            <i data-lucide="plus" class="size-3"></i> เพิ่มสัตว์เลี้ยง
+                        </button>
                     </div>
                     <?php $pets = $customer_pets[$c['id']] ?? []; ?>
                     <?php if (empty($pets)): ?>
@@ -505,7 +510,148 @@ require_once __DIR__ . '/../cores/customers_data.php';
     <form method="dialog" class="modal-backdrop"><button>ปิด</button></form>
 </dialog>
 
+<!-- ═══════════ ADD PET (FROM CUSTOMER) MODAL ═══════════ -->
+<dialog id="modal_add_pet_customer" class="modal modal-bottom sm:modal-middle" style="z-index: 9999;">
+    <div class="modal-box w-11/12 max-w-2xl">
+        <form method="dialog">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-3 top-3">✕</button>
+        </form>
+        <h3 class="font-bold text-lg flex items-center gap-2 mb-4">
+            <div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                <i data-lucide="plus" class="size-4 text-primary"></i>
+            </div>
+            เพิ่มสัตว์เลี้ยงใหม่
+        </h3>
+
+        <div class="bg-base-200/50 rounded-lg p-3 mb-4 flex items-center gap-2 border border-base-200">
+            <i data-lucide="user" class="size-4 text-base-content/60"></i>
+            <span class="text-sm">เจ้าของ: <strong id="add_pet_customer_name_display"
+                    class="text-primary"></strong></span>
+        </div>
+
+        <form method="POST" action="?action=pets" id="add_pet_customer_form" class="space-y-4">
+            <input type="hidden" name="sub_action" value="add">
+            <input type="hidden" name="origin_page" value="customers">
+            <!-- Automatically attached customer ID -->
+            <input type="hidden" name="customer_id" id="add_pet_customer_id" value="">
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <!-- Name -->
+                <div class="form-control">
+                    <label class="label"><span class="label-text font-medium">ชื่อสัตว์เลี้ยง <span
+                                class="text-error">*</span></span></label>
+                    <input type="text" name="name" id="add_pet_customer_name"
+                        class="input input-bordered w-full focus:input-primary" placeholder="เช่น นิกกี้, มอมแมม"
+                        required />
+                </div>
+
+                <!-- Species -->
+                <div class="form-control">
+                    <label class="label"><span class="label-text font-medium">ชนิดสัตว์ <span
+                                class="text-error">*</span></span></label>
+                    <select name="species_id" id="add_pet_customer_species"
+                        class="select select-bordered w-full focus:select-primary" required
+                        onchange="updateAddPetCustomerBreedDropdown(this.value)">
+                        <option value="">-- เลือก --</option>
+                        <?php foreach ($species_list as $sp): ?>
+                            <option value="<?php echo $sp['id']; ?>"><?php echo htmlspecialchars($sp['name']); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <!-- Breed -->
+                <div class="form-control">
+                    <label class="label"><span class="label-text font-medium">สายพันธุ์ <span
+                                class="text-base-content/40">(ไม่บังคับ)</span></span></label>
+                    <select name="breed_id" id="add_pet_customer_breed"
+                        class="select select-bordered w-full focus:select-primary">
+                        <option value="">-- เลือกชนิดสัตว์ก่อน --</option>
+                    </select>
+                </div>
+
+                <!-- Gender -->
+                <div class="form-control">
+                    <label class="label"><span class="label-text font-medium">เพศ</span></label>
+                    <select name="gender" id="add_pet_customer_gender"
+                        class="select select-bordered w-full focus:select-primary">
+                        <option value="male">ผู้ (Male)</option>
+                        <option value="female">เมีย (Female)</option>
+                        <option value="neutered">ทำหมันแล้ว — ผู้ (Neutered)</option>
+                        <option value="spayed">ทำหมันแล้ว — เมีย (Spayed)</option>
+                        <option value="unknown" selected>ไม่ระบุ</option>
+                    </select>
+                </div>
+
+                <!-- DOB -->
+                <div class="form-control">
+                    <label class="label"><span class="label-text font-medium">วันเกิด <span
+                                class="text-base-content/40">(ไม่บังคับ)</span></span></label>
+                    <input type="date" name="dob" id="add_pet_customer_dob"
+                        class="input input-bordered w-full focus:input-primary" />
+                </div>
+
+                <!-- Weight -->
+                <div class="form-control">
+                    <label class="label"><span class="label-text font-medium">น้ำหนัก (kg) <span
+                                class="text-base-content/40">(ไม่บังคับ)</span></span></label>
+                    <input type="number" name="weight_kg" id="add_pet_customer_weight" step="0.01" min="0"
+                        placeholder="เช่น 4.5" class="input input-bordered w-full focus:input-primary" />
+                </div>
+
+                <!-- Vet Name -->
+                <div class="form-control">
+                    <label class="label"><span class="label-text font-medium">คลินิก/หมอประจำตัว <span
+                                class="text-base-content/40">(ไม่บังคับ)</span></span></label>
+                    <input type="text" name="vet_name" id="add_pet_customer_vet_name"
+                        class="input input-bordered w-full focus:input-primary" />
+                </div>
+
+                <!-- Vet Phone -->
+                <div class="form-control">
+                    <label class="label"><span class="label-text font-medium">เบอร์คลินิก <span
+                                class="text-base-content/40">(ไม่บังคับ)</span></span></label>
+                    <input type="text" name="vet_phone" id="add_pet_customer_vet_phone"
+                        class="input input-bordered w-full focus:input-primary" />
+                </div>
+            </div>
+
+            <!-- Aggressive Checkbox -->
+            <div class="form-control">
+                <label class="label cursor-pointer justify-start gap-3">
+                    <input type="checkbox" name="is_aggressive" id="add_pet_customer_aggressive"
+                        class="checkbox checkbox-error" value="1" />
+                    <div>
+                        <span class="label-text font-medium">ดุ/ก้าวร้าว</span>
+                        <p class="text-xs text-base-content/50 mt-0.5">
+                            ทำเครื่องหมายนี้เพื่อแจ้งเตือนพนักงานเรื่องความปลอดภัย</p>
+                    </div>
+                </label>
+            </div>
+
+            <!-- Behavior Note -->
+            <div class="form-control">
+                <label class="label"><span class="label-text font-medium">หมายเหตุพฤติกรรม <span
+                            class="text-base-content/40">(ไม่บังคับ)</span></span></label>
+                <textarea name="behavior_note" id="add_pet_customer_behavior_note"
+                    class="textarea textarea-bordered w-full focus:textarea-primary h-20" rows="2"
+                    placeholder="เช่น กลัวฟ้าร้อง, ชอบกัด, ต้องดูแลพิเศษ..."></textarea>
+            </div>
+
+            <div class="modal-action">
+                <button type="submit" class="btn btn-primary gap-2">
+                    <i data-lucide="save" class="size-4"></i>
+                    บันทึกข้อมูล
+                </button>
+            </div>
+        </form>
+    </div>
+    <form method="dialog" class="modal-backdrop"><button>ปิด</button></form>
+</dialog>
+
 <script>
+    // Breeds data from PHP for add pet modal
+    const breedsBySpecies = <?php echo json_encode($breeds_by_species); ?>;
+
     function openCustomerConfirmModal(customerId, action, customerName) {
         // Populate hidden fields
         document.getElementById('customer_confirm_id').value = customerId;
@@ -551,5 +697,34 @@ require_once __DIR__ . '/../cores/customers_data.php';
         // Close the previous modal if it is open (so we don't stack dialogs improperly)
         document.getElementById('modal_customer_' + customerId).close();
         document.getElementById('modal_confirm_customer').showModal();
+    }
+
+    function updateAddPetCustomerBreedDropdown(speciesId) {
+        const breedSelect = document.getElementById('add_pet_customer_breed');
+        breedSelect.innerHTML = '<option value="">-- เลือก --</option>';
+
+        if (speciesId && breedsBySpecies[speciesId]) {
+            breedsBySpecies[speciesId].forEach(b => {
+                const opt = document.createElement('option');
+                opt.value = b.id;
+                opt.textContent = b.name;
+                breedSelect.appendChild(opt);
+            });
+        }
+    }
+
+    function openAddPetCustomerModal(customerId, customerName) {
+        // Reset form
+        document.getElementById('add_pet_customer_form').reset();
+        document.getElementById('add_pet_customer_breed').innerHTML = '<option value="">-- เลือกชนิดสัตว์ก่อน --</option>';
+
+        // Set customer context
+        document.getElementById('add_pet_customer_id').value = customerId;
+        document.getElementById('add_pet_customer_name_display').textContent = customerName;
+
+        // Close detail modal and open add pet modal
+        document.getElementById('modal_customer_' + customerId).close();
+        document.getElementById('modal_add_pet_customer').showModal();
+        if (typeof lucide !== 'undefined') lucide.createIcons();
     }
 </script>
