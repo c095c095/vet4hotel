@@ -161,7 +161,7 @@ function renderStars($rating)
                             </div>
                         </div>
 
-                        <div class="bg-base-200/50 p-3 rounded-lg flex-1 min-h-[5rem] my-2 text-sm">
+                        <div class="bg-base-200/50 p-3 rounded-lg flex-1 min-h-20 my-2 text-sm">
                             "
                             <?php echo nl2br(htmlspecialchars($review['comment'] ?? 'ไม่มีข้อความอธิบาย')); ?>"
                         </div>

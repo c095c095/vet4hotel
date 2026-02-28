@@ -4,10 +4,8 @@
 // Handles approving (publishing) or hiding customer reviews
 // ═══════════════════════════════════════════════════════════
 
-session_start();
-
 if (!isset($_SESSION['employee_id'])) {
-    header("Location: ./?page=login");
+    header("Location: ?page=login");
     exit();
 }
 
@@ -37,6 +35,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    header("Location: ./?page=cms_reviews");
+    header("Location: ?page=cms_reviews");
     exit();
 }

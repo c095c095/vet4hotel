@@ -224,7 +224,7 @@ function getRefundTypeBadge($type)
                                                 จัดการ <i data-lucide="chevron-down" class="size-3"></i>
                                             </label>
                                             <ul tabindex="0"
-                                                class="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-48 border border-base-200">
+                                                class="dropdown-content z-1 menu p-2 shadow-lg bg-base-100 rounded-box w-48 border border-base-200">
                                                 <li><a onclick="updateRefundStatus(<?php echo $r['id']; ?>, 'processed')"
                                                         class="text-success"><i data-lucide="check" class="size-4"></i>
                                                         อนุมัติการคืนเงินแล้ว</a></li>
