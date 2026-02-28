@@ -2,6 +2,8 @@
 
 session_start();
 date_default_timezone_set("Asia/Bangkok");
+error_reporting(0);
+ini_set('display_errors', 0);
 
 require_once 'config.php';
 require_once 'routes.php';
