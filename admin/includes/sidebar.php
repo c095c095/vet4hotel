@@ -13,6 +13,7 @@ $nav_items = [
     ['page' => 'care_tasks', 'label' => 'งานดูแลรายวัน', 'icon' => 'clipboard-check'],
     ['page' => 'payments', 'label' => 'การชำระเงิน', 'icon' => 'credit-card'],
     ['page' => 'services', 'label' => 'บริการเสริม', 'icon' => 'sparkles'],
+    ['page' => 'room_types', 'label' => 'ประเภทห้องพัก', 'icon' => 'bed-double'],
     ['page' => 'promotions', 'label' => 'โปรโมชัน', 'icon' => 'tag'],
 ];
 

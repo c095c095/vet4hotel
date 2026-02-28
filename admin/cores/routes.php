@@ -42,6 +42,9 @@ $pages = [
     // --- Promotions ---
     "promotions" => ["title" => "จัดการโปรโมชัน", "file" => "pages/promotions.php"],
 
+    // --- Room Types ---
+    "room_types" => ["title" => "ประเภทห้องพัก", "file" => "pages/room_types.php"],
+
     // --- Error Pages ---
     "404" => ["title" => "ไม่พบหน้าเว็บ", "file" => "pages/404.php"],
 ];
