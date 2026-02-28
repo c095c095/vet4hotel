@@ -33,6 +33,9 @@ $pages = [
     // --- Daily Care Tasks ---
     "care_tasks" => ["title" => "งานดูแลรายวัน", "file" => "pages/care_tasks.php"],
 
+    // --- Settings ---
+    "settings" => ["title" => "ตั้งค่าระบบ", "file" => "pages/settings.php"],
+
     // --- Setup ---
     "setup" => ["title" => "ตั้งค่าเริ่มต้น", "file" => "pages/setup.php"],
 
