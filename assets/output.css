@@ -5644,6 +5644,16 @@
       }
     }
   }
+  .progress-error {
+    @layer daisyui.l1.l2 {
+      color: var(--color-error);
+    }
+  }
+  .progress-primary {
+    @layer daisyui.l1.l2 {
+      color: var(--color-primary);
+    }
+  }
   .text-accent {
     color: var(--color-accent);
   }
@@ -7078,6 +7088,11 @@
       }
     }
   }
+  .sm\:w-1\/2 {
+    @media (width >= 40rem) {
+      width: calc(1 / 2 * 100%);
+    }
+  }
   .sm\:w-auto {
     @media (width >= 40rem) {
       width: auto;
@@ -7256,6 +7271,11 @@
   .md\:left-\[-60px\] {
     @media (width >= 48rem) {
       left: -60px;
+    }
+  }
+  .md\:col-span-1 {
+    @media (width >= 48rem) {
+      grid-column: span 1 / span 1;
     }
   }
   .md\:steps-horizontal {

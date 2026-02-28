@@ -170,6 +170,14 @@ $min_date = date('Y-m-d');
                     </div>
                 </div>
 
+                <div class="form-control mb-6">
+                    <label class="label"><span class="label-text font-medium">รหัสโปรโมชัน (ถ้ามี)</span></label>
+                    <div class="relative flex gap-2 w-full sm:w-1/2">
+                        <input type="text" name="promotion_code" class="input input-bordered w-full uppercase"
+                            placeholder="เช่น VET2026..." />
+                    </div>
+                </div>
+
                 <div class="form-control">
                     <label class="label"><span class="label-text font-medium">คำขอพิเศษ / หมายเหตุการจอง
                             (ถ้ามี)</span></label>

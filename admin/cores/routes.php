@@ -39,6 +39,9 @@ $pages = [
     // --- Setup ---
     "setup" => ["title" => "ตั้งค่าเริ่มต้น", "file" => "pages/setup.php"],
 
+    // --- Promotions ---
+    "promotions" => ["title" => "จัดการโปรโมชัน", "file" => "pages/promotions.php"],
+
     // --- Error Pages ---
     "404" => ["title" => "ไม่พบหน้าเว็บ", "file" => "pages/404.php"],
 ];

@@ -13,6 +13,7 @@ $nav_items = [
     ['page' => 'care_tasks', 'label' => 'งานดูแลรายวัน', 'icon' => 'clipboard-check'],
     ['page' => 'payments', 'label' => 'การชำระเงิน', 'icon' => 'credit-card'],
     ['page' => 'services', 'label' => 'บริการเสริม', 'icon' => 'sparkles'],
+    ['page' => 'promotions', 'label' => 'โปรโมชัน', 'icon' => 'tag'],
 ];
 
 $employee_name = $_SESSION['user_name'] ?? 'พนักงาน';
