@@ -219,7 +219,8 @@ function active_badge($is_active)
                                 required></div>
                     </div>
                     <div class="form-control"><label class="label"><span class="label-text">อีเมล</span></label><input
-                            type="email" name="email" id="edit_emp_email" class="input input-sm input-bordered w-full" required>
+                            type="email" name="email" id="edit_emp_email" class="input input-sm input-bordered w-full"
+                            required>
                     </div>
                     <div class="form-control"><label class="label"><span class="label-text">บทบาท</span></label>
                         <select name="role" id="edit_emp_role" class="select select-sm select-bordered w-full">
@@ -667,6 +668,128 @@ function active_badge($is_active)
                 </ul>
             </div>
 
+            <!-- Species -->
+            <div class="card bg-base-100 shadow-sm border border-base-200 h-fit">
+                <div class="p-3 border-b border-base-200 flex justify-between items-center bg-base-100/50 rounded-t-2xl">
+                    <h2 class="font-bold text-sm">สายพันธุ์หลัก (Species)</h2>
+                    <button onclick="addLookup('species', 'สายพันธุ์หลัก', false)"
+                        class="btn btn-xs btn-ghost text-primary"><i data-lucide="plus" class="size-3.5"></i></button>
+                </div>
+                <ul class="menu menu-xs p-2 w-full">
+                    <?php foreach ($species_list as $item): ?>
+                        <li class="flex flex-row items-center justify-between p-1.5 hover:bg-base-200/50 rounded">
+                            <span>
+                                <?php echo htmlspecialchars($item['name']); ?>
+                            </span>
+                            <div class="flex gap-1 shrink-0">
+                                <button
+                                    onclick="editLookup('species', <?php echo $item['id']; ?>, '<?php echo htmlspecialchars($item['name'], ENT_QUOTES); ?>', null, false)"
+                                    class="btn btn-xs btn-square btn-ghost"><i data-lucide="pencil"
+                                        class="size-3.5 text-base-content/50"></i></button>
+                            </div>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+
+            <!-- Breeds -->
+            <div class="card bg-base-100 shadow-sm border border-base-200 h-fit">
+                <div class="p-3 border-b border-base-200 flex justify-between items-center bg-base-100/50 rounded-t-2xl">
+                    <h2 class="font-bold text-sm">สายพันธุ์ย่อย (Breeds)</h2>
+                    <button onclick="addLookup('breeds', 'สายพันธุ์ย่อย', false, true)"
+                        class="btn btn-xs btn-ghost text-primary"><i data-lucide="plus" class="size-3.5"></i></button>
+                </div>
+                <div class="p-2 max-h-64 overflow-y-auto w-full">
+                    <table class="table table-xs w-full">
+                        <tbody>
+                            <?php foreach ($breeds_list as $item): ?>
+                                <tr>
+                                    <td>
+                                        <div class="font-medium"><?php echo htmlspecialchars($item['name']); ?></div>
+                                        <div class="text-[10px] text-base-content/50">
+                                            <?php echo htmlspecialchars($item['species_name']); ?>
+                                        </div>
+                                    </td>
+                                    <td class="text-right whitespace-nowrap">
+                                        <div class="flex gap-1 justify-end">
+                                            <button
+                                                onclick="editLookup('breeds', <?php echo $item['id']; ?>, '<?php echo htmlspecialchars($item['name'], ENT_QUOTES); ?>', null, false, true, <?php echo $item['species_id']; ?>)"
+                                                class="btn btn-xs btn-square btn-ghost"><i data-lucide="pencil"
+                                                    class="size-3 text-base-content/50"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Vaccine Types -->
+            <div class="card bg-base-100 shadow-sm border border-base-200 h-fit">
+                <div class="p-3 border-b border-base-200 flex justify-between items-center bg-base-100/50 rounded-t-2xl">
+                    <h2 class="font-bold text-sm">ชนิดวัคซีน (Vaccines)</h2>
+                    <button onclick="addLookup('vaccine_types', 'ชนิดวัคซีน', false, true)"
+                        class="btn btn-xs btn-ghost text-primary"><i data-lucide="plus" class="size-3.5"></i></button>
+                </div>
+                <div class="p-2 max-h-64 overflow-y-auto w-full">
+                    <table class="table table-xs w-full">
+                        <tbody>
+                            <?php foreach ($vaccine_types as $item): ?>
+                                <tr class="<?php echo $item['is_active'] ? '' : 'opacity-50 line-through'; ?>">
+                                    <td>
+                                        <div class="font-medium"><?php echo htmlspecialchars($item['name']); ?></div>
+                                        <div class="text-[10px] text-base-content/50">
+                                            <?php echo htmlspecialchars($item['species_name']); ?>
+                                        </div>
+                                    </td>
+                                    <td class="text-right whitespace-nowrap">
+                                        <div class="flex gap-1 justify-end">
+                                            <button
+                                                onclick="editLookup('vaccine_types', <?php echo $item['id']; ?>, '<?php echo htmlspecialchars($item['name'], ENT_QUOTES); ?>', null, false, true, <?php echo $item['species_id']; ?>)"
+                                                class="btn btn-xs btn-square btn-ghost"><i data-lucide="pencil"
+                                                    class="size-3 text-base-content/50"></i></button>
+                                            <button
+                                                onclick="toggleLookup('vaccine_types', <?php echo $item['id']; ?>, <?php echo $item['is_active'] ? '0' : '1'; ?>)"
+                                                class="btn btn-xs btn-square btn-ghost <?php echo $item['is_active'] ? 'text-warning' : 'text-success'; ?>">
+                                                <i data-lucide="<?php echo $item['is_active'] ? 'pause-circle' : 'play-circle'; ?>"
+                                                    class="size-3"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Amenities -->
+            <div class="card bg-base-100 shadow-sm border border-base-200 h-fit">
+                <div class="p-3 border-b border-base-200 flex justify-between items-center bg-base-100/50 rounded-t-2xl">
+                    <h2 class="font-bold text-sm">สิ่งอำนวยความสะดวกในห้อง</h2>
+                    <button onclick="addLookup('amenities', 'สิ่งอำนวยความสะดวก', true)"
+                        class="btn btn-xs btn-ghost text-primary"><i data-lucide="plus" class="size-3.5"></i></button>
+                </div>
+                <ul class="menu menu-xs p-2 w-full">
+                    <?php foreach ($amenities as $item): ?>
+                        <li class="flex flex-row items-center justify-between p-1.5 hover:bg-base-200/50 rounded">
+                            <span class="flex items-center gap-2">
+                                <?php if ($item['icon_class']): ?><i data-lucide="<?php echo $item['icon_class']; ?>"
+                                        class="size-3.5"></i><?php endif; ?>
+                                <?php echo htmlspecialchars($item['name']); ?>
+                            </span>
+                            <div class="flex gap-1 shrink-0">
+                                <button
+                                    onclick="editLookup('amenities', <?php echo $item['id']; ?>, '<?php echo htmlspecialchars($item['name'], ENT_QUOTES); ?>', '<?php echo $item['icon_class']; ?>', true)"
+                                    class="btn btn-xs btn-square btn-ghost"><i data-lucide="pencil"
+                                        class="size-3.5 text-base-content/50"></i></button>
+                            </div>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+
         </div>
 
         <dialog id="modal_lookup" class="modal">
@@ -690,6 +813,16 @@ function active_badge($is_active)
                         <input type="text" name="icon_class" id="lookup_icon" placeholder="เช่น pill, camera"
                             class="input input-sm input-bordered">
                     </div>
+
+                    <div class="form-control" id="lookup_species_wrap" style="display:none;">
+                        <label class="label"><span class="label-text">เลือกสายพันธุ์หลัก *</span></label>
+                        <select name="species_id" id="lookup_species" class="select select-sm select-bordered w-full">
+                            <?php foreach ($species_list as $s): ?>
+                                <option value="<?php echo $s['id']; ?>"><?php echo htmlspecialchars($s['name']); ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
                     <button type="submit" class="btn btn-primary w-full mt-4">บันทึก</button>
                 </form>
             </div>
@@ -697,7 +830,7 @@ function active_badge($is_active)
         </dialog>
 
         <script>
-            function addLookup(table, title, showIcon) {
+            function addLookup(table, title, showIcon, showSpecies = false) {
                 document.getElementById('lookup_sub_action').value = 'add_lookup';
                 document.getElementById('lookup_table').value = table;
                 document.getElementById('lookup_id').value = '';
@@ -705,9 +838,13 @@ function active_badge($is_active)
                 document.getElementById('lookup_icon').value = '';
                 document.getElementById('lookup_title').textContent = 'เพิ่ม ' + title;
                 document.getElementById('lookup_icon_wrap').style.display = showIcon ? 'block' : 'none';
+
+                document.getElementById('lookup_species_wrap').style.display = showSpecies ? 'block' : 'none';
+                document.getElementById('lookup_species').required = showSpecies;
+
                 document.getElementById('modal_lookup').showModal();
             }
-            function editLookup(table, id, name, icon, showIcon) {
+            function editLookup(table, id, name, icon, showIcon, showSpecies = false, speciesId = null) {
                 document.getElementById('lookup_sub_action').value = 'edit_lookup';
                 document.getElementById('lookup_table').value = table;
                 document.getElementById('lookup_id').value = id;
@@ -715,6 +852,13 @@ function active_badge($is_active)
                 document.getElementById('lookup_icon').value = icon || '';
                 document.getElementById('lookup_title').textContent = 'แก้ไขข้อมูล';
                 document.getElementById('lookup_icon_wrap').style.display = showIcon ? 'block' : 'none';
+
+                document.getElementById('lookup_species_wrap').style.display = showSpecies ? 'block' : 'none';
+                document.getElementById('lookup_species').required = showSpecies;
+                if (showSpecies && speciesId) {
+                    document.getElementById('lookup_species').value = speciesId;
+                }
+
                 document.getElementById('modal_lookup').showModal();
             }
             function toggleLookup(table, id, st) {

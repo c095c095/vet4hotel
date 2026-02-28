@@ -11,10 +11,15 @@ $nav_items = [
     ['page' => 'customers', 'label' => 'ลูกค้า', 'icon' => 'users'],
     ['page' => 'pets', 'label' => 'สัตว์เลี้ยง', 'icon' => 'paw-print'],
     ['page' => 'care_tasks', 'label' => 'งานดูแลรายวัน', 'icon' => 'clipboard-check'],
+    ['page' => 'daily_updates', 'label' => 'อัปเดตรายวัน', 'icon' => 'camera'],
+    ['page' => 'pet_transportation', 'label' => 'บริการรับ-ส่ง', 'icon' => 'truck'],
     ['page' => 'payments', 'label' => 'การชำระเงิน', 'icon' => 'credit-card'],
+    ['page' => 'refunds', 'label' => 'ขอคืนเงิน', 'icon' => 'banknote'],
     ['page' => 'services', 'label' => 'บริการเสริม', 'icon' => 'sparkles'],
     ['page' => 'room_types', 'label' => 'ประเภทห้องพัก', 'icon' => 'bed-double'],
     ['page' => 'promotions', 'label' => 'โปรโมชัน', 'icon' => 'tag'],
+    ['page' => 'cms_banners', 'label' => 'แบนเนอร์หน้าแรก', 'icon' => 'image'],
+    ['page' => 'cms_reviews', 'label' => 'รีวิวจากลูกค้า', 'icon' => 'message-square-quote'],
 ];
 
 $employee_name = $_SESSION['user_name'] ?? 'พนักงาน';

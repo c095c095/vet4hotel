@@ -18,11 +18,15 @@ function status_badge($status)
     <!-- ═══════════ HEADER & ACTIONS ═══════════ -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-            <h1 class="text-2xl lg:text-3xl font-bold flex items-center gap-3 text-base-content">
-                <i data-lucide="clipboard-check" class="size-8 text-primary"></i>
+            <h1 class="text-2xl lg:text-3xl font-bold text-base-content flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                    <i data-lucide="clipboard-check" class="size-5 text-primary"></i>
+                </div>
                 งานดูแลรายวัน
             </h1>
-            <p class="text-base-content/60 mt-1">จัดการหน้ารายการงานดูแลสัตว์เลี้ยงประจำวัน</p>
+            <p class="text-base-content/60 text-sm mt-1 ml-13">
+                จัดการหน้ารายการงานดูแลสัตว์เลี้ยงประจำวัน
+            </p>
         </div>
         <div class="flex items-center gap-2">
             <button onclick="openAddModal()"

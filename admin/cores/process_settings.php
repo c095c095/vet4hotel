@@ -330,7 +330,7 @@ if (in_array($sub_action, ['add_lookup', 'edit_lookup'])) {
     $name = trim($_POST['name'] ?? '');
     $icon_class = trim($_POST['icon_class'] ?? ''); // only for daily_update_types
 
-    $valid_tables = ['medical_record_types', 'daily_update_types', 'care_task_types'];
+    $valid_tables = ['medical_record_types', 'daily_update_types', 'care_task_types', 'species', 'breeds', 'vaccine_types', 'amenities'];
 
     if (!in_array($table, $valid_tables) || empty($name)) {
         $_SESSION['msg_error'] = "ข้อมูลไม่ถูกต้อง";
@@ -340,6 +340,20 @@ if (in_array($sub_action, ['add_lookup', 'edit_lookup'])) {
                 if ($table === 'daily_update_types') {
                     $stmt = $pdo->prepare("INSERT INTO daily_update_types (name, icon_class, is_active) VALUES (?, ?, 1)");
                     $stmt->execute([$name, $icon_class ?: null]);
+                } elseif ($table === 'breeds') {
+                    $species_id = (int) ($_POST['species_id'] ?? 0);
+                    $stmt = $pdo->prepare("INSERT INTO breeds (name, species_id) VALUES (?, ?)");
+                    $stmt->execute([$name, $species_id]);
+                } elseif ($table === 'vaccine_types') {
+                    $species_id = (int) ($_POST['species_id'] ?? 0);
+                    $stmt = $pdo->prepare("INSERT INTO vaccine_types (name, species_id, is_active) VALUES (?, ?, 1)");
+                    $stmt->execute([$name, $species_id]);
+                } elseif ($table === 'amenities') {
+                    $stmt = $pdo->prepare("INSERT INTO amenities (name, icon_class) VALUES (?, ?)");
+                    $stmt->execute([$name, $icon_class ?: null]);
+                } elseif ($table === 'species') {
+                    $stmt = $pdo->prepare("INSERT INTO species (name) VALUES (?)");
+                    $stmt->execute([$name]);
                 } else {
                     $stmt = $pdo->prepare("INSERT INTO {$table} (name, is_active) VALUES (?, 1)");
                     $stmt->execute([$name]);
@@ -349,6 +363,20 @@ if (in_array($sub_action, ['add_lookup', 'edit_lookup'])) {
                 if ($table === 'daily_update_types') {
                     $stmt = $pdo->prepare("UPDATE daily_update_types SET name=?, icon_class=? WHERE id=?");
                     $stmt->execute([$name, $icon_class ?: null, $id]);
+                } elseif ($table === 'breeds') {
+                    $species_id = (int) ($_POST['species_id'] ?? 0);
+                    $stmt = $pdo->prepare("UPDATE breeds SET name=?, species_id=? WHERE id=?");
+                    $stmt->execute([$name, $species_id, $id]);
+                } elseif ($table === 'vaccine_types') {
+                    $species_id = (int) ($_POST['species_id'] ?? 0);
+                    $stmt = $pdo->prepare("UPDATE vaccine_types SET name=?, species_id=? WHERE id=?");
+                    $stmt->execute([$name, $species_id, $id]);
+                } elseif ($table === 'amenities') {
+                    $stmt = $pdo->prepare("UPDATE amenities SET name=?, icon_class=? WHERE id=?");
+                    $stmt->execute([$name, $icon_class ?: null, $id]);
+                } elseif ($table === 'species') {
+                    $stmt = $pdo->prepare("UPDATE species SET name=? WHERE id=?");
+                    $stmt->execute([$name, $id]);
                 } else {
                     $stmt = $pdo->prepare("UPDATE {$table} SET name=? WHERE id=?");
                     $stmt->execute([$name, $id]);
@@ -369,12 +397,14 @@ if ($sub_action === 'toggle_lookup') {
     $table = trim($_POST['table_name'] ?? '');
     $new_status = (int) ($_POST['new_status'] ?? 0);
 
-    $valid_tables = ['medical_record_types', 'daily_update_types', 'care_task_types'];
+    $valid_tables = ['medical_record_types', 'daily_update_types', 'care_task_types', 'vaccine_types'];
 
     if (in_array($table, $valid_tables) && $id > 0) {
         $stmt = $pdo->prepare("UPDATE {$table} SET is_active = ? WHERE id = ?");
         $stmt->execute([$new_status, $id]);
         $_SESSION['msg_success'] = "ปรับปรุงสถานะเรียบร้อยแล้ว";
+    } else {
+        $_SESSION['msg_error'] = "ตารางนี้ไม่สามารถเปลี่ยนแปลงสถานะได้";
     }
     header("Location: " . $return_url);
     exit();
