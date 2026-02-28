@@ -184,16 +184,16 @@ function active_badge($is_active)
                     </div>
                     <div class="form-control"><label class="label"><span class="label-text">อีเมล
                                 (ใช้สำหรับเข้าสู่ระบบ)</span></label><input type="email" name="email"
-                            class="input input-sm input-bordered" required></div>
+                            class="input input-sm input-bordered w-full" required></div>
                     <div class="form-control"><label class="label"><span class="label-text">บทบาท</span></label>
-                        <select name="role" class="select select-sm select-bordered">
+                        <select name="role" class="select select-sm select-bordered w-full">
                             <option value="staff">พนักงานทั่วไป (Staff)</option>
                             <option value="admin">ผู้ดูแลระบบ (Admin)</option>
                         </select>
                     </div>
                     <div class="form-control"><label class="label"><span
                                 class="label-text">รหัสผ่านชั่วคราว</span></label><input type="text" name="password"
-                            minlength="8" class="input input-sm input-bordered" required></div>
+                            minlength="8" class="input input-sm input-bordered w-full" required></div>
                     <button type="submit" class="btn btn-primary w-full mt-4">บันทึก</button>
                 </form>
             </div>
@@ -219,10 +219,10 @@ function active_badge($is_active)
                                 required></div>
                     </div>
                     <div class="form-control"><label class="label"><span class="label-text">อีเมล</span></label><input
-                            type="email" name="email" id="edit_emp_email" class="input input-sm input-bordered" required>
+                            type="email" name="email" id="edit_emp_email" class="input input-sm input-bordered w-full" required>
                     </div>
                     <div class="form-control"><label class="label"><span class="label-text">บทบาท</span></label>
-                        <select name="role" id="edit_emp_role" class="select select-sm select-bordered">
+                        <select name="role" id="edit_emp_role" class="select select-sm select-bordered w-full">
                             <option value="staff">พนักงานทั่วไป (Staff)</option>
                             <option value="admin">ผู้ดูแลระบบ (Admin)</option>
                         </select>
@@ -247,7 +247,7 @@ function active_badge($is_active)
                     <input type="hidden" name="employee_id" id="reset_emp_id">
                     <div class="form-control"><label class="label"><span class="label-text">รหัสผ่านใหม่ (อักขระ 8
                                 ตัวขึ้นไป)</span></label><input type="text" name="new_password" minlength="8"
-                            class="input input-sm input-bordered" required></div>
+                            class="input input-sm input-bordered w-full" required></div>
                     <button type="submit" class="btn btn-error w-full mt-4">เปลี่ยนรหัสผ่าน</button>
                 </form>
             </div>
@@ -515,7 +515,7 @@ function active_badge($is_active)
 
                     <div class="form-control"><label class="label"><span class="label-text text-error">ชื่อเทศกาล
                                 *</span></label><input type="text" name="season_name" id="season_name"
-                            placeholder="เช่น ช่วงปีใหม่ 2026" class="input input-sm input-bordered" required></div>
+                            placeholder="เช่น ช่วงปีใหม่ 2026" class="input input-sm input-bordered w-full" required></div>
                     <div class="grid grid-cols-2 gap-4">
                         <div class="form-control"><label class="label"><span class="label-text text-error">วันที่เริ่ม
                                     *</span></label><input type="date" name="start_date" id="season_start"
@@ -526,7 +526,7 @@ function active_badge($is_active)
                     </div>
                     <div class="form-control"><label class="label"><span class="label-text text-error">% บวกเพิ่ม
                                 (จากราคาปกติ) *</span></label>
-                        <label class="input input-sm input-bordered flex items-center gap-2">
+                        <label class="input input-sm input-bordered flex items-center gap-2  w-full">
                             <input type="number" step="0.01" min="0" name="price_multiplier_percent" id="season_pct"
                                 class="grow" required />
                             <span class="text-base-content/50">%</span>
