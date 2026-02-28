@@ -8,7 +8,7 @@ require_once __DIR__ . '/../cores/customers_data.php';
 
 <div class="p-4 lg:p-8 space-y-6 max-w-[1600px] mx-auto">
 
-    <!-- ═══════════ HEADER ═══════════ -->
+    <!-- ═══════════ HEADER & ACTIONS ═══════════ -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
             <h1 class="text-2xl lg:text-3xl font-bold text-base-content flex items-center gap-3">
@@ -17,9 +17,13 @@ require_once __DIR__ . '/../cores/customers_data.php';
                 </div>
                 จัดการลูกค้า
             </h1>
-            <p class="text-base-content/60 text-sm mt-1 ml-13">
-                ดูข้อมูลลูกค้า สัตว์เลี้ยง และประวัติการจองทั้งหมด
-            </p>
+            <p class="text-base-content/60 text-sm mt-1 ml-13">ดูรายชื่อลูกค้า ข้อมูลสัตว์เลี้ยง และประวัติการจอง</p>
+        </div>
+        <div class="flex items-center gap-2">
+            <button onclick="openAddCustomerModal()" class="btn btn-primary gap-2 shadow-sm">
+                <i data-lucide="user-plus" class="size-4"></i>
+                เพิ่มลูกค้าใหม่
+            </button>
         </div>
     </div>
 
@@ -648,9 +652,114 @@ require_once __DIR__ . '/../cores/customers_data.php';
     <form method="dialog" class="modal-backdrop"><button>ปิด</button></form>
 </dialog>
 
+<!-- ═══════════ ADD CUSTOMER MODAL ═══════════ -->
+<dialog id="modal_add_customer" class="modal modal-bottom sm:modal-middle">
+    <div class="modal-box w-11/12 max-w-2xl">
+        <form method="dialog">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-3 top-3">✕</button>
+        </form>
+        <h3 class="font-bold text-lg flex items-center gap-2 mb-4">
+            <div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                <i data-lucide="user-plus" class="size-4 text-primary"></i>
+            </div>
+            เพิ่มลูกค้าใหม่
+        </h3>
+
+        <form method="POST" action="?action=customer" id="add_customer_form" class="space-y-4">
+            <!-- Ensure your backend process_customer.php receives this action flag -->
+            <input type="hidden" name="customer_action" value="add">
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <!-- First Name -->
+                <div class="form-control">
+                    <label class="label"><span class="label-text font-medium">ชื่อ <span
+                                class="text-error">*</span></span></label>
+                    <input type="text" name="first_name" id="add_cust_first_name"
+                        class="input input-bordered w-full focus:input-primary" required />
+                </div>
+
+                <!-- Last Name -->
+                <div class="form-control">
+                    <label class="label"><span class="label-text font-medium">นามสกุล <span
+                                class="text-error">*</span></span></label>
+                    <input type="text" name="last_name" id="add_cust_last_name"
+                        class="input input-bordered w-full focus:input-primary" required />
+                </div>
+
+                <!-- Phone -->
+                <div class="form-control">
+                    <label class="label"><span class="label-text font-medium">เบอร์โทรศัพท์ <span
+                                class="text-error">*</span></span></label>
+                    <input type="tel" name="phone" id="add_cust_phone"
+                        class="input input-bordered w-full focus:input-primary" placeholder="เช่น 0812345678"
+                        required />
+                </div>
+
+                <!-- Email -->
+                <div class="form-control">
+                    <label class="label"><span class="label-text font-medium">อีเมล <span
+                                class="text-error">*</span></span></label>
+                    <input type="email" name="email" id="add_cust_email"
+                        class="input input-bordered w-full focus:input-primary" placeholder="เช่น user@example.com"
+                        required />
+                </div>
+
+                <!-- Address (Full width) -->
+                <div class="form-control sm:col-span-2">
+                    <label class="label"><span class="label-text font-medium">ที่อยู่ <span
+                                class="text-base-content/40">(ไม่บังคับ)</span></span></label>
+                    <textarea name="address" id="add_cust_address"
+                        class="textarea textarea-bordered w-full focus:textarea-primary h-20" rows="2"></textarea>
+                </div>
+
+                <div class="sm:col-span-2 mt-2 pt-2 border-t border-base-200">
+                    <h4 class="text-sm font-semibold mb-2">ข้อมูลติดต่อฉุกเฉิน</h4>
+                </div>
+
+                <!-- Emergency Contact Name -->
+                <div class="form-control">
+                    <label class="label pt-0"><span class="label-text font-medium">ชื่อบุคคลติดต่อฉุกเฉิน <span
+                                class="text-base-content/40">(ไม่บังคับ)</span></span></label>
+                    <input type="text" name="emergency_contact_name" id="add_cust_emergency_name"
+                        class="input input-bordered w-full focus:input-primary" />
+                </div>
+
+                <!-- Emergency Contact Phone -->
+                <div class="form-control">
+                    <label class="label pt-0"><span class="label-text font-medium">เบอร์ติดต่อฉุกเฉิน <span
+                                class="text-base-content/40">(ไม่บังคับ)</span></span></label>
+                    <input type="tel" name="emergency_contact_phone" id="add_cust_emergency_phone"
+                        class="input input-bordered w-full focus:input-primary" />
+                </div>
+
+                <div class="sm:col-span-2 text-xs text-error mt-1">
+                    <i data-lucide="info" class="size-3 inline-block -mt-0.5 mr-1"></i>
+                    รหัสผ่านเริ่มต้นสำหรับลูกค้าจะใช้เบอร์โทรศัพท์ในการเข้าสู่ระบบ
+                    หลังจากเพิ่มลูกค้าแล้วแนะนำให้แจ้งลูกค้าให้เปลี่ยนรหัสผ่านเพื่อความปลอดภัยของบัญชี
+                </div>
+
+            </div>
+
+            <div class="modal-action">
+                <button type="submit" class="btn btn-primary gap-2">
+                    <i data-lucide="user-check" class="size-4"></i>
+                    เพิ่มลูกค้า
+                </button>
+            </div>
+        </form>
+    </div>
+    <form method="dialog" class="modal-backdrop"><button>ปิด</button></form>
+</dialog>
+
 <script>
     // Breeds data from PHP for add pet modal
     const breedsBySpecies = <?php echo json_encode($breeds_by_species); ?>;
+
+    function openAddCustomerModal() {
+        document.getElementById('add_customer_form').reset();
+        document.getElementById('modal_add_customer').showModal();
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
 
     function openCustomerConfirmModal(customerId, action, customerName) {
         // Populate hidden fields

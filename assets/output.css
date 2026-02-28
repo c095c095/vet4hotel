@@ -5585,6 +5585,12 @@
   .text-error {
     color: var(--color-error);
   }
+  .text-error\/50 {
+    color: var(--color-error);
+    @supports (color: color-mix(in lab, red, red)) {
+      color: color-mix(in oklab, var(--color-error) 50%, transparent);
+    }
+  }
   .text-error\/70 {
     color: var(--color-error);
     @supports (color: color-mix(in lab, red, red)) {
@@ -5695,6 +5701,12 @@
   }
   .text-warning-content {
     color: var(--color-warning-content);
+  }
+  .text-warning-content\/50 {
+    color: var(--color-warning-content);
+    @supports (color: color-mix(in lab, red, red)) {
+      color: color-mix(in oklab, var(--color-warning-content) 50%, transparent);
+    }
   }
   .text-white {
     color: var(--color-white);
