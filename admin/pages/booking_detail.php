@@ -443,6 +443,114 @@ $action_btn_config = [
         </div>
     <?php endif; ?>
 
+    <!-- ═══════════ CARE TASKS ═══════════ -->
+    <div class="card bg-base-100 border border-base-200 shadow-sm">
+        <div class="card-body p-5">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                        <i data-lucide="clipboard-check" class="size-4 text-primary"></i>
+                    </div>
+                    <h2 class="font-bold text-base-content">งานดูแลสัตว์เลี้ยง (Daily Care Tasks)</h2>
+                    <span class="badge badge-ghost badge-sm"><?php echo count($booking_care_tasks); ?> รายการ</span>
+                </div>
+                <!-- Only allow adding if the booking is active -->
+                <?php if (in_array($booking['status'], ['confirmed', 'checked_in'])): ?>
+                    <button class="btn btn-sm btn-outline btn-primary gap-1" onclick="openAddCareTaskModal()">
+                        <i data-lucide="plus" class="size-4"></i> เพิ่มงานดูแล
+                    </button>
+                <?php endif; ?>
+            </div>
+
+            <?php if (empty($booking_care_tasks)): ?>
+                <div class="text-center py-6 text-base-content/40 bg-base-200/20 rounded-xl border border-dashed border-base-300">
+                    <i data-lucide="clipboard-x" class="size-8 mx-auto mb-2 opacity-50"></i>
+                    <p class="text-sm">ไม่มีงานดูแลสำหรับรายการจองนี้</p>
+                </div>
+            <?php else: ?>
+                <div class="overflow-x-auto -mx-2">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr class="text-base-content/50">
+                                <th>วันที่</th>
+                                <th>สัตว์เลี้ยง</th>
+                                <th>ประเภทงาน</th>
+                                <th>รายละเอียด</th>
+                                <th class="text-center">สถานะ</th>
+                                <th>ผู้รับผิดชอบ</th>
+                                <th class="text-center">จัดการ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($booking_care_tasks as $task): ?>
+                                <tr class="hover">
+                                    <td class="text-sm whitespace-nowrap">
+                                        <?php echo date('d/m/Y', strtotime($task['task_date'])); ?>
+                                    </td>
+                                    <td class="font-medium">
+                                        <?php echo sanitize($task['pet_name']); ?>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-ghost badge-sm"><?php echo sanitize($task['task_type_name']); ?></span>
+                                    </td>
+                                    <td class="text-sm text-base-content/70 max-w-xs truncate" title="<?php echo sanitize($task['description']); ?>">
+                                        <?php echo sanitize($task['description']); ?>
+                                    </td>
+                                    <td class="text-center">
+                                        <?php if ($task['status'] === 'completed'): ?>
+                                            <span class="badge badge-sm badge-success gap-1"><i data-lucide="check-circle" class="size-3"></i> เสร็จสิ้น</span>
+                                        <?php else: ?>
+                                            <span class="badge badge-sm badge-warning gap-1"><i data-lucide="clock" class="size-3"></i> รอดำเนินการ</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="text-sm">
+                                        <?php if ($task['status'] === 'completed' && $task['emp_first_name']): ?>
+                                            <?php echo sanitize($task['emp_first_name']); ?>
+                                            <div class="text-[10px] text-base-content/50"><?php echo date('H:i', strtotime($task['completed_at'])); ?> น.</div>
+                                        <?php else: ?>
+                                            <span class="text-base-content/40">-</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>
+                                        <div class="flex items-center justify-center gap-1">
+                                            <!-- Quick Complete Toggle -->
+                                            <form action="?action=care_tasks" method="POST" class="inline">
+                                                <input type="hidden" name="sub_action" value="toggle_status">
+                                                <input type="hidden" name="task_id" value="<?php echo $task['id']; ?>">
+                                                <input type="hidden" name="new_status" value="<?php echo $task['status'] === 'completed' ? 'pending' : 'completed'; ?>">
+                                                <input type="hidden" name="return_to_booking" value="<?php echo $booking_id; ?>">
+                                                
+                                                <?php if ($task['status'] === 'pending'): ?>
+                                                    <button type="submit" class="btn btn-xs btn-circle btn-ghost text-success hover:bg-success/10" data-tip="ทำสำเร็จ">
+                                                        <i data-lucide="check" class="size-4"></i>
+                                                    </button>
+                                                <?php else: ?>
+                                                    <button type="submit" class="btn btn-xs btn-circle btn-ghost text-warning hover:bg-warning/10" data-tip="ยกเลิกการทำ">
+                                                        <i data-lucide="rotate-ccw" class="size-4"></i>
+                                                    </button>
+                                                <?php endif; ?>
+                                            </form>
+                                            
+                                            <!-- Delete Button -->
+                                            <form action="?action=care_tasks" method="POST" class="inline" onsubmit="return confirm('ยืนยันการลบงานดูแลนี้?')">
+                                                <input type="hidden" name="sub_action" value="delete">
+                                                <input type="hidden" name="task_id" value="<?php echo $task['id']; ?>">
+                                                <input type="hidden" name="return_to_booking" value="<?php echo $booking_id; ?>">
+                                                <button type="submit" class="btn btn-xs btn-circle btn-ghost text-error/70 hover:text-error hover:bg-error/10" data-tip="ลบ">
+                                                    <i data-lucide="trash-2" class="size-4"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+
     <!-- ═══════════ FINANCIAL SUMMARY ═══════════ -->
     <div class="card bg-base-100 border border-base-200 shadow-sm">
         <div class="card-body p-5">
@@ -753,5 +861,104 @@ $action_btn_config = [
 
         // Re-init icons
         if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+
+    function openAddCareTaskModal() {
+        document.getElementById('modal-add-care-task').showModal();
+    }
+</script>
+
+<!-- ═══════════ ADD CARE TASK MODAL ═══════════ -->
+<dialog id="modal-add-care-task" class="modal modal-bottom sm:modal-middle">
+    <div class="modal-box bg-base-100 rounded-t-3xl sm:rounded-3xl p-0 overflow-hidden shadow-2xl max-w-md">
+        <div class="p-6 border-b border-base-200 flex items-center gap-3 bg-base-100/50">
+            <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                <i data-lucide="clipboard-check" class="size-5"></i>
+            </div>
+            <div>
+                <h3 class="font-bold text-lg text-base-content leading-tight">เพิ่มงานดูแลสัตว์เลี้ยง</h3>
+                <p class="text-sm text-base-content/60 mt-0.5">ระบุงานดูแลสำหรับรายการจองนี้</p>
+            </div>
+            <form method="dialog" class="ml-auto">
+                <button class="btn btn-sm btn-circle btn-ghost text-base-content/50 hover:text-base-content hover:bg-base-200">
+                    <i data-lucide="x" class="size-4"></i>
+                </button>
+            </form>
+        </div>
+
+        <form action="?action=care_tasks" method="POST" class="p-6 space-y-4">
+            <input type="hidden" name="sub_action" value="add">
+            <input type="hidden" name="return_to_booking" value="<?php echo $booking_id; ?>">
+            
+            <div class="form-control">
+                <label class="label pt-0"><span class="label-text font-medium">สัตว์เลี้ยง <span class="text-error">*</span></span></label>
+                <select name="pet_info" id="add-pet-select" class="select select-bordered w-full rounded-xl focus:outline-primary/50 focus:border-primary transition-colors" required onchange="updateAddCareTaskHiddenFields()">
+                    <option value="" disabled selected>-- เลือกสัตว์เลี้ยง --</option>
+                    <?php 
+                    // Flatten the pets array from all booked items
+                    foreach ($pets_by_item as $item_id => $pets) {
+                        foreach ($pets as $p) {
+                            $val = $item_id . '|' . $p['pet_id'];
+                            echo '<option value="' . $val . '">' . htmlspecialchars($p['pet_name'] . ' (' . $p['species_name'] . ')') . '</option>';
+                        }
+                    }
+                    ?>
+                </select>
+                <!-- JS will split this into these hidden fields on submit -->
+                <input type="hidden" name="booking_item_id" id="add-booking-item-id">
+                <input type="hidden" name="pet_id" id="add-pet-id">
+            </div>
+
+            <div class="form-control">
+                <label class="label pt-0"><span class="label-text font-medium">วันที่ต้องดูแล <span class="text-error">*</span></span></label>
+                <!-- Default to check in date if future, else today, but restrict min/max based on booking dates roughly if possible -->
+                <input type="date" name="task_date" class="input input-bordered w-full rounded-xl focus:outline-primary/50 focus:border-primary transition-colors" value="<?php echo date('Y-m-d'); ?>" required>
+            </div>
+
+            <div class="form-control">
+                <label class="label pt-0"><span class="label-text font-medium">ประเภทงาน <span class="text-error">*</span></span></label>
+                <select name="task_type_id" class="select select-bordered w-full rounded-xl focus:outline-primary/50 focus:border-primary transition-colors" required>
+                    <option value="" disabled selected>-- เลือกประเภท --</option>
+                    <?php foreach ($care_task_types as $type): ?>
+                        <option value="<?php echo $type['id']; ?>"><?php echo htmlspecialchars($type['name']); ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <div class="form-control">
+                <label class="label pt-0"><span class="label-text font-medium">รายละเอียดงาน <span class="text-error">*</span></span></label>
+                <textarea name="description" class="textarea textarea-bordered h-24 rounded-xl focus:outline-primary/50 focus:border-primary transition-colors w-full" placeholder="เช่น ป้อนยา 1 เม็ดหลังอาหาร" required></textarea>
+            </div>
+
+            <div class="modal-action mt-6">
+                <button type="button" class="btn btn-ghost rounded-xl font-medium" onclick="document.getElementById('modal-add-care-task').close()">ยกเลิก</button>
+                <button type="submit" class="btn btn-primary rounded-xl font-medium gap-2 shadow-sm" onclick="return prepareAddSubmit()">
+                    <i data-lucide="save" class="size-4"></i> บันทึกข้อมูล
+                </button>
+            </div>
+        </form>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
+</dialog>
+
+<script>
+    function updateAddCareTaskHiddenFields() {
+        const selectEl = document.getElementById('add-pet-select');
+        if (selectEl.value) {
+            const parts = selectEl.value.split('|');
+            document.getElementById('add-booking-item-id').value = parts[0];
+            document.getElementById('add-pet-id').value = parts[1];
+        }
+    }
+
+    function prepareAddSubmit() {
+        updateAddCareTaskHiddenFields();
+        if(!document.getElementById('add-pet-id').value) {
+            alert('กรุณาเลือกสัตว์เลี้ยง');
+            return false;
+        }
+        return true;
     }
 </script>

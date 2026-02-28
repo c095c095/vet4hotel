@@ -65,7 +65,11 @@ if ($sub_action === 'add') {
         $_SESSION['msg_error'] = "เกิดข้อผิดพลาด: ไม่สามารถเพิ่มงานดูแลได้";
     }
 
-    header("Location: ?page=care_tasks&date={$task_date}");
+    if (isset($_POST['return_to_booking']) && (int) $_POST['return_to_booking'] > 0) {
+        header("Location: ?page=booking_detail&id=" . (int) $_POST['return_to_booking']);
+    } else {
+        header("Location: ?page=care_tasks&date={$task_date}");
+    }
     exit();
 }
 
@@ -111,7 +115,11 @@ if ($sub_action === 'edit') {
         $_SESSION['msg_error'] = "เกิดข้อผิดพลาด: ไม่สามารถแก้ไขงานดูแลได้";
     }
 
-    header("Location: ?page=care_tasks&date={$task_date}");
+    if (isset($_POST['return_to_booking']) && (int) $_POST['return_to_booking'] > 0) {
+        header("Location: ?page=booking_detail&id=" . (int) $_POST['return_to_booking']);
+    } else {
+        header("Location: ?page=care_tasks&date={$task_date}");
+    }
     exit();
 }
 
@@ -140,9 +148,13 @@ if ($sub_action === 'toggle_status') {
         $_SESSION['msg_error'] = "เกิดข้อผิดพลาด: ไม่สามารถอัปเดตสถานะได้";
     }
 
-    // Capture the current URL parameter for date to redirect back smoothly
-    $redirect_date = isset($_POST['current_date_filter']) ? trim($_POST['current_date_filter']) : '';
-    header("Location: ?page=care_tasks" . ($redirect_date ? "&date={$redirect_date}" : ""));
+    if (isset($_POST['return_to_booking']) && (int) $_POST['return_to_booking'] > 0) {
+        header("Location: ?page=booking_detail&id=" . (int) $_POST['return_to_booking']);
+    } else {
+        // Capture the current URL parameter for date to redirect back smoothly
+        $redirect_date = isset($_POST['current_date_filter']) ? trim($_POST['current_date_filter']) : '';
+        header("Location: ?page=care_tasks" . ($redirect_date ? "&date={$redirect_date}" : ""));
+    }
     exit();
 }
 
@@ -164,8 +176,12 @@ if ($sub_action === 'delete') {
         $_SESSION['msg_error'] = "เกิดข้อผิดพลาด: ไม่สามารถลบงานได้";
     }
 
-    $redirect_date = isset($_POST['current_date_filter']) ? trim($_POST['current_date_filter']) : '';
-    header("Location: ?page=care_tasks" . ($redirect_date ? "&date={$redirect_date}" : ""));
+    if (isset($_POST['return_to_booking']) && (int) $_POST['return_to_booking'] > 0) {
+        header("Location: ?page=booking_detail&id=" . (int) $_POST['return_to_booking']);
+    } else {
+        $redirect_date = isset($_POST['current_date_filter']) ? trim($_POST['current_date_filter']) : '';
+        header("Location: ?page=care_tasks" . ($redirect_date ? "&date={$redirect_date}" : ""));
+    }
     exit();
 }
 

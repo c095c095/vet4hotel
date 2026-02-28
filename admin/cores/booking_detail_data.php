@@ -143,6 +143,28 @@ $stmt = $pdo->prepare("
 $stmt->execute([':booking_id' => $booking_id]);
 $total_paid = (float) $stmt->fetchColumn();
 
+// ─── 8. Daily Care Tasks ───
+$stmt = $pdo->prepare("
+    SELECT 
+        dct.*,
+        ctt.name AS task_type_name,
+        pet.name AS pet_name,
+        e.first_name AS emp_first_name
+    FROM daily_care_tasks dct
+    JOIN care_task_types ctt ON dct.task_type_id = ctt.id
+    JOIN pets pet ON dct.pet_id = pet.id
+    JOIN booking_items bi ON dct.booking_item_id = bi.id
+    LEFT JOIN employees e ON dct.completed_by_employee_id = e.id
+    WHERE bi.booking_id = :booking_id
+    ORDER BY dct.task_date DESC, dct.status ASC
+");
+$stmt->execute([':booking_id' => $booking_id]);
+$booking_care_tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// ─── 9. Fetch Care Task Types (For Modals) ───
+$types_stmt = $pdo->query("SELECT * FROM care_task_types WHERE is_active = 1 ORDER BY name ASC");
+$care_task_types = $types_stmt->fetchAll(PDO::FETCH_ASSOC);
+
 // ─── Status Config ───
 $status_config = [
     'pending_payment' => ['label' => 'รอชำระเงิน', 'class' => 'badge-warning', 'icon' => 'clock'],
