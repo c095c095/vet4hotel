@@ -120,7 +120,7 @@ function pet_age($dob)
             class="card bg-base-100 border border-base-200 shadow-sm relative overflow-hidden group hover:border-primary/30 transition-colors">
             <!-- Subtle gradient background purely for premium feel -->
             <div
-                class="absolute inset-0 bg-gradient-to-br from-base-200/50 via-transparent to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity">
+                class="absolute inset-0 bg-linear-to-br from-base-200/50 via-transparent to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity">
             </div>
 
             <div class="card-body p-4 flex flex-col justify-center relative z-10">
