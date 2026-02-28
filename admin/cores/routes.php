@@ -24,6 +24,9 @@ $pages = [
     // --- Payments ---
     "payments" => ["title" => "การชำระเงิน", "file" => "pages/payments.php"],
 
+    // --- Services ---
+    "services" => ["title" => "บริการเสริม", "file" => "pages/services.php"],
+
     // --- Setup ---
     "setup" => ["title" => "ตั้งค่าเริ่มต้น", "file" => "pages/setup.php"],
 

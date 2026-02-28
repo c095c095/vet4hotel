@@ -31,6 +31,7 @@
     --color-black: #000;
     --color-white: #fff;
     --spacing: 0.25rem;
+    --container-3xs: 16rem;
     --container-xs: 20rem;
     --container-sm: 24rem;
     --container-md: 28rem;
@@ -3754,6 +3755,9 @@
   .h-16 {
     height: calc(var(--spacing) * 16);
   }
+  .h-20 {
+    height: calc(var(--spacing) * 20);
+  }
   .h-24 {
     height: calc(var(--spacing) * 24);
   }
@@ -3923,6 +3927,9 @@
   }
   .max-w-3xl {
     max-width: var(--container-3xl);
+  }
+  .max-w-3xs {
+    max-width: var(--container-3xs);
   }
   .max-w-4xl {
     max-width: var(--container-4xl);
@@ -6613,6 +6620,13 @@
       }
     }
   }
+  .hover\:text-success {
+    &:hover {
+      @media (hover: hover) {
+        color: var(--color-success);
+      }
+    }
+  }
   .hover\:text-warning {
     &:hover {
       @media (hover: hover) {
@@ -7451,6 +7465,11 @@
   .xl\:w-3\/9 {
     @media (width >= 80rem) {
       width: calc(3 / 9 * 100%);
+    }
+  }
+  .xl\:w-44 {
+    @media (width >= 80rem) {
+      width: calc(var(--spacing) * 44);
     }
   }
   .xl\:w-48 {
