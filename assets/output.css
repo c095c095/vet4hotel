@@ -5879,6 +5879,12 @@
   .ring-error {
     --tw-ring-color: var(--color-error);
   }
+  .ring-error\/20 {
+    --tw-ring-color: var(--color-error);
+    @supports (color: color-mix(in lab, red, red)) {
+      --tw-ring-color: color-mix(in oklab, var(--color-error) 20%, transparent);
+    }
+  }
   .ring-error\/50 {
     --tw-ring-color: var(--color-error);
     @supports (color: color-mix(in lab, red, red)) {
@@ -6610,6 +6616,13 @@
     &:hover {
       @media (hover: hover) {
         color: var(--color-error);
+      }
+    }
+  }
+  .hover\:text-info {
+    &:hover {
+      @media (hover: hover) {
+        color: var(--color-info);
       }
     }
   }
