@@ -10,10 +10,10 @@ require_once __DIR__ . '/../cores/pets_data.php';
 function gender_badge($gender)
 {
     $map = [
-        'male' => ['♂ ผู้', 'badge-info'],
-        'female' => ['♀ เมีย', 'badge-secondary'],
-        'spayed' => ['♀ ทำหมันแล้ว', 'badge-accent'],
-        'neutered' => ['♂ ทำหมันแล้ว', 'badge-accent'],
+        'male' => ['ผู้', 'badge-info'],
+        'female' => ['เมีย', 'badge-secondary'],
+        'spayed' => ['ทำหมันแล้ว', 'badge-accent'],
+        'neutered' => ['ทำหมันแล้ว', 'badge-accent'],
         'unknown' => ['ไม่ระบุ', 'badge-ghost'],
     ];
     $info = $map[$gender] ?? ['ไม่ทราบ', 'badge-ghost'];
@@ -116,26 +116,55 @@ function pet_age($dob)
             </div>
         </div>
         <!-- Species Breakdown -->
-        <div class="card bg-base-100 border border-base-200 shadow-sm">
-            <div class="card-body p-4">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-xs text-base-content/50 font-medium uppercase tracking-wide">ประเภทสัตว์</p>
-                        <div class="flex flex-wrap gap-1.5 mt-2">
-                            <?php if (!empty($species_stats)): ?>
-                                <?php foreach (array_slice($species_stats, 0, 3) as $sp): ?>
-                                    <span class="badge badge-sm badge-outline"><?php echo htmlspecialchars($sp['name']); ?>
-                                        (<?php echo $sp['cnt']; ?>)</span>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <span class="text-base-content/30 text-xs">—</span>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                    <div class="w-10 h-10 rounded-xl bg-success/10 flex items-center justify-center">
-                        <i data-lucide="list" class="size-5 text-success"></i>
+        <div class="card bg-base-100 border border-base-200 shadow-sm relative overflow-hidden group hover:border-primary/30 transition-colors">
+            <!-- Subtle gradient background purely for premium feel -->
+            <div class="absolute inset-0 bg-gradient-to-br from-base-200/50 via-transparent to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            
+            <div class="card-body p-4 flex flex-col justify-center relative z-10">
+                <div class="flex items-center justify-between mb-2">
+                    <p class="text-xs text-base-content/50 font-medium uppercase tracking-wide flex items-center gap-1.5">
+                        <i data-lucide="pie-chart" class="size-3.5 opacity-70"></i> 
+                        สัดส่วนประเภทสัตว์
+                    </p>
+                    <div class="w-6 h-6 rounded-md bg-base-200/80 flex items-center justify-center tooltip tooltip-left" data-tip="สัตว์เลี้ยงแยกตามสายพันธุ์">
+                        <span class="text-[10px] font-bold text-base-content/70"><?php echo count($species_stats); ?></span>
                     </div>
                 </div>
+
+                <?php if (!empty($species_stats)): ?>
+                    <!-- Segmented Progress Bar -->
+                    <div class="flex w-full h-2.5 rounded-full overflow-hidden gap-0.5 bg-base-200 mb-2">
+                        <?php 
+                        $colors = ['bg-primary', 'bg-info', 'bg-secondary', 'bg-accent'];
+                        $total_pets = $stats['total'] ?: 1;
+                        foreach (array_slice($species_stats, 0, 4) as $index => $sp): 
+                            $percent = max(($sp['cnt'] / $total_pets) * 100, 2); // Set minimum 2% width so it's visible
+                            $color_class = $colors[$index % count($colors)];
+                        ?>
+                            <div class="<?php echo $color_class; ?> hover:opacity-80 transition-opacity cursor-help" 
+                                style="width: <?php echo $percent; ?>%" 
+                                title="<?php echo htmlspecialchars($sp['name']) . ' (' . $sp['cnt'] . ' ตัว)'; ?>">
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                    
+                    <!-- Clean Legend -->
+                    <div class="flex gap-x-3 gap-y-1 mt-1 truncate">
+                        <?php foreach (array_slice($species_stats, 0, 2) as $index => $sp): 
+                            $color_class = $colors[$index % count($colors)];
+                        ?>
+                            <div class="flex items-center gap-1.5 min-w-0">
+                                <span class="w-2 h-2 rounded-full shrink-0 <?php echo $color_class; ?> shadow-sm"></span>
+                                <span class="text-xs font-medium text-base-content/80 truncate">
+                                    <?php echo htmlspecialchars($sp['name']); ?>
+                                </span>
+                                <span class="text-[10px] text-base-content/40 font-semibold">(<?php echo $sp['cnt']; ?>)</span>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php else: ?>
+                    <p class="text-2xl font-bold text-base-content/20 mt-1">—</p>
+                <?php endif; ?>
             </div>
         </div>
     </div>
