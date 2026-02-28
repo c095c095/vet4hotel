@@ -36,6 +36,8 @@ $employee_name = $_SESSION['user_name'] ?? 'พนักงาน';
                     </span>
                 </li>
                 <li><a href="?page=home"><i data-lucide="layout-dashboard" class="size-4"></i>แดชบอร์ด</a></li>
+                <li class="my-1 border-t border-base-200"></li>
+                <li><a href="?page=profile"><i data-lucide="user" class="size-4"></i>ข้อมูลส่วนตัว</a></li>
                 <li><a href="?action=logout" class="text-error"><i data-lucide="log-out"
                             class="size-4"></i>ออกจากระบบ</a></li>
             </ul>

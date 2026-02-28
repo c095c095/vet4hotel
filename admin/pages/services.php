@@ -123,7 +123,7 @@ function active_badge($is_active)
     <!-- ═══════════ FILTERS & SEARCH ═══════════ -->
     <div class="card bg-base-100 border border-base-200 shadow-sm">
         <div class="card-body p-4 sm:p-5">
-            <form action="index.php" method="GET" class="flex flex-col xl:flex-row gap-4">
+            <form action="?page=services" method="GET" class="flex flex-col xl:flex-row gap-4">
                 <input type="hidden" name="page" value="services">
 
                 <!-- Search -->

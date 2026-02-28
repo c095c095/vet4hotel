@@ -30,7 +30,7 @@ $date_placeholder = date('Y-m-d');
     <!-- ═══════════ FILTERS & SEARCH ═══════════ -->
     <div class="card bg-base-100 border border-base-200 shadow-sm">
         <div class="card-body p-4 sm:p-5">
-            <form action="index.php" method="GET" class="flex flex-col xl:flex-row gap-4">
+            <form action="?page=payments" method="GET" class="flex flex-col xl:flex-row gap-4">
                 <input type="hidden" name="page" value="payments">
 
                 <!-- Search -->
@@ -156,7 +156,8 @@ $date_placeholder = date('Y-m-d');
                                             <div class="font-medium text-sm flex items-center gap-2">
                                                 <?php echo htmlspecialchars($p['first_name'] . ' ' . $p['last_name']); ?>
                                             </div>
-                                            <div class="text-xs text-base-content/60 mt-0.5 flex flex-col 2xl:flex-row items-center gap-2">
+                                            <div
+                                                class="text-xs text-base-content/60 mt-0.5 flex flex-col 2xl:flex-row items-center gap-2">
                                                 <a href="?page=booking_detail&id=<?php echo $p['booking_id']; ?>"
                                                     class="link link-primary font-mono font-semibold hover:underline">
                                                     <?php echo htmlspecialchars($p['booking_ref']); ?>
@@ -198,13 +199,13 @@ $date_placeholder = date('Y-m-d');
                                 <td class="text-center">
                                     <div class="flex flex-col 2xl:flex-row gap-2 items-center">
                                         <?php echo payment_status_badge_ui($p['status']); ?>
-                                        
+
                                         <?php if ($p['status'] === 'verified' && $p['verifier_first_name']): ?>
                                             <div class="text-[10px] text-base-content/50 mt-1 whitespace-nowrap tooltip"
-                                            data-tip="ตรวจสอบโดย: <?php echo htmlspecialchars($p['verifier_first_name']); ?>">
-                                            <i data-lucide="user-check" class="size-3 inline align-middle"></i>
-                                            <?php echo htmlspecialchars($p['verifier_first_name']); ?>
-                                        </div>
+                                                data-tip="ตรวจสอบโดย: <?php echo htmlspecialchars($p['verifier_first_name']); ?>">
+                                                <i data-lucide="user-check" class="size-3 inline align-middle"></i>
+                                                <?php echo htmlspecialchars($p['verifier_first_name']); ?>
+                                            </div>
                                         <?php endif; ?>
                                     </div>
                                 </td>

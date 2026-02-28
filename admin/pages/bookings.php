@@ -115,7 +115,7 @@ function booking_status_badge_ui($status)
     <!-- ═══════════ FILTERS & SEARCH ═══════════ -->
     <div class="card bg-base-100 border border-base-200 shadow-sm">
         <div class="card-body p-4 sm:p-5">
-            <form action="index.php" method="GET" class="flex flex-col xl:flex-row gap-4">
+            <form action="?page=" method="GET" class="flex flex-col xl:flex-row gap-4">
                 <input type="hidden" name="page" value="bookings">
 
                 <!-- Search -->

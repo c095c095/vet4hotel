@@ -95,11 +95,18 @@ $role_label = $employee_role === 'admin' ? 'ผู้ดูแลระบบ' :
                         <?php echo $role_label; ?>
                     </span>
                 </div>
-                <a href="?page=logout"
-                    class="btn btn-ghost btn-sm btn-square text-base-content/50 hover:text-error tooltip tooltip-left"
-                    data-tip="ออกจากระบบ">
-                    <i data-lucide="log-out" class="size-4"></i>
-                </a>
+                <div class="flex items-center gap-1">
+                    <a href="?page=profile"
+                        class="btn btn-ghost btn-sm btn-square text-base-content/50 hover:text-primary tooltip tooltip-left"
+                        data-tip="ข้อมูลส่วนตัว">
+                        <i data-lucide="settings" class="size-4"></i>
+                    </a>
+                    <a href="?page=logout"
+                        class="btn btn-ghost btn-sm btn-square text-base-content/50 hover:text-error tooltip tooltip-left"
+                        data-tip="ออกจากระบบ">
+                        <i data-lucide="log-out" class="size-4"></i>
+                    </a>
+                </div>
             </div>
         </div>
     </aside>

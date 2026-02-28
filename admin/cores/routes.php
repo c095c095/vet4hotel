@@ -20,6 +20,9 @@ $pages = [
     // --- Pets ---
     "pets" => ["title" => "จัดการสัตว์เลี้ยง", "file" => "pages/pets.php"],
 
+    // --- Profile ---
+    "profile" => ["title" => "ข้อมูลส่วนตัว", "file" => "pages/profile.php"],
+
     // --- Authentication ---
     "login" => ["title" => "เข้าสู่ระบบ", "file" => "pages/login.php"],
     "logout" => ["title" => "ออกจากระบบ", "file" => "cores/logout.php"],
