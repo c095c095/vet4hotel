@@ -44,6 +44,74 @@ function booking_status_badge_ui($status)
         </div>
     </div>
 
+    <!-- ═══════════ SUMMARY STAT CARDS ═══════════ -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
+        <!-- Total Bookings -->
+        <div class="card bg-base-100 border border-base-200 shadow-sm">
+            <div class="card-body p-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-base-content/50 font-medium uppercase tracking-wide">การจองทั้งหมด</p>
+                        <p class="text-2xl font-bold text-base-content mt-1">
+                            <?php echo $status_counts['all'] ?? 0; ?>
+                        </p>
+                    </div>
+                    <div class="w-10 h-10 rounded-xl bg-base-200/80 flex items-center justify-center">
+                        <i data-lucide="calendar-range" class="size-5 text-base-content/40"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Pending Payment -->
+        <div class="card bg-base-100 border border-base-200 shadow-sm">
+            <div class="card-body p-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-base-content/50 font-medium uppercase tracking-wide">รอชำระเงิน</p>
+                        <p class="text-2xl font-bold text-warning mt-1">
+                            <?php echo $status_counts['pending_payment'] ?? 0; ?>
+                        </p>
+                    </div>
+                    <div class="w-10 h-10 rounded-xl bg-warning/10 flex items-center justify-center">
+                        <i data-lucide="clock" class="size-5 text-warning"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Verifying Payment -->
+        <div class="card bg-base-100 border border-base-200 shadow-sm">
+            <div class="card-body p-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-base-content/50 font-medium uppercase tracking-wide">รอตรวจสอบยอด</p>
+                        <p class="text-2xl font-bold text-info mt-1">
+                            <?php echo $status_counts['verifying_payment'] ?? 0; ?>
+                        </p>
+                    </div>
+                    <div class="w-10 h-10 rounded-xl bg-info/10 flex items-center justify-center">
+                        <i data-lucide="search-check" class="size-5 text-info"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Active Checkins -->
+        <div class="card bg-base-100 border border-base-200 shadow-sm">
+            <div class="card-body p-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-base-content/50 font-medium uppercase tracking-wide">ผู้เข้าพักวันนี้</p>
+                        <p class="text-2xl font-bold text-primary mt-1">
+                            <?php echo $active_checkins ?? 0; ?>
+                        </p>
+                    </div>
+                    <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                        <i data-lucide="key" class="size-5 text-primary"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- ═══════════ FILTERS & SEARCH ═══════════ -->
     <div class="card bg-base-100 border border-base-200 shadow-sm">
         <div class="card-body p-4 sm:p-5">
@@ -55,7 +123,8 @@ function booking_status_badge_ui($status)
                     <label class="label pt-0"><span class="label-text font-medium">ค้นหา</span></label>
                     <label class="input w-full">
                         <i data-lucide="search" class="h-[1em] opacity-50"></i>
-                        <input type="search" name="search" placeholder="Ref, ชื่อ, นามสกุล, เบอร์โทร..." value="<?php echo htmlspecialchars($search); ?>" />
+                        <input type="search" name="search" placeholder="Ref, ชื่อ, นามสกุล, เบอร์โทร..."
+                            value="<?php echo htmlspecialchars($search); ?>" />
                     </label>
                 </div>
 
