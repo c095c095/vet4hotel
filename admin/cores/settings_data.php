@@ -9,8 +9,6 @@ require_once __DIR__ . '/../../cores/config.php';
 require_once __DIR__ . '/../../cores/database.php';
 require_once __DIR__ . '/../../cores/functions.php';
 
-
-
 // Admin-only access
 if (!isset($_SESSION['employee_id']) || ($_SESSION['employee_role'] ?? '') !== 'admin') {
     $_SESSION['msg_error'] = "คุณไม่มีสิทธิ์เข้าถึงหน้านี้";
@@ -84,4 +82,30 @@ $daily_update_types = $pdo->query(
 // 4c. Care Task Types
 $care_task_types = $pdo->query(
     "SELECT id, name, is_active FROM care_task_types ORDER BY is_active DESC, name ASC"
+)->fetchAll();
+
+// 4d. Species
+$species_list = $pdo->query(
+    "SELECT id, name, 1 as is_active FROM species ORDER BY name ASC"
+)->fetchAll();
+
+// 4e. Breeds
+$breeds_list = $pdo->query(
+    "SELECT b.id, b.name, b.species_id, 1 as is_active, s.name as species_name 
+     FROM breeds b
+     JOIN species s ON b.species_id = s.id 
+     ORDER BY s.name ASC, b.name ASC"
+)->fetchAll();
+
+// 4f. Vaccine Types
+$vaccine_types = $pdo->query(
+    "SELECT v.id, v.name, v.is_active, v.species_id, s.name as species_name 
+     FROM vaccine_types v
+     JOIN species s ON v.species_id = s.id
+     ORDER BY s.name ASC, v.is_active DESC, v.name ASC"
+)->fetchAll();
+
+// 4g. Amenities
+$amenities = $pdo->query(
+    "SELECT id, name, icon_class, 1 as is_active FROM amenities ORDER BY name ASC"
 )->fetchAll();

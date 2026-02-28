@@ -12,7 +12,7 @@
             <div class="relative group">
                 <div class="absolute inset-0 bg-primary/20 blur-2xl rounded-full animate-pulse"></div>
                 <div
-                    class="w-32 h-32 bg-base-100 rounded-[2rem] shadow-xl flex items-center justify-center relative border border-base-200 rotate-12 group-hover:rotate-0 transition-transform duration-500 ease-out">
+                    class="w-32 h-32 bg-base-100 rounded-4xl shadow-xl flex items-center justify-center relative border border-base-200 rotate-12 group-hover:rotate-0 transition-transform duration-500 ease-out">
                     <i data-lucide="file-question" class="size-16 text-primary"></i>
                 </div>
             </div>
