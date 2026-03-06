@@ -6155,6 +6155,12 @@
       --input-color: var(--color-primary);
     }
   }
+  .checkbox-secondary {
+    @layer daisyui.l1.l2 {
+      color: var(--color-secondary-content);
+      --input-color: var(--color-secondary);
+    }
+  }
   .link-primary {
     @layer daisyui.l1.l2 {
       color: var(--color-primary);

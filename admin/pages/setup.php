@@ -25,10 +25,12 @@ $success = $_SESSION['success_msg'] ?? '';
 unset($_SESSION['success_msg']);
 ?>
 
-<section class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden bg-base-100 md:bg-base-200">
+<section
+    class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden bg-base-100 md:bg-base-200">
     <!-- Decorative background elements -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
-        <div class="absolute top-0 left-0 w-full h-full bg-linear-to-br from-primary/5 via-transparent to-secondary/5"></div>
+        <div class="absolute top-0 left-0 w-full h-full bg-linear-to-br from-primary/5 via-transparent to-secondary/5">
+        </div>
         <div class="absolute top-[15%] left-[15%] opacity-5 text-primary">
             <i data-lucide="settings" class="size-24"></i>
         </div>
@@ -37,9 +39,10 @@ unset($_SESSION['success_msg']);
         </div>
     </div>
 
-    <div class="max-w-lg w-full mx-auto relative z-10">
+    <div class="max-w-2xl w-full mx-auto relative z-10">
         <!-- Back to website -->
-        <a href="../" class="inline-flex items-center gap-2 text-sm text-base-content/60 hover:text-primary transition-colors mb-4">
+        <a href="../"
+            class="inline-flex items-center gap-2 text-sm text-base-content/60 hover:text-primary transition-colors mb-4">
             <i data-lucide="arrow-left" class="size-4"></i>
             กลับสู่หน้าเว็บไซต์
         </a>
@@ -48,7 +51,8 @@ unset($_SESSION['success_msg']);
             <div class="p-8 sm:p-10">
                 <!-- Logo & Header -->
                 <div class="text-center mb-8">
-                    <div class="inline-flex items-center justify-center w-16 h-16 bg-primary/10 text-primary rounded-2xl mb-4">
+                    <div
+                        class="inline-flex items-center justify-center w-16 h-16 bg-primary/10 text-primary rounded-2xl mb-4">
                         <i data-lucide="rocket" class="size-8"></i>
                     </div>
                     <h1 class="text-2xl font-bold text-base-content">ตั้งค่าระบบครั้งแรก</h1>
@@ -75,27 +79,30 @@ unset($_SESSION['success_msg']);
                 <form action="?action=setup" method="POST" class="space-y-5">
                     <!-- Admin Info Section -->
                     <div class="space-y-4">
-                        <h3 class="text-sm font-semibold text-base-content/70 uppercase tracking-wider flex items-center gap-2">
+                        <h3
+                            class="text-sm font-semibold text-base-content/70 uppercase tracking-wider flex items-center gap-2">
                             <i data-lucide="user" class="size-4"></i>
                             ข้อมูลผู้ดูแลระบบ
                         </h3>
-                        
+
                         <!-- First Name & Last Name -->
                         <div class="grid grid-cols-2 gap-4">
                             <div class="form-control">
                                 <label class="label pt-0 pb-1" for="first_name">
-                                    <span class="label-text font-medium text-base-content/80">ชื่อ <span class="text-error">*</span></span>
+                                    <span class="label-text font-medium text-base-content/80">ชื่อ <span
+                                            class="text-error">*</span></span>
                                 </label>
-                                <input type="text" id="first_name" name="first_name" 
+                                <input type="text" id="first_name" name="first_name"
                                     class="input input-bordered rounded-xl focus:outline-primary/50 focus:border-primary transition-colors w-full"
                                     placeholder="สมชาย" required
                                     value="<?php echo sanitize($_POST['first_name'] ?? ''); ?>" />
                             </div>
                             <div class="form-control">
                                 <label class="label pt-0 pb-1" for="last_name">
-                                    <span class="label-text font-medium text-base-content/80">นามสกุล <span class="text-error">*</span></span>
+                                    <span class="label-text font-medium text-base-content/80">นามสกุล <span
+                                            class="text-error">*</span></span>
                                 </label>
-                                <input type="text" id="last_name" name="last_name" 
+                                <input type="text" id="last_name" name="last_name"
                                     class="input input-bordered rounded-xl focus:outline-primary/50 focus:border-primary transition-colors w-full"
                                     placeholder="ใจดี" required
                                     value="<?php echo sanitize($_POST['last_name'] ?? ''); ?>" />
@@ -105,9 +112,11 @@ unset($_SESSION['success_msg']);
                         <!-- Email -->
                         <div class="form-control">
                             <label class="label pt-0 pb-1" for="email">
-                                <span class="label-text font-medium text-base-content/80">อีเมล <span class="text-error">*</span></span>
+                                <span class="label-text font-medium text-base-content/80">อีเมล <span
+                                        class="text-error">*</span></span>
                             </label>
-                            <label class="input input-bordered flex items-center gap-3 rounded-xl focus-within:outline-primary/50 focus-within:border-primary transition-colors bg-base-100/50 w-full">
+                            <label
+                                class="input input-bordered flex items-center gap-3 rounded-xl focus-within:outline-primary/50 focus-within:border-primary transition-colors bg-base-100/50 w-full">
                                 <i data-lucide="mail" class="size-4 text-base-content/40"></i>
                                 <input type="email" id="email" name="email" class="grow"
                                     placeholder="admin@vet4hotel.com" required
@@ -118,9 +127,11 @@ unset($_SESSION['success_msg']);
                         <!-- Password -->
                         <div class="form-control">
                             <label class="label pt-0 pb-1" for="password">
-                                <span class="label-text font-medium text-base-content/80">รหัสผ่าน <span class="text-error">*</span></span>
+                                <span class="label-text font-medium text-base-content/80">รหัสผ่าน <span
+                                        class="text-error">*</span></span>
                             </label>
-                            <label class="input input-bordered flex items-center gap-3 rounded-xl focus-within:outline-primary/50 focus-within:border-primary transition-colors bg-base-100/50 relative w-full">
+                            <label
+                                class="input input-bordered flex items-center gap-3 rounded-xl focus-within:outline-primary/50 focus-within:border-primary transition-colors bg-base-100/50 relative w-full">
                                 <i data-lucide="lock" class="size-4 text-base-content/40"></i>
                                 <input type="password" id="password" name="password" class="grow pr-10"
                                     placeholder="••••••••" required minlength="8" />
@@ -131,16 +142,19 @@ unset($_SESSION['success_msg']);
                                 </button>
                             </label>
                             <label class="label pb-0">
-                                <span class="label-text-alt text-base-content/50">รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร</span>
+                                <span class="label-text-alt text-base-content/50">รหัสผ่านต้องมีอย่างน้อย 8
+                                    ตัวอักษร</span>
                             </label>
                         </div>
 
                         <!-- Confirm Password -->
                         <div class="form-control">
                             <label class="label pt-0 pb-1" for="confirm_password">
-                                <span class="label-text font-medium text-base-content/80">ยืนยันรหัสผ่าน <span class="text-error">*</span></span>
+                                <span class="label-text font-medium text-base-content/80">ยืนยันรหัสผ่าน <span
+                                        class="text-error">*</span></span>
                             </label>
-                            <label class="input input-bordered flex items-center gap-3 rounded-xl focus-within:outline-primary/50 focus-within:border-primary transition-colors bg-base-100/50 relative w-full">
+                            <label
+                                class="input input-bordered flex items-center gap-3 rounded-xl focus-within:outline-primary/50 focus-within:border-primary transition-colors bg-base-100/50 relative w-full">
                                 <i data-lucide="lock" class="size-4 text-base-content/40"></i>
                                 <input type="password" id="confirm_password" name="confirm_password" class="grow pr-10"
                                     placeholder="••••••••" required />
@@ -157,17 +171,19 @@ unset($_SESSION['success_msg']);
 
                     <!-- Database Section -->
                     <div class="space-y-4">
-                        <h3 class="text-sm font-semibold text-base-content/70 uppercase tracking-wider flex items-center gap-2">
+                        <h3
+                            class="text-sm font-semibold text-base-content/70 uppercase tracking-wider flex items-center gap-2">
                             <i data-lucide="database" class="size-4"></i>
                             การเชื่อมต่อฐานข้อมูล
                         </h3>
-                        
+
                         <!-- DB Host -->
                         <div class="form-control">
                             <label class="label pt-0 pb-1" for="db_host">
-                                <span class="label-text font-medium text-base-content/80">โฮสต์ฐานข้อมูล <span class="text-error">*</span></span>
+                                <span class="label-text font-medium text-base-content/80">โฮสต์ฐานข้อมูล <span
+                                        class="text-error">*</span></span>
                             </label>
-                            <input type="text" id="db_host" name="db_host" 
+                            <input type="text" id="db_host" name="db_host"
                                 class="input input-bordered rounded-xl focus:outline-primary/50 focus:border-primary transition-colors w-full"
                                 placeholder="localhost" required
                                 value="<?php echo sanitize($_POST['db_host'] ?? 'localhost'); ?>" />
@@ -176,9 +192,10 @@ unset($_SESSION['success_msg']);
                         <!-- DB Name -->
                         <div class="form-control">
                             <label class="label pt-0 pb-1" for="db_name">
-                                <span class="label-text font-medium text-base-content/80">ชื่อฐานข้อมูล <span class="text-error">*</span></span>
+                                <span class="label-text font-medium text-base-content/80">ชื่อฐานข้อมูล <span
+                                        class="text-error">*</span></span>
                             </label>
-                            <input type="text" id="db_name" name="db_name" 
+                            <input type="text" id="db_name" name="db_name"
                                 class="input input-bordered rounded-xl focus:outline-primary/50 focus:border-primary transition-colors w-full"
                                 placeholder="vet4_db" required
                                 value="<?php echo sanitize($_POST['db_name'] ?? 'vet4_db'); ?>" />
@@ -187,9 +204,10 @@ unset($_SESSION['success_msg']);
                         <!-- DB User -->
                         <div class="form-control">
                             <label class="label pt-0 pb-1" for="db_user">
-                                <span class="label-text font-medium text-base-content/80">ชื่อผู้ใช้ฐานข้อมูล <span class="text-error">*</span></span>
+                                <span class="label-text font-medium text-base-content/80">ชื่อผู้ใช้ฐานข้อมูล <span
+                                        class="text-error">*</span></span>
                             </label>
-                            <input type="text" id="db_user" name="db_user" 
+                            <input type="text" id="db_user" name="db_user"
                                 class="input input-bordered rounded-xl focus:outline-primary/50 focus:border-primary transition-colors w-full"
                                 placeholder="root" required
                                 value="<?php echo sanitize($_POST['db_user'] ?? 'root'); ?>" />
@@ -200,7 +218,8 @@ unset($_SESSION['success_msg']);
                             <label class="label pt-0 pb-1" for="db_pass">
                                 <span class="label-text font-medium text-base-content/80">รหัสผ่านฐานข้อมูล</span>
                             </label>
-                            <label class="input input-bordered flex items-center gap-3 rounded-xl focus-within:outline-primary/50 focus-within:border-primary transition-colors bg-base-100/50 relative w-full">
+                            <label
+                                class="input input-bordered flex items-center gap-3 rounded-xl focus-within:outline-primary/50 focus-within:border-primary transition-colors bg-base-100/50 relative w-full">
                                 <i data-lucide="key" class="size-4 text-base-content/40"></i>
                                 <input type="password" id="db_pass" name="db_pass" class="grow pr-10"
                                     placeholder="(เว้นว่างถ้าไม่มี)" />
@@ -213,12 +232,44 @@ unset($_SESSION['success_msg']);
                         </div>
                     </div>
 
-                    <!-- Initialize Data Checkbox -->
-                    <div class="form-control">
-                        <label class="label cursor-pointer justify-start gap-3 py-2">
-                            <input type="checkbox" name="init_data" value="1" class="checkbox checkbox-primary" checked />
-                            <span class="label-text">เตรียมข้อมูลพื้นฐาน (สายพันธุ์สัตว์, ประเภทห้อง, บริการ, ฯลฯ)</span>
-                        </label>
+                    <div class="divider my-2"></div>
+
+                    <!-- Data Options Section -->
+                    <div class="space-y-3">
+                        <h3
+                            class="text-sm font-semibold text-base-content/70 uppercase tracking-wider flex items-center gap-2">
+                            <i data-lucide="package" class="size-4"></i>
+                            ข้อมูลเริ่มต้น
+                        </h3>
+
+                        <!-- Initialize Data Checkbox -->
+                        <div class="form-control">
+                            <label class="label cursor-pointer justify-start gap-3 py-2">
+                                <input type="checkbox" name="init_data" value="1" class="checkbox checkbox-primary"
+                                    checked />
+                                <div>
+                                    <span class="label-text font-medium">เตรียมข้อมูลพื้นฐาน</span>
+                                    <p class="text-xs text-base-content/50 mt-0.5">สายพันธุ์สัตว์, วัคซีน,
+                                        ประเภทห้อง, ห้องพัก, บริการเสริม, ช่องทางชำระเงิน, โปรโมชัน, Seasonal
+                                        Pricing ฯลฯ</p>
+                                </div>
+                            </label>
+                        </div>
+
+                        <!-- Mock Users Checkbox -->
+                        <div class="form-control">
+                            <label class="label cursor-pointer justify-start gap-3 py-2">
+                                <input type="checkbox" name="mock_users" value="1"
+                                    class="checkbox checkbox-secondary" />
+                                <div>
+                                    <span class="label-text font-medium">สร้าง Mock Users
+                                        และการจองตัวอย่าง</span>
+                                    <p class="text-xs text-base-content/50 mt-0.5">สร้างลูกค้าจำลอง 2 คน
+                                        พร้อมสัตว์เลี้ยง, การจองครบทุกสถานะ, การชำระเงิน, รีวิว
+                                        (รหัสผ่าน: <code class="text-primary font-mono">password</code>)</p>
+                                </div>
+                            </label>
+                        </div>
                     </div>
 
                     <!-- Submit Button -->
