@@ -139,33 +139,33 @@ function initBasicData($pdo) {
         $stmt->execute([$s['name']]);
     }
 
-    // Breeds for Dogs
-    $dog_breeds = [
-        ['species_id' => 1, 'name' => 'โกลเด้น รีทรีฟเวอร์'],
-        ['species_id' => 1, 'name' => 'ลาบราดอร์ รีทรีฟเวอร์'],
-        ['species_id' => 1, 'name' => 'พุดเดิ้ล'],
-        ['species_id' => 1, 'name' => 'ชิวาวา'],
-        ['species_id' => 1, 'name' => 'ปอมเมอเรเนียน'],
-        ['species_id' => 1, 'name' => 'ไซบีเรียน ฮัสกี้'],
-        ['species_id' => 1, 'name' => 'บีเกิ้ล'],
-        ['species_id' => 1, 'name' => 'ไทยหลังอาน'],
-        ['species_id' => 1, 'name' => 'บางแก้ว'],
-        ['species_id' => 1, 'name' => 'ร็อตไวเลอร์'],
-        ['species_id' => 1, 'name' => 'เยอรมันเชพเพิร์ด'],
+    // Breeds for Cats
+    $cat_breeds = [
+        ['species_id' => 1, 'name' => 'เปอร์เซีย'],
+        ['species_id' => 1, 'name' => 'สก็อตติช โฟลด์'],
+        ['species_id' => 1, 'name' => 'บริติช ชอร์ตแฮร์'],
+        ['species_id' => 1, 'name' => 'อเมริกัน ชอร์ตแฮร์'],
+        ['species_id' => 1, 'name' => 'เมนคูน'],
+        ['species_id' => 1, 'name' => 'รากดอล'],
+        ['species_id' => 1, 'name' => 'เบงกอล'],
+        ['species_id' => 1, 'name' => 'สยาม'],
+        ['species_id' => 1, 'name' => 'วิเชียรมาศ'],
         ['species_id' => 1, 'name' => 'พันธุ์ผสม/ไม่ทราบสายพันธุ์']
     ];
 
-    // Breeds for Cats
-    $cat_breeds = [
-        ['species_id' => 2, 'name' => 'เปอร์เซีย'],
-        ['species_id' => 2, 'name' => 'สก็อตติช โฟลด์'],
-        ['species_id' => 2, 'name' => 'บริติช ชอร์ตแฮร์'],
-        ['species_id' => 2, 'name' => 'อเมริกัน ชอร์ตแฮร์'],
-        ['species_id' => 2, 'name' => 'เมนคูน'],
-        ['species_id' => 2, 'name' => 'รากดอล'],
-        ['species_id' => 2, 'name' => 'เบงกอล'],
-        ['species_id' => 2, 'name' => 'สยาม'],
-        ['species_id' => 2, 'name' => 'วิเชียรมาศ'],
+    // Breeds for Dogs
+    $dog_breeds = [
+        ['species_id' => 2, 'name' => 'โกลเด้น รีทรีฟเวอร์'],
+        ['species_id' => 2, 'name' => 'ลาบราดอร์ รีทรีฟเวอร์'],
+        ['species_id' => 2, 'name' => 'พุดเดิ้ล'],
+        ['species_id' => 2, 'name' => 'ชิวาวา'],
+        ['species_id' => 2, 'name' => 'ปอมเมอเรเนียน'],
+        ['species_id' => 2, 'name' => 'ไซบีเรียน ฮัสกี้'],
+        ['species_id' => 2, 'name' => 'บีเกิ้ล'],
+        ['species_id' => 2, 'name' => 'ไทยหลังอาน'],
+        ['species_id' => 2, 'name' => 'บางแก้ว'],
+        ['species_id' => 2, 'name' => 'ร็อตไวเลอร์'],
+        ['species_id' => 2, 'name' => 'เยอรมันเชพเพิร์ด'],
         ['species_id' => 2, 'name' => 'พันธุ์ผสม/ไม่ทราบสายพันธุ์']
     ];
 
