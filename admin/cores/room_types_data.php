@@ -65,9 +65,11 @@ $query = "SELECT
             rt.is_active,
             rt.created_at,
             rt.updated_at,
+            rti.image_url AS primary_image,
             (SELECT COUNT(r.id) FROM rooms r WHERE r.room_type_id = rt.id AND r.deleted_at IS NULL AND r.status != 'maintenance') AS active_rooms_count,
             (SELECT COUNT(r.id) FROM rooms r WHERE r.room_type_id = rt.id AND r.deleted_at IS NULL) AS total_rooms_count
           FROM room_types rt
+          LEFT JOIN room_type_images rti ON rti.room_type_id = rt.id AND rti.is_primary = 1
           WHERE {$where_sql}
           ORDER BY rt.is_active DESC, rt.name ASC
           LIMIT :limit OFFSET :offset";

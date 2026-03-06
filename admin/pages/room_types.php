@@ -160,6 +160,7 @@ function active_badge($is_active)
             <table class="table table-zebra table-sm sm:table-md w-full">
                 <thead class="bg-base-200/50 text-base-content/70">
                     <tr>
+                        <th class="font-medium w-16 text-center">รูปภาพ</th>
                         <th class="font-medium">ชื่อประเภทห้องพัก</th>
                         <th class="font-medium text-right">ราคาเริ่มต้น/คืน</th>
                         <th class="font-medium text-center">สัตว์เลี้ยงสูงสุด</th>
@@ -180,6 +181,21 @@ function active_badge($is_active)
                     <?php else: ?>
                         <?php foreach ($room_types as $rt): ?>
                             <tr class="hover group">
+                                <td class="text-center">
+                                    <?php if (!empty($rt['primary_image'])): ?>
+                                        <div class="avatar">
+                                            <div class="w-12 h-12 rounded-xl border border-base-200 shadow-sm">
+                                                <img src="../<?php echo htmlspecialchars($rt['primary_image']); ?>" alt="Room Image"
+                                                    class="object-cover" />
+                                            </div>
+                                        </div>
+                                    <?php else: ?>
+                                        <div
+                                            class="w-12 h-12 rounded-xl bg-base-200/50 flex items-center justify-center border border-base-200 mx-auto">
+                                            <i data-lucide="image" class="size-5 text-base-content/30"></i>
+                                        </div>
+                                    <?php endif; ?>
+                                </td>
                                 <td>
                                     <div>
                                         <div class="font-bold text-primary flex items-center gap-1">
@@ -321,7 +337,7 @@ function active_badge($is_active)
             </div>
             เพิ่มประเภทห้องพักใหม่
         </h3>
-        <form method="POST" action="?action=room_types" class="space-y-4">
+        <form method="POST" action="?action=room_types" class="space-y-4" enctype="multipart/form-data">
             <input type="hidden" name="sub_action" value="add">
 
             <div class="grid grid-cols-1 gap-4">
@@ -335,6 +351,13 @@ function active_badge($is_active)
                     <label class="label"><span class="label-text font-medium">รายละเอียดเพิ่มเติม</span></label>
                     <textarea name="description" class="textarea textarea-bordered h-20 focus:textarea-primary w-full"
                         placeholder="คำอธิบายถึงจุดเด่นของห้องนี้..."></textarea>
+                </div>
+                <div class="form-control">
+                    <label class="label"><span class="label-text font-medium">รูปภาพหน้าปก</span></label>
+                    <input type="file" name="image" accept="image/*"
+                        class="file-input file-input-bordered w-full focus:file-input-primary" />
+                    <label class="label"><span class="label-text-alt text-base-content/60">รองรับ jpg, jpeg, png, webp
+                            (สูงสุด 5MB)</span></label>
                 </div>
             </div>
 
@@ -382,7 +405,8 @@ function active_badge($is_active)
             </div>
             แก้ไขประเภทห้องพัก
         </h3>
-        <form method="POST" action="?action=room_types" id="edit_room_type_form" class="space-y-4">
+        <form method="POST" action="?action=room_types" id="edit_room_type_form" class="space-y-4"
+            enctype="multipart/form-data">
             <input type="hidden" name="sub_action" value="edit">
             <input type="hidden" name="room_type_id" id="edit_room_type_id">
 
@@ -397,6 +421,14 @@ function active_badge($is_active)
                     <label class="label"><span class="label-text font-medium">รายละเอียดเพิ่มเติม</span></label>
                     <textarea name="description" id="edit_description"
                         class="textarea textarea-bordered h-20 focus:textarea-primary w-full"></textarea>
+                </div>
+                <div class="form-control">
+                    <label class="label"><span class="label-text font-medium">รูปภาพหน้าปกใหม่
+                            (เลือกเมื่อต้องการเปลี่ยน)</span></label>
+                    <input type="file" name="image" accept="image/*"
+                        class="file-input file-input-bordered w-full focus:file-input-primary" />
+                    <label class="label"><span class="label-text-alt text-base-content/60">รองรับ jpg, jpeg, png, webp
+                            (สูงสุด 5MB)</span></label>
                 </div>
             </div>
 

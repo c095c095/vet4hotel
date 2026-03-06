@@ -66,6 +66,26 @@ if ($sub_action === 'add') {
             ':max_pets' => $max_pets,
             ':size' => $size_sqm,
         ]);
+        $room_type_id = $pdo->lastInsertId();
+
+        // Handle Image Upload
+        if (isset($_FILES['image']) && $_FILES['image']['error'] == UPLOAD_ERR_OK) {
+            $upload_dir = '../uploads/room_types/';
+            if (!is_dir($upload_dir)) {
+                mkdir($upload_dir, 0755, true);
+            }
+            $file_ext = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
+            $allowed_exts = ['jpg', 'jpeg', 'png', 'webp'];
+            if (in_array($file_ext, $allowed_exts) && $_FILES['image']['size'] <= 5 * 1024 * 1024) {
+                $new_filename = 'rt_' . $room_type_id . '_' . time() . '.' . $file_ext;
+                $upload_path = $upload_dir . $new_filename;
+                if (move_uploaded_file($_FILES['image']['tmp_name'], $upload_path)) {
+                    $image_url = 'uploads/room_types/' . $new_filename;
+                    $stmt_img = $pdo->prepare("INSERT INTO room_type_images (room_type_id, image_url, is_primary) VALUES (?, ?, 1)");
+                    $stmt_img->execute([$room_type_id, $image_url]);
+                }
+            }
+        }
 
         $_SESSION['msg_success'] = "เพิ่มประเภทห้องพัก \"{$name}\" สำเร็จแล้ว";
     } catch (PDOException $e) {
@@ -125,6 +145,36 @@ if ($sub_action === 'edit') {
             ':id' => $room_type_id,
         ]);
 
+        // Handle Image Upload
+        if (isset($_FILES['image']) && $_FILES['image']['error'] == UPLOAD_ERR_OK) {
+            $upload_dir = '../uploads/room_types/';
+            if (!is_dir($upload_dir)) {
+                mkdir($upload_dir, 0755, true);
+            }
+            $file_ext = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
+            $allowed_exts = ['jpg', 'jpeg', 'png', 'webp'];
+            if (in_array($file_ext, $allowed_exts) && $_FILES['image']['size'] <= 5 * 1024 * 1024) {
+                $new_filename = 'rt_' . $room_type_id . '_' . time() . '.' . $file_ext;
+                $upload_path = $upload_dir . $new_filename;
+                if (move_uploaded_file($_FILES['image']['tmp_name'], $upload_path)) {
+                    $image_url = 'uploads/room_types/' . $new_filename;
+                    $stmt_old = $pdo->prepare("SELECT image_url FROM room_type_images WHERE room_type_id = ? AND is_primary = 1");
+                    $stmt_old->execute([$room_type_id]);
+                    $old_img = $stmt_old->fetch();
+                    if ($old_img && $old_img['image_url']) {
+                        $old_path = '../' . ltrim($old_img['image_url'], '/');
+                        if (file_exists($old_path))
+                            unlink($old_path);
+                        $stmt_img = $pdo->prepare("UPDATE room_type_images SET image_url = ? WHERE room_type_id = ? AND is_primary = 1");
+                        $stmt_img->execute([$image_url, $room_type_id]);
+                    } else {
+                        $stmt_img = $pdo->prepare("INSERT INTO room_type_images (room_type_id, image_url, is_primary) VALUES (?, ?, 1)");
+                        $stmt_img->execute([$room_type_id, $image_url]);
+                    }
+                }
+            }
+        }
+
         $_SESSION['msg_success'] = "แก้ไขประเภทห้องพัก \"{$name}\" สำเร็จแล้ว";
     } catch (PDOException $e) {
         $_SESSION['msg_error'] = "เกิดข้อผิดพลาด: ไม่สามารถแก้ไขประเภทห้องพักได้";
@@ -179,6 +229,18 @@ if ($sub_action === 'delete') {
     }
 
     try {
+        // delete actual files
+        $stmt_img = $pdo->prepare("SELECT image_url FROM room_type_images WHERE room_type_id = ?");
+        $stmt_img->execute([$room_type_id]);
+        $images = $stmt_img->fetchAll();
+        foreach ($images as $img) {
+            if ($img['image_url']) {
+                $file_path = '../' . ltrim($img['image_url'], '/');
+                if (file_exists($file_path))
+                    unlink($file_path);
+            }
+        }
+
         $stmt = $pdo->prepare("DELETE FROM room_types WHERE id = :id");
         $stmt->execute([':id' => $room_type_id]);
 
