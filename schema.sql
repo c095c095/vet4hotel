@@ -422,6 +422,8 @@ CREATE TABLE `reviews` (
   `customer_id` int(11) NOT NULL,
   `rating` int(1) NOT NULL CHECK (`rating` >= 1 AND `rating` <= 5),
   `comment` text DEFAULT NULL,
+  `staff_reply` text DEFAULT NULL, -- คำตอบจากทางโรงแรม
+  `staff_reply_at` timestamp NULL DEFAULT NULL, -- เวลาที่ตอบกลับ
   `is_published` tinyint(1) DEFAULT 0, -- แอดมินต้องตรวจสอบก่อน (0 = ซ่อน, 1 = โชว์)
   `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
