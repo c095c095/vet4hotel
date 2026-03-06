@@ -4,20 +4,40 @@
 // Persistent drawer-style navigation for all admin pages
 // ═══════════════════════════════════════════════════════════
 
-$nav_items = [
-    ['page' => 'home', 'label' => 'แดชบอร์ด', 'icon' => 'layout-dashboard'],
-    ['page' => 'bookings', 'label' => 'การจอง', 'icon' => 'calendar-range'],
-    ['page' => 'rooms', 'label' => 'ห้องพัก', 'icon' => 'door-open'],
-    ['page' => 'customers', 'label' => 'ลูกค้า', 'icon' => 'users'],
-    ['page' => 'pets', 'label' => 'สัตว์เลี้ยง', 'icon' => 'paw-print'],
-    ['page' => 'care_tasks', 'label' => 'งานดูแลรายวัน', 'icon' => 'clipboard-check'],
-    ['page' => 'daily_updates', 'label' => 'อัปเดตรายวัน', 'icon' => 'camera'],
-    ['page' => 'payments', 'label' => 'การชำระเงิน', 'icon' => 'credit-card'],
-    ['page' => 'refunds', 'label' => 'ขอคืนเงิน', 'icon' => 'banknote'],
-    ['page' => 'services', 'label' => 'บริการเสริม', 'icon' => 'sparkles'],
-    ['page' => 'room_types', 'label' => 'ประเภทห้องพัก', 'icon' => 'bed-double'],
-    ['page' => 'promotions', 'label' => 'โปรโมชัน', 'icon' => 'tag'],
-    ['page' => 'cms_reviews', 'label' => 'รีวิวจากลูกค้า', 'icon' => 'message-square-quote'],
+$nav_groups = [
+    [
+        'label' => 'ภาพรวม',
+        'items' => [
+            ['page' => 'home', 'label' => 'แดชบอร์ด', 'icon' => 'layout-dashboard'],
+        ],
+    ],
+    [
+        'label' => 'การจัดการจอง',
+        'items' => [
+            ['page' => 'bookings', 'label' => 'การจอง', 'icon' => 'calendar-range'],
+            ['page' => 'rooms', 'label' => 'ห้องพัก', 'icon' => 'door-open'],
+            ['page' => 'payments', 'label' => 'การชำระเงิน', 'icon' => 'credit-card'],
+            ['page' => 'refunds', 'label' => 'ขอคืนเงิน', 'icon' => 'banknote'],
+        ],
+    ],
+    [
+        'label' => 'ลูกค้า & สัตว์เลี้ยง',
+        'items' => [
+            ['page' => 'customers', 'label' => 'ลูกค้า', 'icon' => 'users'],
+            ['page' => 'pets', 'label' => 'สัตว์เลี้ยง', 'icon' => 'paw-print'],
+            ['page' => 'care_tasks', 'label' => 'งานดูแลรายวัน', 'icon' => 'clipboard-check'],
+            ['page' => 'daily_updates', 'label' => 'อัปเดตรายวัน', 'icon' => 'camera'],
+        ],
+    ],
+    [
+        'label' => 'ตั้งค่าบริการ',
+        'items' => [
+            ['page' => 'services', 'label' => 'บริการเสริม', 'icon' => 'sparkles'],
+            ['page' => 'room_types', 'label' => 'ประเภทห้องพัก', 'icon' => 'bed-double'],
+            ['page' => 'promotions', 'label' => 'โปรโมชัน', 'icon' => 'tag'],
+            ['page' => 'cms_reviews', 'label' => 'รีวิวจากลูกค้า', 'icon' => 'message-square-quote'],
+        ],
+    ],
 ];
 
 $employee_name = $_SESSION['user_name'] ?? 'พนักงาน';
@@ -45,27 +65,37 @@ $role_label = $employee_role === 'admin' ? 'ผู้ดูแลระบบ' :
 
         <!-- Navigation -->
         <nav class="flex-1 overflow-y-auto px-4 py-4">
-            <p class="text-[10px] font-semibold uppercase tracking-wider text-base-content/40 px-3 mb-2">เมนูหลัก</p>
-            <ul class="menu menu-md gap-0.5 p-0 w-full">
-                <?php foreach ($nav_items as $item): ?>
-                    <?php
-                    $is_active = ($current_page === $item['page']);
-                    $active_class = $is_active
-                        ? 'bg-primary/10 text-primary font-semibold border-l-3 border-primary rounded-l-none'
-                        : 'text-base-content/70 hover:bg-base-200/70 hover:text-base-content';
-                    ?>
-                    <li>
-                        <a href="?page=<?php echo $item['page']; ?>"
-                            class="<?php echo $active_class; ?> rounded-lg transition-all duration-200 px-3 py-2.5">
-                            <i data-lucide="<?php echo $item['icon']; ?>" class="size-[18px]"></i>
-                            <span><?php echo $item['label']; ?></span>
-                            <?php if ($is_active): ?>
-                                <span class="ml-auto w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
-                            <?php endif; ?>
-                        </a>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
+            <?php foreach ($nav_groups as $g_index => $group): ?>
+                <?php if ($g_index > 0): ?>
+                    <div class="divider my-3 px-3 text-[10px] font-semibold uppercase tracking-wider text-base-content/40">
+                        <?php echo $group['label']; ?>
+                    </div>
+                <?php else: ?>
+                    <p class="text-[10px] font-semibold uppercase tracking-wider text-base-content/40 px-3 mb-2">
+                        <?php echo $group['label']; ?>
+                    </p>
+                <?php endif; ?>
+                <ul class="menu menu-md gap-0.5 p-0 w-full <?php echo $g_index < count($nav_groups) - 1 ? 'mb-1' : ''; ?>">
+                    <?php foreach ($group['items'] as $item): ?>
+                        <?php
+                        $is_active = ($current_page === $item['page']);
+                        $active_class = $is_active
+                            ? 'bg-primary/10 text-primary font-semibold border-l-3 border-primary rounded-l-none'
+                            : 'text-base-content/70 hover:bg-base-200/70 hover:text-base-content';
+                        ?>
+                        <li>
+                            <a href="?page=<?php echo $item['page']; ?>"
+                                class="<?php echo $active_class; ?> rounded-lg transition-all duration-200 px-3 py-2.5">
+                                <i data-lucide="<?php echo $item['icon']; ?>" class="size-[18px]"></i>
+                                <span><?php echo $item['label']; ?></span>
+                                <?php if ($is_active): ?>
+                                    <span class="ml-auto w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+                                <?php endif; ?>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endforeach; ?>
 
             <?php if ($employee_role === 'admin'): ?>
                 <div class="divider my-3 px-3 text-[10px] font-semibold uppercase tracking-wider text-base-content/40">
