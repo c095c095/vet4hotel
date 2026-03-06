@@ -46,6 +46,29 @@ $total_pets = count($pet_ids);
 try {
     $pdo->beginTransaction();
 
+    // 0. Verify that pets are not already booked for these dates
+    if (!empty($pet_ids)) {
+        $in = implode(',', array_fill(0, count($pet_ids), '?'));
+        $check_stmt = $pdo->prepare("
+            SELECT p.name
+            FROM booking_item_pets bip
+            JOIN booking_items bi ON bi.id = bip.booking_item_id
+            JOIN bookings b ON b.id = bi.booking_id
+            JOIN pets p ON p.id = bip.pet_id
+            WHERE bip.pet_id IN ($in)
+              AND b.status NOT IN ('cancelled', 'rejected')
+              AND bi.check_in_date < ?
+              AND bi.check_out_date > ?
+            LIMIT 1
+        ");
+        $check_params = array_merge($pet_ids, [$check_out_date, $check_in_date]);
+        $check_stmt->execute($check_params);
+        $booked_pet = $check_stmt->fetchColumn();
+        if ($booked_pet) {
+            throw new Exception("สัตว์เลี้ยงชื่อ {$booked_pet} มีการจองในช่วงเวลานี้แล้วในระบบ");
+        }
+    }
+
     // 1. Verify Room Availability and get a Physical Room
     $stmt = $pdo->prepare("SELECT id FROM rooms 
                            WHERE room_type_id = :rt AND status = 'active' AND deleted_at IS NULL

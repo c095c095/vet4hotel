@@ -224,6 +224,29 @@ if (isset($_POST['confirm_booking'])) {
 
             // 4e. Insert booking_item_pets
             if (!empty($pet_ids)) {
+                $in = implode(',', array_fill(0, count($pet_ids), '?'));
+                $check_stmt = $pdo->prepare("
+                    SELECT p.name
+                    FROM booking_item_pets bip
+                    JOIN booking_items bi ON bi.id = bip.booking_item_id
+                    JOIN bookings b ON b.id = bi.booking_id
+                    JOIN pets p ON p.id = bip.pet_id
+                    WHERE bip.pet_id IN ($in)
+                      AND b.status NOT IN ('cancelled', 'rejected')
+                      AND bi.check_in_date < ?
+                      AND bi.check_out_date > ?
+                    LIMIT 1
+                ");
+                $check_params = array_merge($pet_ids, [$check_out, $check_in]);
+                $check_stmt->execute($check_params);
+                $booked_pet = $check_stmt->fetchColumn();
+                if ($booked_pet) {
+                    $pdo->rollBack();
+                    $_SESSION['msg_error'] = "ขออภัย สัตว์เลี้ยงชื่อ {$booked_pet} มีการจองในช่วงเวลานี้แล้ว กรุณาลบออกจากตะกร้าและทำรายการใหม่";
+                    header('Location: ?page=cart');
+                    exit();
+                }
+
                 $stmt = $pdo->prepare("INSERT INTO booking_item_pets (booking_item_id, pet_id) VALUES (?, ?)");
                 foreach ($pet_ids as $pet_id) {
                     $stmt->execute([$booking_item_id, (int) $pet_id]);

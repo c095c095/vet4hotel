@@ -78,6 +78,47 @@ function validate_booking_form($form, $cart, $pdo, $customer_id)
             return ['step' => 2, 'error' => 'พบสัตว์เลี้ยงที่ไม่ได้อยู่ในบัญชีของคุณ'];
         }
 
+        // 7. ตรวจสอบว่าสัตว์เลี้ยงถูกจองไปแล้วหรือยังในช่วงเวลานี้ (ในฐานข้อมูล)
+        if (!empty($pet_ids)) {
+            $check_stmt = $pdo->prepare("
+                SELECT p.name
+                FROM booking_item_pets bip
+                JOIN booking_items bi ON bi.id = bip.booking_item_id
+                JOIN bookings b ON b.id = bi.booking_id
+                JOIN pets p ON p.id = bip.pet_id
+                WHERE bip.pet_id IN ($in)
+                  AND b.status NOT IN ('cancelled', 'rejected')
+                  AND bi.check_in_date < ?
+                  AND bi.check_out_date > ?
+                LIMIT 1
+            ");
+            $check_params = array_merge($pet_ids, [$check_out_date, $check_in_date]);
+            $check_stmt->execute($check_params);
+            $booked_pet = $check_stmt->fetchColumn();
+            if ($booked_pet) {
+                return ['step' => 2, 'error' => "สัตว์เลี้ยงชื่อ {$booked_pet} มีการจองในช่วงเวลานี้แล้ว"];
+            }
+
+            // 8. ตรวจสอบในตะกร้าว่าสัตว์เลี้ยงตัวนี้ถูกเลือกไปแล้วหรือยังในช่วงเวลานี้
+            foreach ($cart as $item) {
+                $cin = $item['check_in_date'] ?? '';
+                $cout = $item['check_out_date'] ?? '';
+                $c_pets = $item['pet_ids'] ?? [];
+                if ($cin && $cout && !empty($c_pets)) {
+                    if (strtotime($check_in_date) < strtotime($cout) && strtotime($check_out_date) > strtotime($cin)) {
+                        $intersect = array_intersect($pet_ids, $c_pets);
+                        if (!empty($intersect)) {
+                            $p_id = reset($intersect);
+                            $name_stmt = $pdo->prepare("SELECT name FROM pets WHERE id = ?");
+                            $name_stmt->execute([$p_id]);
+                            $p_name = $name_stmt->fetchColumn() ?: 'บางตัว';
+                            return ['step' => 2, 'error' => "สัตว์เลี้ยงชื่อ {$p_name} ถูกเลือกในตะกร้าสำหรับช่วงเวลานี้แล้ว"];
+                        }
+                    }
+                }
+            }
+        }
+
     } catch (PDOException $e) {
         return ['step' => 2, 'error' => 'เกิดข้อผิดพลาดในการเชื่อมต่อฐานข้อมูล'];
     }

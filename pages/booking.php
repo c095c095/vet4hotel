@@ -88,6 +88,45 @@ try {
     $services = [];
 }
 
+// === ตรวจสอบสัตว์เลี้ยงที่ถูกจองแล้วในช่วงเวลานี้ ===
+$booked_pet_ids = [];
+if ($check_in_date && $check_out_date && !empty($pets)) {
+    try {
+        $pet_ids_check = array_column($pets, 'id');
+        if (!empty($pet_ids_check)) {
+            $in = implode(',', array_fill(0, count($pet_ids_check), '?'));
+            $stmt_check = $pdo->prepare("
+                SELECT bip.pet_id
+                FROM booking_item_pets bip
+                JOIN booking_items bi ON bi.id = bip.booking_item_id
+                JOIN bookings b ON b.id = bi.booking_id
+                WHERE bip.pet_id IN ($in)
+                  AND b.status NOT IN ('cancelled', 'rejected')
+                  AND bi.check_in_date < ?
+                  AND bi.check_out_date > ?
+            ");
+            $params_check = array_merge($pet_ids_check, [$check_out_date, $check_in_date]);
+            $stmt_check->execute($params_check);
+            $booked_pet_ids = $stmt_check->fetchAll(PDO::FETCH_COLUMN);
+        }
+    } catch (PDOException $e) {
+    }
+
+    // ตรวจสอบจากในตะกร้า
+    foreach ($_SESSION['booking_cart'] ?? [] as $item) {
+        $cin = $item['check_in_date'] ?? '';
+        $cout = $item['check_out_date'] ?? '';
+        $c_pets = $item['pet_ids'] ?? [];
+        if ($cin && $cout && !empty($c_pets)) {
+            if (strtotime($check_in_date) < strtotime($cout) && strtotime($check_out_date) > strtotime($cin)) {
+                $booked_pet_ids = array_merge($booked_pet_ids, $c_pets);
+            }
+        }
+    }
+    $booked_pet_ids = array_unique($booked_pet_ids);
+}
+// ===========================================
+
 if ($step === 2) {
     if (!$check_in_date || !$check_out_date) {
         $_SESSION['booking_error'] = 'กรุณาเลือกวันที่เข้าพักและวันที่เช็คเอาท์';
@@ -376,13 +415,16 @@ function estimate_total($room_types, $selected_room_type, $check_in_date, $check
                                     <?php
                                 } else {
                                     foreach ($pets as $pet) {
-                                        $is_pet_selected = in_array($pet['id'], $selected_pets);
+                                        $is_pet_booked = in_array($pet['id'], $booked_pet_ids);
+                                        $is_pet_selected = !$is_pet_booked && in_array($pet['id'], $selected_pets);
                                         ?>
-                                        <label class="cursor-pointer group relative">
+                                        <label
+                                            class="<?php echo $is_pet_booked ? 'cursor-not-allowed' : 'cursor-pointer'; ?> group relative"
+                                            <?php echo $is_pet_booked ? 'title="สัตว์เลี้ยงตัวนี้มีการจอง หรือถูกเลือกไว้ในตะกร้าแล้ว"' : ''; ?>>
                                             <input type="checkbox" name="pet_ids[]" value="<?php echo (int) $pet['id']; ?>"
-                                                class="peer hidden" <?php echo $is_pet_selected ? 'checked' : ''; ?>>
+                                                class="peer hidden" <?php echo $is_pet_selected ? 'checked' : ''; ?>             <?php echo $is_pet_booked ? 'data-booked="1" disabled' : ''; ?>>
                                             <div
-                                                class="border-2 rounded-xl p-4 transition-all duration-200 flex flex-col items-center justify-center gap-2 text-center peer-checked:border-primary peer-checked:bg-primary/5 peer-checked:text-primary peer-disabled:opacity-50 peer-disabled:cursor-not-allowed border-base-200 bg-base-100 hover:border-primary/30">
+                                                class="border-2 rounded-xl p-4 transition-all duration-200 flex flex-col items-center justify-center gap-2 text-center peer-checked:border-primary peer-checked:bg-primary/5 peer-checked:text-primary peer-disabled:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:bg-base-200 border-base-200 bg-base-100 hover:border-primary/30">
                                                 <div class="avatar placeholder">
                                                     <div
                                                         class="bg-neutral text-neutral-content w-12 rounded-full flex items-center justify-center">
@@ -403,6 +445,10 @@ function estimate_total($room_types, $selected_room_type, $check_in_date, $check
                                                     echo sanitize($species_text . ($breed_text ? ' • ' . $breed_text : ''));
                                                     ?>
                                                 </span>
+                                                <?php if ($is_pet_booked): ?>
+                                                    <span
+                                                        class="badge badge-error badge-sm badge-outline mt-1 text-[10px]">มีคิวจองแล้ว</span>
+                                                <?php endif; ?>
                                             </div>
                                         </label>
                                         <?php
@@ -735,8 +781,13 @@ function estimate_total($room_types, $selected_room_type, $check_in_date, $check
                 }
             });
             petCheckboxes.forEach(cb => {
-                if (!cb.checked && checkedCount >= max) cb.disabled = true;
-                else cb.disabled = false;
+                if (cb.dataset.booked === "1") {
+                    cb.disabled = true;
+                    cb.checked = false;
+                } else {
+                    if (!cb.checked && checkedCount >= max) cb.disabled = true;
+                    else cb.disabled = false;
+                }
             });
         }
         roomRadios.forEach(r => r.addEventListener('change', updatePetLimit));
