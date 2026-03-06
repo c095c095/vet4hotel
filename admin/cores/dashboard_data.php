@@ -208,3 +208,116 @@ $total_customers = (int) $stmt->fetchColumn();
 $stmt = $pdo->prepare("SELECT COUNT(*) FROM pets WHERE deleted_at IS NULL");
 $stmt->execute();
 $total_pets = (int) $stmt->fetchColumn();
+
+// ── 14. Previous Month Revenue (for trend comparison) ─────
+$prev_month_start = date('Y-m-01', strtotime('-1 month'));
+$prev_month_end = date('Y-m-t', strtotime('-1 month'));
+$stmt = $pdo->prepare("
+    SELECT COALESCE(SUM(amount), 0)
+    FROM payments
+    WHERE status = 'verified'
+      AND DATE(paid_at) BETWEEN ? AND ?
+");
+$stmt->execute([$prev_month_start, $prev_month_end]);
+$prev_monthly_revenue = (float) $stmt->fetchColumn();
+
+$revenue_change_pct = $prev_monthly_revenue > 0
+    ? round((($kpi_monthly_revenue - $prev_monthly_revenue) / $prev_monthly_revenue) * 100, 1)
+    : ($kpi_monthly_revenue > 0 ? 100 : 0);
+
+// ── 15. Today's Revenue ──────────────────────────────────
+$stmt = $pdo->prepare("
+    SELECT COALESCE(SUM(amount), 0)
+    FROM payments
+    WHERE status = 'verified'
+      AND DATE(paid_at) = ?
+");
+$stmt->execute([$today]);
+$today_revenue = (float) $stmt->fetchColumn();
+
+// ── 16. Pending Refunds ──────────────────────────────────
+$stmt = $pdo->prepare("SELECT COUNT(*) FROM refunds WHERE status = 'pending'");
+$stmt->execute();
+$pending_refunds = (int) $stmt->fetchColumn();
+
+// ── 17. Today's Daily Updates Count ──────────────────────
+$stmt = $pdo->prepare("SELECT COUNT(*) FROM daily_updates WHERE DATE(created_at) = ?");
+$stmt->execute([$today]);
+$today_updates_count = (int) $stmt->fetchColumn();
+
+// ── 18. Booking Status Distribution ─────────────────────
+$stmt = $pdo->prepare("
+    SELECT status, COUNT(*) AS count
+    FROM bookings
+    GROUP BY status
+");
+$stmt->execute();
+$booking_status_rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$booking_status_dist = [];
+$total_bookings_all = 0;
+foreach ($booking_status_rows as $row) {
+    $booking_status_dist[$row['status']] = (int) $row['count'];
+    $total_bookings_all += (int) $row['count'];
+}
+
+// ── 19. Average Review Rating ───────────────────────────
+$stmt = $pdo->prepare("SELECT AVG(rating) FROM reviews");
+$stmt->execute();
+$avg_rating_raw = $stmt->fetchColumn();
+$avg_rating = $avg_rating_raw ? round((float) $avg_rating_raw, 1) : 0;
+$stmt = $pdo->prepare("SELECT COUNT(*) FROM reviews");
+$stmt->execute();
+$total_reviews = (int) $stmt->fetchColumn();
+
+// ── 20. Room Type Occupancy Breakdown ───────────────────
+$stmt = $pdo->prepare("
+    SELECT
+        rt.id AS room_type_id,
+        rt.name AS room_type_name,
+        COUNT(r.id) AS total_rooms,
+        COALESCE(SUM(
+            CASE WHEN r.id IN (
+                SELECT DISTINCT bi2.room_id
+                FROM booking_items bi2
+                JOIN bookings b2 ON b2.id = bi2.booking_id
+                WHERE b2.status = 'checked_in'
+                  AND bi2.check_in_date <= ?
+                  AND bi2.check_out_date > ?
+            ) THEN 1 ELSE 0 END
+        ), 0) AS occupied
+    FROM room_types rt
+    LEFT JOIN rooms r ON r.room_type_id = rt.id AND r.status = 'active' AND r.deleted_at IS NULL
+    WHERE rt.is_active = 1
+    GROUP BY rt.id, rt.name
+    ORDER BY rt.name ASC
+");
+$stmt->execute([$today, $today]);
+$room_type_occupancy = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// ── 21. Care Task Completion Stats Today ────────────────
+$stmt = $pdo->prepare("
+    SELECT
+        COUNT(*) AS total_tasks,
+        SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) AS completed_tasks
+    FROM daily_care_tasks
+    WHERE task_date = ?
+");
+$stmt->execute([$today]);
+$care_stats = $stmt->fetch(PDO::FETCH_ASSOC);
+$care_total = (int) ($care_stats['total_tasks'] ?? 0);
+$care_completed = (int) ($care_stats['completed_tasks'] ?? 0);
+$care_pct = $care_total > 0 ? round(($care_completed / $care_total) * 100) : 100;
+
+// ── 22. Upcoming Check-ins (next 7 days) ────────────────
+$next_week = date('Y-m-d', strtotime('+7 days'));
+$stmt = $pdo->prepare("
+    SELECT DATE(bi.check_in_date) AS ci_date, COUNT(DISTINCT bi.id) AS count
+    FROM booking_items bi
+    JOIN bookings b ON b.id = bi.booking_id
+    WHERE bi.check_in_date BETWEEN ? AND ?
+      AND b.status IN ('confirmed', 'pending_payment', 'verifying_payment')
+    GROUP BY DATE(bi.check_in_date)
+    ORDER BY ci_date ASC
+");
+$stmt->execute([$today, $next_week]);
+$upcoming_checkins = $stmt->fetchAll(PDO::FETCH_ASSOC);
