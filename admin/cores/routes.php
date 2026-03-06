@@ -46,7 +46,6 @@ $pages = [
 
     // --- Promotions & CMS ---
     "promotions" => ["title" => "จัดการโปรโมชัน", "file" => "pages/promotions.php"],
-    "cms_banners" => ["title" => "จัดการแบนเนอร์ภาพ", "file" => "pages/cms_banners.php"],
     "cms_reviews" => ["title" => "รีวิวจากลูกค้า", "file" => "pages/cms_reviews.php"],
 
     // --- Room Types ---

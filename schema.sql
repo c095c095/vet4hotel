@@ -415,18 +415,6 @@ CREATE TABLE `refunds` (
 -- 6. FRONTEND CMS
 -- ==========================================
 
-CREATE TABLE `banners` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) DEFAULT NULL,
-  `image_url` varchar(255) NOT NULL,
-  `target_url` varchar(255) DEFAULT NULL,
-  `display_order` int(11) DEFAULT 0,
-  `is_active` tinyint(1) DEFAULT 1,
-  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
 -- Reviews สำหรับหน้าเว็บและวัด KPI พนักงาน
 CREATE TABLE `reviews` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

@@ -17,7 +17,6 @@ $nav_items = [
     ['page' => 'services', 'label' => 'บริการเสริม', 'icon' => 'sparkles'],
     ['page' => 'room_types', 'label' => 'ประเภทห้องพัก', 'icon' => 'bed-double'],
     ['page' => 'promotions', 'label' => 'โปรโมชัน', 'icon' => 'tag'],
-    ['page' => 'cms_banners', 'label' => 'แบนเนอร์หน้าแรก', 'icon' => 'image'],
     ['page' => 'cms_reviews', 'label' => 'รีวิวจากลูกค้า', 'icon' => 'message-square-quote'],
 ];
 
