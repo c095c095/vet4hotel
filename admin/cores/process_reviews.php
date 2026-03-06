@@ -1,7 +1,7 @@
 <?php
 // ═══════════════════════════════════════════════════════════
 // CMS REVIEWS PROCESSOR - VET4 HOTEL ADMIN
-// Handles approving (publishing) or hiding customer reviews
+// Handles approving (publishing), hiding, replying, and deleting customer reviews
 // ═══════════════════════════════════════════════════════════
 
 if (!isset($_SESSION['employee_id'])) {
@@ -22,6 +22,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['msg_success'] = "อัปเดตสถานะรีวิวสำเร็จ";
         } catch (PDOException $e) {
             $_SESSION['msg_error'] = "เกิดข้อผิดพลาด: " . $e->getMessage();
+        }
+    } elseif ($sub_action === 'reply_review') {
+        $review_id = intval($_POST['review_id']);
+        $staff_reply = trim($_POST['staff_reply'] ?? '');
+
+        if (empty($staff_reply)) {
+            $_SESSION['msg_error'] = "กรุณากรอกข้อความตอบกลับ";
+        } else {
+            try {
+                $stmt = $pdo->prepare("UPDATE reviews SET staff_reply = ?, staff_reply_at = NOW() WHERE id = ?");
+                $stmt->execute([$staff_reply, $review_id]);
+                $_SESSION['msg_success'] = "ตอบกลับรีวิวสำเร็จ";
+            } catch (PDOException $e) {
+                $_SESSION['msg_error'] = "เกิดข้อผิดพลาด: " . $e->getMessage();
+            }
         }
     } elseif ($sub_action === 'delete_review') {
         $review_id = intval($_POST['review_id']);

@@ -1,7 +1,7 @@
 <?php
 // ═══════════════════════════════════════════════════════════
 // CMS REVIEWS UI - VET4 HOTEL ADMIN
-// Manage and moderate customer reviews
+// Manage and moderate customer reviews with staff reply
 // ═══════════════════════════════════════════════════════════
 
 // Filter
@@ -114,7 +114,7 @@ function renderStars($rating)
             <a href="?page=cms_reviews&status=all" role="tab"
                 class="tab <?php echo $status_filter === 'all' ? 'tab-active bg-primary text-primary-content' : ''; ?>">ทั้งหมด</a>
             <a href="?page=cms_reviews&status=published" role="tab"
-                class="tab <?php echo $status_filter === 'published' ? 'tab-active bg-primary text-primary-content' : ''; ?>">ซ่อนอยู่</a>
+                class="tab <?php echo $status_filter === 'published' ? 'tab-active bg-primary text-primary-content' : ''; ?>">อนุมัติแล้ว</a>
             <a href="?page=cms_reviews&status=hidden" role="tab"
                 class="tab <?php echo $status_filter === 'hidden' ? 'tab-active bg-primary text-primary-content' : ''; ?>">ยังไม่อนุมัติ
                 (ซ่อน)</a>
@@ -136,7 +136,7 @@ function renderStars($rating)
                         <div class="flex justify-between items-start mb-2">
                             <div class="flex items-center gap-3">
                                 <div class="avatar placeholder">
-                                    <div class="bg-neutral text-neutral-content rounded-full w-10">
+                                    <div class="bg-neutral text-neutral-content rounded-full w-10 flex items-center justify-center">
                                         <span class="text-xs">
                                             <?php echo mb_substr($review['first_name'], 0, 1); ?>
                                         </span>
@@ -162,9 +162,24 @@ function renderStars($rating)
                         </div>
 
                         <div class="bg-base-200/50 p-3 rounded-lg flex-1 min-h-20 my-2 text-sm">
-                            "
-                            <?php echo nl2br(htmlspecialchars($review['comment'] ?? 'ไม่มีข้อความอธิบาย')); ?>"
+                            "<?php echo nl2br(htmlspecialchars($review['comment'] ?? 'ไม่มีข้อความอธิบาย')); ?>"
                         </div>
+
+                        <!-- Staff Reply Display -->
+                        <?php if ($review['staff_reply']): ?>
+                            <div class="bg-primary/5 border border-primary/15 rounded-lg px-3 py-2.5 mb-2">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <i data-lucide="reply" class="size-3 text-primary"></i>
+                                    <span class="text-[11px] font-semibold text-primary">ตอบกลับแล้ว</span>
+                                    <span class="text-[10px] text-base-content/40">
+                                        <?php echo date('d/m/Y H:i', strtotime($review['staff_reply_at'])); ?>
+                                    </span>
+                                </div>
+                                <p class="text-xs text-base-content/70">
+                                    <?php echo nl2br(htmlspecialchars($review['staff_reply'])); ?>
+                                </p>
+                            </div>
+                        <?php endif; ?>
 
                         <div class="card-actions justify-between items-center mt-2 border-t border-base-200 pt-3">
                             <div class="flex items-center gap-2">
@@ -177,6 +192,13 @@ function renderStars($rating)
                                 <?php endif; ?>
                             </div>
                             <div class="flex gap-1">
+                                <!-- Reply button -->
+                                <button
+                                    onclick="openReplyModal(<?php echo $review['id']; ?>, <?php echo htmlspecialchars(json_encode($review['staff_reply'] ?? ''), ENT_QUOTES); ?>)"
+                                    class="btn btn-xs btn-outline btn-primary gap-1" title="ตอบกลับ">
+                                    <i data-lucide="reply" class="size-3.5"></i>
+                                    <?php echo $review['staff_reply'] ? 'แก้ไขคำตอบ' : 'ตอบกลับ'; ?>
+                                </button>
                                 <?php if ($review['is_published']): ?>
                                     <button onclick="toggleReview(<?php echo $review['id']; ?>, 0)"
                                         class="btn btn-xs btn-outline btn-warning">ซ่อน (นำออก)</button>
@@ -208,6 +230,51 @@ function renderStars($rating)
     <input type="hidden" name="review_id" id="delete_review_id">
 </form>
 
+<!-- Reply Modal -->
+<dialog id="modal-reply" class="modal modal-bottom sm:modal-middle">
+    <div class="modal-box bg-base-100 rounded-t-3xl sm:rounded-3xl p-0 overflow-hidden shadow-2xl max-w-md">
+        <div class="p-6 border-b border-base-200 flex items-center gap-3 bg-base-100/50">
+            <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                <i data-lucide="reply" class="size-5"></i>
+            </div>
+            <div>
+                <h3 class="font-bold text-lg text-base-content leading-tight">ตอบกลับรีวิว</h3>
+                <p class="text-sm text-base-content/60 mt-0.5">เขียนข้อความตอบกลับให้ลูกค้า</p>
+            </div>
+            <form method="dialog" class="ml-auto">
+                <button
+                    class="btn btn-sm btn-circle btn-ghost text-base-content/50 hover:text-base-content hover:bg-base-200">
+                    <i data-lucide="x" class="size-4"></i>
+                </button>
+            </form>
+        </div>
+
+        <form action="?action=reviews" method="POST" class="p-6 space-y-4">
+            <input type="hidden" name="sub_action" value="reply_review">
+            <input type="hidden" name="review_id" id="reply_review_id">
+
+            <div class="form-control">
+                <label class="label pt-0"><span class="label-text font-medium">ข้อความตอบกลับ <span
+                            class="text-error">*</span></span></label>
+                <textarea name="staff_reply" id="reply_textarea"
+                    class="textarea textarea-bordered h-28 rounded-xl focus:outline-primary/50 focus:border-primary transition-colors w-full"
+                    placeholder="ขอบคุณสำหรับรีวิวค่ะ..." required></textarea>
+            </div>
+
+            <div class="modal-action mt-6">
+                <button type="button" class="btn btn-ghost rounded-xl font-medium"
+                    onclick="document.getElementById('modal-reply').close()">ยกเลิก</button>
+                <button type="submit" class="btn btn-primary rounded-xl font-medium gap-2 shadow-sm">
+                    <i data-lucide="send" class="size-4"></i> ส่งคำตอบ
+                </button>
+            </div>
+        </form>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
+</dialog>
+
 <script>
     function toggleReview(id, newStatus) {
         document.getElementById('status_review_id').value = id;
@@ -220,5 +287,12 @@ function renderStars($rating)
             document.getElementById('delete_review_id').value = id;
             document.getElementById('delete-form').submit();
         }
+    }
+
+    function openReplyModal(id, existingReply) {
+        document.getElementById('reply_review_id').value = id;
+        document.getElementById('reply_textarea').value = existingReply || '';
+        document.getElementById('modal-reply').showModal();
+        if (typeof lucide !== 'undefined') lucide.createIcons();
     }
 </script>

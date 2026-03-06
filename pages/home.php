@@ -21,30 +21,67 @@ try {
     // Silently fail — page works without DB data
 }
 
-// --- Static testimonials data ---
-$testimonials = [
-    [
-        'name' => 'คุณนุ่น',
-        'pet' => 'น้องมิลค์ (โกลเด้น)',
-        'avatar' => 'น',
-        'text' => 'ฝากน้องมิลค์ครั้งแรกก็กังวลมาก แต่ได้รับอัปเดตรูปทุกวัน เห็นน้องวิ่งเล่นมีความสุข ใจชื้นขึ้นเลยค่ะ',
-        'rating' => 5,
-    ],
-    [
-        'name' => 'คุณเบนซ์',
-        'pet' => 'น้องชีส (แมวสก็อตติช)',
-        'avatar' => 'เ',
-        'text' => 'น้อนขี้กลัวคนแปลกหน้ามากครับ แต่แปลกที่พี่ๆ เลี้ยงที่นี่เค้ามีวิธียังไงไม่รู้ แมวผมยอมให้ลูบหัวเฉยเลย กลับบ้านมาลูกก็ไม่ซึม ประทับใจจริงๆ ครับ',
-        'rating' => 5,
-    ],
-    [
-        'name' => 'คุณแม็ค',
-        'pet' => 'น้องโมจิ (ปอม)',
-        'avatar' => 'แ',
-        'text' => 'ที่ชอบที่สุดคือมีหมออยู่ตลอดนี่แหละครับ ลูกผมท้องไส้ไม่ค่อยดี พอมาฝากที่นี่แล้วอุ่นใจมาก มีคนดูอาการให้ตลอด 24 ชม.',
-        'rating' => 5,
-    ],
-];
+// --- Fetch published reviews from DB ---
+$testimonials = [];
+try {
+    $stmt = $pdo->query("
+        SELECT r.rating, r.comment, r.staff_reply, r.staff_reply_at,
+               c.first_name, c.last_name
+        FROM reviews r
+        JOIN customers c ON r.customer_id = c.id
+        WHERE r.is_published = 1
+        ORDER BY r.created_at DESC
+        LIMIT 6
+    ");
+    $db_reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    foreach ($db_reviews as $rv) {
+        $testimonials[] = [
+            'name' => 'คุณ' . $rv['first_name'],
+            'pet' => '',
+            'avatar' => mb_substr($rv['first_name'], 0, 1),
+            'text' => $rv['comment'],
+            'rating' => (int) $rv['rating'],
+            'staff_reply' => $rv['staff_reply'],
+            'staff_reply_at' => $rv['staff_reply_at'],
+        ];
+    }
+} catch (PDOException $e) {
+    // Silently fail
+}
+
+// Fallback to static data if no published reviews
+if (empty($testimonials)) {
+    $testimonials = [
+        [
+            'name' => 'คุณนุ่น',
+            'pet' => 'น้องมิลค์ (โกลเด้น)',
+            'avatar' => 'น',
+            'text' => 'ฝากน้องมิลค์ครั้งแรกก็กังวลมาก แต่ได้รับอัปเดตรูปทุกวัน เห็นน้องวิ่งเล่นมีความสุข ใจชื้นขึ้นเลยค่ะ',
+            'rating' => 5,
+            'staff_reply' => null,
+            'staff_reply_at' => null,
+        ],
+        [
+            'name' => 'คุณเบนซ์',
+            'pet' => 'น้องชีส (แมวสก็อตติช)',
+            'avatar' => 'เ',
+            'text' => 'น้อนขี้กลัวคนแปลกหน้ามากครับ แต่แปลกที่พี่ๆ เลี้ยงที่นี่เค้ามีวิธียังไงไม่รู้ แมวผมยอมให้ลูบหัวเฉยเลย กลับบ้านมาลูกก็ไม่ซึม ประทับใจจริงๆ ครับ',
+            'rating' => 5,
+            'staff_reply' => null,
+            'staff_reply_at' => null,
+        ],
+        [
+            'name' => 'คุณแม็ค',
+            'pet' => 'น้องโมจิ (ปอม)',
+            'avatar' => 'แ',
+            'text' => 'ที่ชอบที่สุดคือมีหมออยู่ตลอดนี่แหละครับ ลูกผมท้องไส้ไม่ค่อยดี พอมาฝากที่นี่แล้วอุ่นใจมาก มีคนดูอาการให้ตลอด 24 ชม.',
+            'rating' => 5,
+            'staff_reply' => null,
+            'staff_reply_at' => null,
+        ],
+    ];
+}
 
 // --- A Day in the Life data ---
 $daily_timeline = [
@@ -63,7 +100,8 @@ $daily_timeline = [
 <section class="relative min-h-[92vh] flex items-center overflow-hidden">
     <!-- Hero background image -->
     <div class="absolute inset-0" aria-hidden="true">
-        <img src="assets/images/487456352_9682552058431752_5798845638060029487_n.jpg" alt="" class="hero-kenburns w-full h-full object-cover">
+        <img src="assets/images/487456352_9682552058431752_5798845638060029487_n.jpg" alt=""
+            class="hero-kenburns w-full h-full object-cover">
         <div class="absolute inset-0 bg-linear-to-r from-black/65 via-black/45 to-black/55"></div>
     </div>
 
@@ -105,7 +143,9 @@ $daily_timeline = [
             <!-- Sub-copy -->
             <p class="animate-fade-in-up text-lg md:text-xl text-white/80 leading-relaxed mb-8 max-w-xl"
                 style="animation-delay: 0.3s;">
-                เราเข้าใจความกังวลของคุณพ่อคุณแม่ทุกคน ด้วยประสบการณ์กว่า 39 ปี ที่นี่เลยไม่ใช่แค่ที่ฝากเลี้ยง แต่เป็นเหมือนบ้านหลังที่สอง ที่น้องๆ ได้รับทั้งความรัก การดูแล และความใส่ใจตลอด 24 ชม. ให้คุณอุ่นใจแม้ไม่ได้อยู่ด้วยกัน
+                เราเข้าใจความกังวลของคุณพ่อคุณแม่ทุกคน ด้วยประสบการณ์กว่า 39 ปี ที่นี่เลยไม่ใช่แค่ที่ฝากเลี้ยง
+                แต่เป็นเหมือนบ้านหลังที่สอง ที่น้องๆ ได้รับทั้งความรัก การดูแล และความใส่ใจตลอด 24 ชม.
+                ให้คุณอุ่นใจแม้ไม่ได้อยู่ด้วยกัน
             </p>
 
             <!-- CTA buttons -->
@@ -179,17 +219,23 @@ $daily_timeline = [
                 </h2>
                 <div class="space-y-4 text-base-content/70 text-base leading-relaxed">
                     <p>
-                        โรงพยาบาลสัตว์ สัตวแพทย์ 4 (VET4) เกิดขึ้นตั้งแต่ปี พ.ศ. 2529 จากความตั้งใจของคุณหมอและทีมงานที่รักสัตว์สุดหัวใจ เพราะเราเข้าใจดีว่าน้องๆ ไม่ใช่แค่สัตว์เลี้ยง แต่คือ "สมาชิกคนสำคัญในครอบครัว" ของคุณ
+                        โรงพยาบาลสัตว์ สัตวแพทย์ 4 (VET4) เกิดขึ้นตั้งแต่ปี พ.ศ. 2529
+                        จากความตั้งใจของคุณหมอและทีมงานที่รักสัตว์สุดหัวใจ เพราะเราเข้าใจดีว่าน้องๆ ไม่ใช่แค่สัตว์เลี้ยง
+                        แต่คือ "สมาชิกคนสำคัญในครอบครัว" ของคุณ
                     </p>
                     <p>
-                        ตลอด 39 ปีที่ผ่านมา เราจึงไม่เคยหยุดพัฒนานวัตกรรมการรักษาตามมาตรฐานสากล (TASHA) ควบคู่ไปกับการดูแลด้วยความรัก ไม่ว่าจะเป็นการฝากพักผ่อนในโรงแรมที่แสนสบาย หรือการดูแลยามเจ็บป่วย ทุกรายละเอียดถูกออกแบบมาเพื่อให้คุณพ่อคุณแม่คลายความกังวล เพราะที่นี่... มีทีมสัตวแพทย์ผู้เชี่ยวชาญคอยดูแลลูกๆ ของคุณอย่างใกล้ชิดตลอด 24 ชั่วโมง
+                        ตลอด 39 ปีที่ผ่านมา เราจึงไม่เคยหยุดพัฒนานวัตกรรมการรักษาตามมาตรฐานสากล (TASHA)
+                        ควบคู่ไปกับการดูแลด้วยความรัก ไม่ว่าจะเป็นการฝากพักผ่อนในโรงแรมที่แสนสบาย หรือการดูแลยามเจ็บป่วย
+                        ทุกรายละเอียดถูกออกแบบมาเพื่อให้คุณพ่อคุณแม่คลายความกังวล เพราะที่นี่...
+                        มีทีมสัตวแพทย์ผู้เชี่ยวชาญคอยดูแลลูกๆ ของคุณอย่างใกล้ชิดตลอด 24 ชั่วโมง
                     </p>
                 </div>
 
                 <!-- Founder quote -->
                 <div class="mt-8 bg-base-200/50 rounded-2xl p-6 border-l-4 border-primary">
                     <p class="italic text-base-content/80 text-base mb-3">
-                        "ตลอด 39 ปี เราตั้งใจดูแลสัตว์เลี้ยงให้ดีที่สุด ใช้ความเชี่ยวชาญที่มี ดูแลลูกๆ ของคุณเหมือนลูกของเราเอง"
+                        "ตลอด 39 ปี เราตั้งใจดูแลสัตว์เลี้ยงให้ดีที่สุด ใช้ความเชี่ยวชาญที่มี ดูแลลูกๆ
+                        ของคุณเหมือนลูกของเราเอง"
                     </p>
                     <div class="flex items-center gap-3">
                         <div class="avatar placeholder">
@@ -211,7 +257,7 @@ $daily_timeline = [
                 <div class="relative">
                     <!-- Main photo -->
                     <div class="rounded-3xl aspect-4/3 overflow-hidden">
-                        <img src="assets/images/รวมฝากเลี้ยง.jpg" alt="ทีมงานและน้องๆ ที่ VET4 Hotel" 
+                        <img src="assets/images/รวมฝากเลี้ยง.jpg" alt="ทีมงานและน้องๆ ที่ VET4 Hotel"
                             class="w-full h-full object-cover">
                     </div>
 
@@ -463,8 +509,21 @@ $daily_timeline = [
 
                     <!-- Review text -->
                     <p class="text-base-content/70 text-sm leading-relaxed flex-1 mb-5">
-                        "<?php echo $review['text']; ?>"
+                        "<?php echo htmlspecialchars($review['text']); ?>"
                     </p>
+
+                    <!-- Staff reply (if exists) -->
+                    <?php if (!empty($review['staff_reply'])): ?>
+                        <div class="bg-primary/5 border border-primary/10 rounded-xl px-3 py-2.5 mb-4 -mt-2">
+                            <div class="flex items-center gap-1.5 mb-1">
+                                <i data-lucide="reply" class="size-3 text-primary"></i>
+                                <span class="text-[11px] font-semibold text-primary">ตอบกลับจาก VET4</span>
+                            </div>
+                            <p class="text-xs text-base-content/60 leading-relaxed">
+                                <?php echo htmlspecialchars($review['staff_reply']); ?>
+                            </p>
+                        </div>
+                    <?php endif; ?>
 
                     <!-- Reviewer -->
                     <div class="flex items-center gap-3 pt-4 border-t border-base-200">

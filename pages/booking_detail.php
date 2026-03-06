@@ -201,6 +201,18 @@ try {
         $updates_by_date[$date_key][] = $upd;
     }
 
+    // 7. Review for this booking
+    $existing_review = null;
+    $stmt = $pdo->prepare("
+        SELECT r.*, c.first_name, c.last_name
+        FROM reviews r
+        JOIN customers c ON r.customer_id = c.id
+        WHERE r.booking_id = ? 
+        LIMIT 1
+    ");
+    $stmt->execute([$booking_id]);
+    $existing_review = $stmt->fetch(PDO::FETCH_ASSOC);
+
 } catch (PDOException $e) {
     header("Location: ?page=booking_history");
     exit();
@@ -939,6 +951,96 @@ $latest_cout = !empty($items) ? max(array_column($items, 'check_out_date')) : nu
             </div>
         </div>
 
+        <!-- ═══ REVIEW SECTION ═══ -->
+        <?php if ($booking['status'] === 'checked_out'): ?>
+            <div class="card bg-base-100 shadow-md border border-base-200 overflow-hidden mb-6">
+                <div class="card-body p-0">
+                    <!-- Section Header -->
+                    <div
+                        class="px-5 py-4 border-b border-base-200 bg-linear-to-r from-warning/5 to-transparent flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-warning/10 text-warning p-2 rounded-xl">
+                                <i data-lucide="star" class="size-5"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-base text-base-content">รีวิวจากคุณ</h3>
+                                <p class="text-[11px] text-base-content/50">แชร์ประสบการณ์การเข้าพักของน้องๆ
+                                    ให้กำลังใจทีมงาน</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="px-5 py-5">
+                        <?php if ($existing_review): ?>
+                            <!-- Display existing review -->
+                            <div class="space-y-4">
+                                <!-- Rating -->
+                                <div class="flex items-center gap-3">
+                                    <div class="flex gap-0.5">
+                                        <?php for ($i = 1; $i <= 5; $i++): ?>
+                                            <i data-lucide="star"
+                                                class="size-5 <?php echo $i <= $existing_review['rating'] ? 'fill-warning text-warning' : 'text-base-content/20'; ?>"></i>
+                                        <?php endfor; ?>
+                                    </div>
+                                    <span
+                                        class="text-sm font-bold text-warning"><?php echo $existing_review['rating']; ?>.0</span>
+                                    <?php if ($existing_review['is_published']): ?>
+                                        <span class="badge badge-success badge-xs gap-1">
+                                            <i data-lucide="check" class="size-2.5"></i> แสดงผลบนเว็บไซต์
+                                        </span>
+                                    <?php else: ?>
+                                        <span class="badge badge-ghost badge-xs gap-1">
+                                            <i data-lucide="clock" class="size-2.5"></i> รอการตรวจสอบ
+                                        </span>
+                                    <?php endif; ?>
+                                </div>
+
+                                <!-- Comment -->
+                                <div class="bg-base-200/40 rounded-xl px-4 py-3 text-sm text-base-content/70 italic">
+                                    "<?php echo nl2br(htmlspecialchars($existing_review['comment'] ?? '')); ?>"
+                                </div>
+
+                                <div class="text-[10px] text-base-content/40 flex items-center gap-1">
+                                    <i data-lucide="calendar" class="size-3"></i>
+                                    รีวิวเมื่อ <?php echo thaiDateTime_d($existing_review['created_at']); ?>
+                                </div>
+
+                                <!-- Staff reply -->
+                                <?php if ($existing_review['staff_reply']): ?>
+                                    <div class="bg-primary/5 border border-primary/15 rounded-xl px-4 py-3 mt-2">
+                                        <div class="flex items-center gap-2 mb-1.5">
+                                            <div class="bg-primary/10 p-1 rounded-lg">
+                                                <i data-lucide="reply" class="size-3 text-primary"></i>
+                                            </div>
+                                            <span class="text-xs font-semibold text-primary">ตอบกลับจากทีมงาน VET4</span>
+                                            <span class="text-[10px] text-base-content/40">
+                                                <?php echo thaiDateTime_d($existing_review['staff_reply_at']); ?>
+                                            </span>
+                                        </div>
+                                        <p class="text-sm text-base-content/70">
+                                            <?php echo nl2br(htmlspecialchars($existing_review['staff_reply'])); ?>
+                                        </p>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        <?php else: ?>
+                            <!-- Review form -->
+                            <div class="text-center py-2">
+                                <p class="text-sm text-base-content/50 mb-4">
+                                    คุณยังไม่ได้รีวิวการเข้าพักครั้งนี้ แชร์ประสบการณ์ให้พวกเราฟังหน่อยนะคะ 😊
+                                </p>
+                                <button class="btn btn-primary btn-sm gap-2 rounded-xl"
+                                    onclick="document.getElementById('modal-review').showModal()">
+                                    <i data-lucide="pen-line" class="size-4"></i>
+                                    เขียนรีวิว
+                                </button>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
+
         <!-- ═══ BOTTOM ACTIONS ═══ -->
         <a href="?page=booking_history" class="btn btn-ghost gap-2 w-full sm:w-auto mb-6">
             <i data-lucide="arrow-left" class="size-4"></i>
@@ -1034,18 +1136,103 @@ $latest_cout = !empty($items) ? max(array_column($items, 'check_out_date')) : nu
     </dialog>
 
     <script>
-        function updateCustRefundMax() {
-            const select = document.getElementById('cust-refund-payment-select');
-            const input = document.getElementById('cust-refund-amount-input');
-            const label = document.getElementById('cust-refund-max-label');
-            const opt = select.options[select.selectedIndex];
-            if (opt && opt.dataset.max) {
-                const max = parseFloat(opt.dataset.max);
-                input.max = max;
-                input.value = max.toFixed(2);
-                label.textContent = 'คืนได้สูงสุด ฿' + max.toLocaleString('th-TH', { minimumFractionDigits: 2 });
+            function updateCustRefundMax() {
+                const select = document.getElementById('cust-refund-payment-select');
+                const input = document.getElementById('cust-refund-amount-input');
+                const label = document.getElementById('cust-refund-max-label');
+                const opt = select.options[select.selectedIndex];
+                if (opt && opt.dataset.max) {
+                    const max = parseFloat(opt.dataset.max);
+                    input .max = max;
+                     input.value = max.toFixed(2);
+            label.textContent = 'คืนได้สูงสุด ฿' + max.toLocaleString('th-TH', { minimumFractionDigits: 2 });
+                }
             }
-        }
+    </script>
+<?php endif; ?>
+
+<!-- ═══════════ REVIEW MODAL ═══════════ -->
+<?php if ($booking['status'] === 'checked_out' && !$existing_review): ?>
+    <dialog id="modal-review" class="modal modal-bottom sm:modal-middle">
+        <div class="modal-box bg-base-100 rounded-t-3xl sm:rounded-3xl p-0 overflow-hidden shadow-2xl max-w-md">
+            <div class="p-6 border-b border-base-200 flex items-center gap-3 bg-base-100/50">
+                <div class="w-10 h-10 rounded-full bg-warning/10 flex items-center justify-center text-warning shrink-0">
+                    <i data-lucide="star" class="size-5"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg text-base-content leading-tight">เขียนรีวิว</h3>
+                    <p class="text-sm text-base-content/60 mt-0.5">ให้คะแนนและแชร์ประสบการณ์ของคุณ</p>
+                </div>
+                <form method="dialog" class="ml-auto">
+                    <button
+                        class="btn btn-sm btn-circle btn-ghost text-base-content/50 hover:text-base-content hover:bg-base-200">
+                        <i data-lucide="x" class="size-4"></i>
+                    </button>
+                </form>
+            </div>
+
+            <form action="?action=review" method="POST" class="p-6 space-y-5">
+                <input type="hidden" name="booking_id" value="<?php echo $booking_id; ?>">
+
+                <!-- Star Rating -->
+                <div class="form-control">
+                    <label class="label pt-0"><span class="label-text font-medium">ให้คะแนนประสบการณ์ <span
+                                class="text-error">*</span></span></label>
+                    <div class="flex items-center gap-1 py-2" id="star-rating-container">
+                        <?php for ($i = 1; $i <= 5; $i++): ?>
+                            <button type="button" class="star-btn cursor-pointer transition-transform hover:scale-125"
+                                data-rating="<?php echo $i; ?>" onclick="setRating(<?php echo $i; ?>)">
+                                <i data-lucide="star" class="size-8 text-base-content/20 transition-colors duration-200"
+                                    id="star-<?php echo $i; ?>"></i>
+                            </button>
+                        <?php endfor; ?>
+                        <span class="text-lg font-bold text-warning ml-3" id="rating-display">0</span>
+                    </div>
+                    <input type="hidden" name="rating" id="rating-input" value="0" required>
+                </div>
+
+                <!-- Comment -->
+                <div class="form-control">
+                    <label class="label pt-0"><span class="label-text font-medium">ข้อความรีวิว <span
+                                class="text-error">*</span></span></label>
+                    <textarea name="comment"
+                        class="textarea textarea-bordered h-28 rounded-xl focus:outline-primary/50 focus:border-primary transition-colors w-full"
+                        placeholder="เล่าประสบการณ์การเข้าพักของน้องๆ ที่ VET4 Hotel ให้เราฟังหน่อยนะคะ..."
+                        required></textarea>
+                </div>
+
+                <div class="modal-action mt-6">
+                    <button type="button" class="btn btn-ghost rounded-xl font-medium"
+                        onclick="document.getElementById('modal-review').close()">ยกเลิก</button>
+                    <button type="submit" class="btn btn-primary rounded-xl font-medium gap-2 shadow-sm"
+                        id="submit-review-btn" disabled>
+                        <i data-lucide="send" class="size-4"></i> ส่งรีวิว
+                    </button>
+                </div>
+            </form>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
+
+    <script>
+            function setRating(rating) {
+                document.getElementById('rating-input').value = rating;
+                document.getElementById('rating-display').textContent = rating + '.0';
+                for (let i = 1; i <= 5; i++) {
+                    const star = document.getElementById('star-' + i);
+                    if (i <= rating) {
+                        star.classList.remove('text-base-content/20');
+                        star.classList.add('fill-warning', 'text-warning');
+                    } else {
+                        star.classList.remove('fill-warning', 'text-warning');
+                        star.classList.add('text-base-content/20');
+                    }
+                }
+                // Enable submit button when rating is set
+                document.getElementById('submit-review-btn').disabled = false;
+            }
     </script>
 <?php endif; ?>
 
