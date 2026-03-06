@@ -475,13 +475,9 @@ function nightsCount($cin, $cout)
                             </div>
                         </div>
                     </div>
-                </div>
+                <?php endforeach; ?>
             </div>
-
-        <?php endforeach; ?>
-        </div>
-
-    <?php endif; ?>
+        <?php endif; ?>
     </div>
 </section>
 
