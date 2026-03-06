@@ -4,8 +4,6 @@
 // Handles POST to ?action=payment
 // ═══════════════════════════════════════════════════════════
 
-require_once '../cores/init.php';
-
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header("Location: ?page=payments");
     exit();

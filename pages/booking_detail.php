@@ -131,8 +131,38 @@ try {
     ");
     $stmt->execute([$booking_id]);
     $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    $stmt->execute([$booking_id]);
-    $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // 6. Daily Updates (สมุดพกสัตว์เลี้ยง)
+    $daily_updates = [];
+    if (in_array($booking['status'], ['checked_in', 'checked_out'])) {
+        $stmt = $pdo->prepare("
+            SELECT 
+                du.*,
+                dt.name AS type_name,
+                dt.icon_class,
+                p.name AS pet_name,
+                p.species_id,
+                rm.room_number,
+                e.first_name AS emp_name
+            FROM daily_updates du
+            JOIN daily_update_types dt ON du.update_type_id = dt.id
+            JOIN pets p ON du.pet_id = p.id
+            JOIN booking_items bi ON du.booking_item_id = bi.id
+            JOIN rooms rm ON bi.room_id = rm.id
+            JOIN employees e ON du.employee_id = e.id
+            WHERE bi.booking_id = ?
+            ORDER BY du.created_at DESC
+        ");
+        $stmt->execute([$booking_id]);
+        $daily_updates = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Group daily updates by date
+    $updates_by_date = [];
+    foreach ($daily_updates as $upd) {
+        $date_key = date('Y-m-d', strtotime($upd['created_at']));
+        $updates_by_date[$date_key][] = $upd;
+    }
 
 } catch (PDOException $e) {
     header("Location: ?page=booking_history");
@@ -622,6 +652,109 @@ $latest_cout = !empty($items) ? max(array_column($items, 'check_out_date')) : nu
                     </h3>
                     <div class="bg-base-200/40 rounded-xl px-4 py-3 text-sm text-base-content/70 italic">
                         "<?php echo nl2br(sanitize($booking['special_requests'])); ?>"
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <!-- ═══ DAILY UPDATES TIMELINE (สมุดพกสัตว์เลี้ยง) ═══ -->
+        <?php if (!empty($daily_updates)): ?>
+            <div class="card bg-base-100 shadow-md border border-base-200 overflow-hidden mb-6">
+                <div class="card-body p-0">
+                    <!-- Section Header -->
+                    <div
+                        class="px-5 py-4 border-b border-base-200 bg-linear-to-r from-primary/5 to-transparent flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-primary/10 text-primary p-2 rounded-xl">
+                                <i data-lucide="camera" class="size-5"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-base text-base-content">สมุดพกสัตว์เลี้ยง</h3>
+                                <p class="text-[11px] text-base-content/50">อัปเดตรายวันจากทีมงานดูแลน้องๆ</p>
+                            </div>
+                        </div>
+                        <span class="badge badge-primary badge-outline gap-1">
+                            <i data-lucide="image" class="size-3"></i>
+                            <?php echo count($daily_updates); ?> อัปเดต
+                        </span>
+                    </div>
+
+                    <!-- Grouped by Date -->
+                    <div class="divide-y divide-base-200">
+                        <?php foreach ($updates_by_date as $date_key => $day_updates):
+                            $is_today = ($date_key === date('Y-m-d'));
+                            $day_label = $is_today ? 'วันนี้' : thaiDateShort_d($date_key);
+                            ?>
+                            <div class="collapse collapse-arrow bg-base-100" tabindex="0">
+                                <input type="checkbox" <?php echo $is_today || array_key_first($updates_by_date) === $date_key ? 'checked' : ''; ?> />
+                                <div class="collapse-title py-3 px-5 min-h-0">
+                                    <div class="flex items-center gap-2">
+                                        <i data-lucide="calendar-days" class="size-4 text-primary"></i>
+                                        <span class="font-semibold text-sm text-base-content"><?php echo $day_label; ?></span>
+                                        <span class="badge badge-ghost badge-xs"><?php echo count($day_updates); ?>
+                                            รายการ</span>
+                                    </div>
+                                </div>
+                                <div class="collapse-content px-5 pb-4">
+                                    <div class="space-y-3">
+                                        <?php foreach ($day_updates as $upd): ?>
+                                            <div class="flex gap-3 group/item">
+                                                <!-- Icon -->
+                                                <div class="shrink-0 pt-0.5">
+                                                    <div
+                                                        class="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-primary ring-2 ring-base-100 group-hover/item:ring-primary/20 transition-all">
+                                                        <i data-lucide="<?php echo htmlspecialchars($upd['icon_class'] ?? 'info'); ?>"
+                                                            class="size-4"></i>
+                                                    </div>
+                                                </div>
+                                                <!-- Content -->
+                                                <div class="flex-1 min-w-0">
+                                                    <div
+                                                        class="bg-base-200/40 rounded-xl p-3 border border-base-200 hover:border-primary/20 transition-colors">
+                                                        <!-- Header -->
+                                                        <div class="flex items-center justify-between flex-wrap gap-1 mb-1.5">
+                                                            <div class="flex items-center gap-2">
+                                                                <span class="font-semibold text-sm text-base-content">
+                                                                    <?php echo htmlspecialchars($upd['pet_name']); ?>
+                                                                </span>
+                                                                <span class="badge badge-primary badge-outline badge-xs">
+                                                                    <?php echo htmlspecialchars($upd['type_name']); ?>
+                                                                </span>
+                                                            </div>
+                                                            <span class="text-[10px] text-base-content/40 flex items-center gap-1">
+                                                                <i data-lucide="clock" class="size-2.5"></i>
+                                                                <?php echo date('H:i น.', strtotime($upd['created_at'])); ?>
+                                                            </span>
+                                                        </div>
+                                                        <div class="text-xs text-base-content/50 mb-2 flex items-center gap-1">
+                                                            <i data-lucide="door-open" class="size-3"></i>
+                                                            ห้อง <?php echo htmlspecialchars($upd['room_number']); ?>
+                                                            <span class="mx-1">·</span>
+                                                            <i data-lucide="user" class="size-3"></i>
+                                                            ดูแลโดย <?php echo htmlspecialchars($upd['emp_name']); ?>
+                                                        </div>
+                                                        <!-- Message -->
+                                                        <p class="text-sm text-base-content/80 leading-relaxed">
+                                                            <?php echo nl2br(htmlspecialchars($upd['message'])); ?>
+                                                        </p>
+                                                        <!-- Image -->
+                                                        <?php if ($upd['image_url']): ?>
+                                                            <div
+                                                                class="mt-3 rounded-xl overflow-hidden border border-base-200 max-w-xs">
+                                                                <img src="<?php echo htmlspecialchars($upd['image_url']); ?>"
+                                                                    alt="อัปเดต <?php echo htmlspecialchars($upd['pet_name']); ?>"
+                                                                    class="w-full h-auto object-cover max-h-56 cursor-pointer hover:opacity-90 hover:scale-[1.02] transition-all duration-200"
+                                                                    onclick="window.open(this.src, '_blank')">
+                                                            </div>
+                                                        <?php endif; ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
                     </div>
                 </div>
             </div>

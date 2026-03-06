@@ -130,6 +130,20 @@ try {
             $booking_payments_map[$pay['booking_id']][] = $pay;
         }
 
+        // 6. Daily Updates count per booking
+        $booking_updates_count = [];
+        $stmt = $pdo->prepare("
+            SELECT bi.booking_id, COUNT(du.id) AS update_count
+            FROM daily_updates du
+            JOIN booking_items bi ON du.booking_item_id = bi.id
+            WHERE bi.booking_id IN ($placeholders)
+            GROUP BY bi.booking_id
+        ");
+        $stmt->execute($booking_ids);
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+            $booking_updates_count[$row['booking_id']] = (int) $row['update_count'];
+        }
+
     }
 } catch (PDOException $e) {
     $bookings = [];
@@ -372,90 +386,93 @@ function nightsCount($cin, $cout)
                                         ?>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        <!-- Pets -->
-                        <?php if (!empty($all_pets)): ?>
-                            <div>
-                                <div class="text-xs font-semibold text-base-content/50 uppercase tracking-wider mb-2">
-                                    สัตว์เลี้ยงที่เข้าพัก (<?php echo count($all_pets); ?> ตัว)
-                                </div>
-                                <div class="flex flex-wrap gap-2">
-                                    <?php foreach ($all_pets as $pet): ?>
-                                        <div class="badge badge-outline gap-1.5 py-3 px-3 border-primary/30 text-primary">
-                                            <?php if ($pet['species_id'] == 1): ?>
-                                                <i data-lucide="dog" class="size-3"></i>
-                                            <?php elseif ($pet['species_id'] == 2): ?>
-                                                <i data-lucide="cat" class="size-3"></i>
-                                            <?php else: ?>
-                                                <i data-lucide="paw-print" class="size-3"></i>
-                                            <?php endif; ?>
-                                            <?php echo sanitize($pet['pet_name']); ?>
-                                            <span
-                                                class="text-[10px] text-base-content/40">(<?php echo sanitize($pet['species_name']); ?>)</span>
+                                <!-- Pets -->
+                                <?php if (!empty($all_pets)): ?>
+                                    <div>
+                                        <div class="text-xs font-semibold text-base-content/50 uppercase tracking-wider mb-2">
+                                            สัตว์เลี้ยงที่เข้าพัก (<?php echo count($all_pets); ?> ตัว)
                                         </div>
-                                    <?php endforeach; ?>
-                                </div>
-                            </div>
-                        <?php endif; ?>
+                                        <div class="flex flex-wrap gap-2">
+                                            <?php foreach ($all_pets as $pet): ?>
+                                                <div class="badge badge-outline gap-1.5 py-3 px-3 border-primary/30 text-primary">
+                                                    <?php if ($pet['species_id'] == 1): ?>
+                                                        <i data-lucide="dog" class="size-3"></i>
+                                                    <?php elseif ($pet['species_id'] == 2): ?>
+                                                        <i data-lucide="cat" class="size-3"></i>
+                                                    <?php else: ?>
+                                                        <i data-lucide="paw-print" class="size-3"></i>
+                                                    <?php endif; ?>
+                                                    <?php echo sanitize($pet['pet_name']); ?>
+                                                    <span
+                                                        class="text-[10px] text-base-content/40">(<?php echo sanitize($pet['species_name']); ?>)</span>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
 
-                        <!-- Services summary -->
-                        <?php if (!empty($services)): ?>
-                            <div class="flex items-center gap-2 text-sm text-base-content/60">
-                                <i data-lucide="sparkles" class="size-4 text-accent"></i>
-                                <span>บริการเสริม: <?php echo count($services); ?> รายการ</span>
-                            </div>
-                        <?php endif; ?>
+                                <!-- Services summary -->
+                                <?php if (!empty($services)): ?>
+                                    <div class="flex items-center gap-2 text-sm text-base-content/60">
+                                        <i data-lucide="sparkles" class="size-4 text-accent"></i>
+                                        <span>บริการเสริม: <?php echo count($services); ?> รายการ</span>
+                                    </div>
+                                <?php endif; ?>
 
-                        <!-- Price breakdown -->
-                        <?php if ((float) $booking['discount_amount'] > 0): ?>
-                            <div
-                                class="flex items-center gap-3 text-sm bg-success/5 border border-success/20 rounded-xl px-4 py-2.5">
-                                <i data-lucide="ticket" class="size-4 text-success shrink-0"></i>
-                                <div class="flex-1">
-                                    <span class="text-base-content/70">โค้ดส่วนลด</span>
-                                    <?php if ($booking['promo_code']): ?>
-                                        <span class="font-bold text-success ml-1"><?php echo sanitize($booking['promo_code']); ?></span>
+                                <!-- Price breakdown -->
+                                <?php if ((float) $booking['discount_amount'] > 0): ?>
+                                    <div
+                                        class="flex items-center gap-3 text-sm bg-success/5 border border-success/20 rounded-xl px-4 py-2.5">
+                                        <i data-lucide="ticket" class="size-4 text-success shrink-0"></i>
+                                        <div class="flex-1">
+                                            <span class="text-base-content/70">โค้ดส่วนลด</span>
+                                            <?php if ($booking['promo_code']): ?>
+                                                <span
+                                                    class="font-bold text-success ml-1"><?php echo sanitize($booking['promo_code']); ?></span>
+                                            <?php endif; ?>
+                                        </div>
+                                        <span
+                                            class="font-bold text-success">-฿<?php echo number_format($booking['discount_amount']); ?></span>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                            <!-- Actions -->
+                            <div class="flex items-center justify-between pt-2 border-t border-base-200 p-3">
+                                <!-- Payment status indicator -->
+                                <div class="flex items-center gap-2">
+                                    <?php if (!empty($payments)):
+                                        $last_pay = end($payments);
+                                        $pCfg = $payment_status_config[$last_pay['status']] ?? $payment_status_config['pending'];
+                                        ?>
+                                        <span class="badge <?php echo $pCfg['badge']; ?> badge-sm gap-1">
+                                            <i data-lucide="credit-card" class="size-3"></i>
+                                            <?php echo $pCfg['label']; ?>
+                                        </span>
+                                    <?php else: ?>
+                                        <span class="badge badge-ghost badge-sm gap-1">
+                                            <i data-lucide="credit-card" class="size-3"></i>
+                                            ยังไม่ชำระ
+                                        </span>
+                                    <?php endif; ?>
+
+                                    <?php
+                                    $update_count = $booking_updates_count[$bId] ?? 0;
+                                    if ($update_count > 0):
+                                        ?>
+                                        <span class="badge badge-primary badge-outline badge-sm gap-1">
+                                            <i data-lucide="camera" class="size-3"></i>
+                                            <?php echo $update_count; ?> อัปเดต
+                                        </span>
                                     <?php endif; ?>
                                 </div>
-                                <span
-                                    class="font-bold text-success">-฿<?php echo number_format($booking['discount_amount']); ?></span>
+
+                                <a href="?page=booking_detail&id=<?php echo $bId; ?>"
+                                    class="btn btn-primary btn-sm gap-1.5 shadow-sm">
+                                    <i data-lucide="eye" class="size-4"></i>
+                                    ดูรายละเอียด
+                                </a>
                             </div>
-                        <?php endif; ?>
-
-                        <!-- Actions -->
-                        <div class="flex items-center justify-between pt-2 border-t border-base-200">
-                            <!-- Payment status indicator -->
-                            <div class="flex items-center gap-2">
-                                <?php if (!empty($payments)):
-                                    $last_pay = end($payments);
-                                    $pCfg = $payment_status_config[$last_pay['status']] ?? $payment_status_config['pending'];
-                                    ?>
-                                    <span class="badge <?php echo $pCfg['badge']; ?> badge-sm gap-1">
-                                        <i data-lucide="credit-card" class="size-3"></i>
-                                        <?php echo $pCfg['label']; ?>
-                                    </span>
-                                <?php else: ?>
-                                    <span class="badge badge-ghost badge-sm gap-1">
-                                        <i data-lucide="credit-card" class="size-3"></i>
-                                        ยังไม่ชำระ
-                                    </span>
-                                <?php endif; ?>
-
-                                <?php if (!empty($transports)): ?>
-                                    <span class="badge badge-ghost badge-sm gap-1">
-                                        <i data-lucide="truck" class="size-3"></i>
-                                        Pet Taxi
-                                    </span>
-                                <?php endif; ?>
-                            </div>
-
-                            <a href="?page=booking_detail&id=<?php echo $bId; ?>"
-                                class="btn btn-primary btn-sm gap-1.5 shadow-sm">
-                                <i data-lucide="eye" class="size-4"></i>
-                                ดูรายละเอียด
-                            </a>
                         </div>
                     </div>
                 </div>
