@@ -30,7 +30,7 @@ function status_badge($status)
         </div>
         <div class="flex items-center gap-2">
             <button onclick="openAddModal()"
-                class="btn btn-primary shadow-sm hover:shadow-md hover:shadow-primary/20 transition-all rounded-xl">
+                class="btn btn-primary shadow-sm hover:shadow-md hover:shadow-primary/20 transition-all">
                 <i data-lucide="plus-circle" class="size-5"></i>
                 เพิ่มงานดูแล
             </button>
@@ -99,7 +99,7 @@ function status_badge($status)
                 <div class="form-control flex-1">
                     <label class="label pt-0"><span class="label-text font-medium">ค้นหา</span></label>
                     <label
-                        class="input input-bordered flex items-center gap-2 rounded-xl focus-within:outline-primary/50 focus-within:border-primary w-full transition-colors">
+                        class="input input-bordered flex items-center gap-2 focus-within:outline-primary/50 focus-within:border-primary w-full transition-colors">
                         <i data-lucide="search" class="size-4 text-base-content/50"></i>
                         <input type="text" name="search" class="grow"
                             placeholder="ชื่อสัตว์เลี้ยง, รายละเอียด, หมายเลขการจอง..."
@@ -111,7 +111,7 @@ function status_badge($status)
                 <div class="form-control w-full xl:w-48">
                     <label class="label pt-0"><span class="label-text font-medium">วันที่</span></label>
                     <select name="date"
-                        class="select select-bordered rounded-xl focus:outline-primary/50 focus:border-primary transition-colors w-full"
+                        class="select select-bordered focus:outline-primary/50 focus:border-primary transition-colors w-full"
                         onchange="this.form.submit()">
                         <option value="all" <?php echo $date_filter === 'all' ? 'selected' : ''; ?>>ทุกวัน</option>
                         <option value="<?php echo date('Y-m-d'); ?>" <?php echo $date_filter === date('Y-m-d') ? 'selected' : ''; ?>>วันนี้ (
@@ -131,7 +131,7 @@ function status_badge($status)
                 <div class="form-control w-full xl:w-48">
                     <label class="label pt-0"><span class="label-text font-medium">ประเภทงาน</span></label>
                     <select name="task_type"
-                        class="select select-bordered rounded-xl focus:outline-primary/50 focus:border-primary w-full transition-colors"
+                        class="select select-bordered focus:outline-primary/50 focus:border-primary w-full transition-colors"
                         onchange="this.form.submit()">
                         <option value="all">ทั้งหมด</option>
                         <?php foreach ($care_task_types as $type): ?>
@@ -146,7 +146,7 @@ function status_badge($status)
                 <div class="form-control w-full xl:w-44">
                     <label class="label pt-0"><span class="label-text font-medium">สถานะ</span></label>
                     <select name="status"
-                        class="select select-bordered rounded-xl focus:outline-primary/50 focus:border-primary w-full transition-colors"
+                        class="select select-bordered focus:outline-primary/50 focus:border-primary w-full transition-colors"
                         onchange="this.form.submit()">
                         <?php foreach ($status_config as $val => $cfg): ?>
                                 <option value="<?php echo $val; ?>" <?php echo $status_filter === (string) $val ? 'selected' : ''; ?>>
@@ -400,7 +400,7 @@ function status_badge($status)
             
             <div class="form-control">
                 <label class="label pt-0"><span class="label-text font-medium">สัตว์เลี้ยงที่กำลังเข้าพัก <span class="text-error">*</span></span></label>
-                <select name="pet_info" id="add-pet-select" class="select select-bordered w-full rounded-xl focus:outline-primary/50 focus:border-primary transition-colors" required>
+                <select name="pet_info" id="add-pet-select" class="select select-bordered w-full focus:outline-primary/50 focus:border-primary transition-colors" required>
                     <option value="" disabled selected>-- กำลังโหลดข้อมูล... --</option>
                 </select>
                 <!-- We will use JS to split pet_info into booking_item_id and pet_id before submit -->
@@ -410,12 +410,12 @@ function status_badge($status)
 
             <div class="form-control">
                 <label class="label pt-0"><span class="label-text font-medium">วันที่ต้องดูแล <span class="text-error">*</span></span></label>
-                <input type="date" name="task_date" class="input input-bordered w-full rounded-xl focus:outline-primary/50 focus:border-primary transition-colors" value="<?php echo date('Y-m-d'); ?>" required>
+                <input type="date" name="task_date" class="input input-bordered w-full focus:outline-primary/50 focus:border-primary transition-colors" value="<?php echo date('Y-m-d'); ?>" required>
             </div>
 
             <div class="form-control">
                 <label class="label pt-0"><span class="label-text font-medium">ประเภทงาน <span class="text-error">*</span></span></label>
-                <select name="task_type_id" class="select select-bordered w-full rounded-xl focus:outline-primary/50 focus:border-primary transition-colors" required>
+                <select name="task_type_id" class="select select-bordered w-full focus:outline-primary/50 focus:border-primary transition-colors" required>
                     <option value="" disabled selected>-- เลือกประเภท --</option>
                     <?php foreach ($care_task_types as $type): ?>
                             <option value="<?php echo $type['id']; ?>"><?php echo htmlspecialchars($type['name']); ?></option>
@@ -425,12 +425,12 @@ function status_badge($status)
 
             <div class="form-control">
                 <label class="label pt-0"><span class="label-text font-medium">รายละเอียดงาน <span class="text-error">*</span></span></label>
-                <textarea name="description" class="textarea textarea-bordered h-24 rounded-xl focus:outline-primary/50 focus:border-primary transition-colors w-full" placeholder="เช่น ป้อนยาแก้แพ้ 1 เม็ดหลังอาหารเช้า" required></textarea>
+                <textarea name="description" class="textarea textarea-bordered h-24 focus:outline-primary/50 focus:border-primary transition-colors w-full" placeholder="เช่น ป้อนยาแก้แพ้ 1 เม็ดหลังอาหารเช้า" required></textarea>
             </div>
 
             <div class="modal-action mt-6">
-                <button type="button" class="btn btn-ghost rounded-xl font-medium" onclick="document.getElementById('modal-add-care-task').close()">ยกเลิก</button>
-                <button type="submit" class="btn btn-primary rounded-xl font-medium gap-2 shadow-sm" onclick="return prepareAddSubmit()">
+                <button type="button" class="btn btn-ghost font-medium" onclick="document.getElementById('modal-add-care-task').close()">ยกเลิก</button>
+                <button type="submit" class="btn btn-primary font-medium gap-2 shadow-sm" onclick="return prepareAddSubmit()">
                     <i data-lucide="save" class="size-4"></i> บันทึกข้อมูล
                 </button>
             </div>

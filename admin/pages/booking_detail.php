@@ -994,7 +994,7 @@ $action_btn_config = [
             
             <div class="form-control">
                 <label class="label pt-0"><span class="label-text font-medium">สัตว์เลี้ยง <span class="text-error">*</span></span></label>
-                <select name="pet_info" id="add-pet-select" class="select select-bordered w-full rounded-xl focus:outline-primary/50 focus:border-primary transition-colors" required onchange="updateAddCareTaskHiddenFields()">
+                <select name="pet_info" id="add-pet-select" class="select select-bordered w-full focus:outline-primary/50 focus:border-primary transition-colors" required onchange="updateAddCareTaskHiddenFields()">
                     <option value="" disabled selected>-- เลือกสัตว์เลี้ยง --</option>
                     <?php 
                     // Flatten the pets array from all booked items
@@ -1014,12 +1014,12 @@ $action_btn_config = [
             <div class="form-control">
                 <label class="label pt-0"><span class="label-text font-medium">วันที่ต้องดูแล <span class="text-error">*</span></span></label>
                 <!-- Default to check in date if future, else today, but restrict min/max based on booking dates roughly if possible -->
-                <input type="date" name="task_date" class="input input-bordered w-full rounded-xl focus:outline-primary/50 focus:border-primary transition-colors" value="<?php echo date('Y-m-d'); ?>" required>
+                <input type="date" name="task_date" class="input input-bordered w-full focus:outline-primary/50 focus:border-primary transition-colors" value="<?php echo date('Y-m-d'); ?>" required>
             </div>
 
             <div class="form-control">
                 <label class="label pt-0"><span class="label-text font-medium">ประเภทงาน <span class="text-error">*</span></span></label>
-                <select name="task_type_id" class="select select-bordered w-full rounded-xl focus:outline-primary/50 focus:border-primary transition-colors" required>
+                <select name="task_type_id" class="select select-bordered w-full focus:outline-primary/50 focus:border-primary transition-colors" required>
                     <option value="" disabled selected>-- เลือกประเภท --</option>
                     <?php foreach ($care_task_types as $type): ?>
                         <option value="<?php echo $type['id']; ?>"><?php echo htmlspecialchars($type['name']); ?></option>
@@ -1029,12 +1029,12 @@ $action_btn_config = [
 
             <div class="form-control">
                 <label class="label pt-0"><span class="label-text font-medium">รายละเอียดงาน <span class="text-error">*</span></span></label>
-                <textarea name="description" class="textarea textarea-bordered h-24 rounded-xl focus:outline-primary/50 focus:border-primary transition-colors w-full" placeholder="เช่น ป้อนยา 1 เม็ดหลังอาหาร" required></textarea>
+                <textarea name="description" class="textarea textarea-bordered h-24 focus:outline-primary/50 focus:border-primary transition-colors w-full" placeholder="เช่น ป้อนยา 1 เม็ดหลังอาหาร" required></textarea>
             </div>
 
             <div class="modal-action mt-6">
-                <button type="button" class="btn btn-ghost rounded-xl font-medium" onclick="document.getElementById('modal-add-care-task').close()">ยกเลิก</button>
-                <button type="submit" class="btn btn-primary rounded-xl font-medium gap-2 shadow-sm" onclick="return prepareAddSubmit()">
+                <button type="button" class="btn btn-ghost font-medium" onclick="document.getElementById('modal-add-care-task').close()">ยกเลิก</button>
+                <button type="submit" class="btn btn-primary font-medium gap-2 shadow-sm" onclick="return prepareAddSubmit()">
                     <i data-lucide="save" class="size-4"></i> บันทึกข้อมูล
                 </button>
             </div>
