@@ -324,12 +324,6 @@ $latest_cout = !empty($items) ? max(array_column($items, 'check_out_date')) : nu
                         ชำระเงิน
                     </a>
                 <?php endif; ?>
-                <?php if ($booking['status'] === 'checked_in'): ?>
-                    <a href="?page=active_stay" class="btn btn-primary gap-2 flex-1 sm:flex-none">
-                        <i data-lucide="radio" class="size-4"></i>
-                        ติดตามสถานะ Live
-                    </a>
-                <?php endif; ?>
             </div>
         </div>
 
@@ -1136,18 +1130,18 @@ $latest_cout = !empty($items) ? max(array_column($items, 'check_out_date')) : nu
     </dialog>
 
     <script>
-            function updateCustRefundMax() {
-                const select = document.getElementById('cust-refund-payment-select');
-                const input = document.getElementById('cust-refund-amount-input');
-                const label = document.getElementById('cust-refund-max-label');
-                const opt = select.options[select.selectedIndex];
-                if (opt && opt.dataset.max) {
-                    const max = parseFloat(opt.dataset.max);
-                    input .max = max;
-                     input.value = max.toFixed(2);
-            label.textContent = 'คืนได้สูงสุด ฿' + max.toLocaleString('th-TH', { minimumFractionDigits: 2 });
-                }
+        function updateCustRefundMax() {
+            const select = document.getElementById('cust-refund-payment-select');
+            const input = document.getElementById('cust-refund-amount-input');
+            const label = document.getElementById('cust-refund-max-label');
+            const opt = select.options[select.selectedIndex];
+            if (opt && opt.dataset.max) {
+                const max = parseFloat(opt.dataset.max);
+                input.max = max;
+                input.value = max.toFixed(2);
+                label.textContent = 'คืนได้สูงสุด ฿' + max.toLocaleString('th-TH', { minimumFractionDigits: 2 });
             }
+        }
     </script>
 <?php endif; ?>
 
@@ -1217,22 +1211,22 @@ $latest_cout = !empty($items) ? max(array_column($items, 'check_out_date')) : nu
     </dialog>
 
     <script>
-            function setRating(rating) {
-                document.getElementById('rating-input').value = rating;
-                document.getElementById('rating-display').textContent = rating + '.0';
-                for (let i = 1; i <= 5; i++) {
-                    const star = document.getElementById('star-' + i);
-                    if (i <= rating) {
-                        star.classList.remove('text-base-content/20');
-                        star.classList.add('fill-warning', 'text-warning');
-                    } else {
-                        star.classList.remove('fill-warning', 'text-warning');
-                        star.classList.add('text-base-content/20');
-                    }
+        function setRating(rating) {
+            document.getElementById('rating-input').value = rating;
+            document.getElementById('rating-display').textContent = rating + '.0';
+            for (let i = 1; i <= 5; i++) {
+                const star = document.getElementById('star-' + i);
+                if (i <= rating) {
+                    star.classList.remove('text-base-content/20');
+                    star.classList.add('fill-warning', 'text-warning');
+                } else {
+                    star.classList.remove('fill-warning', 'text-warning');
+                    star.classList.add('text-base-content/20');
                 }
-                // Enable submit button when rating is set
-                document.getElementById('submit-review-btn').disabled = false;
             }
+            // Enable submit button when rating is set
+            document.getElementById('submit-review-btn').disabled = false;
+        }
     </script>
 <?php endif; ?>
 

@@ -111,7 +111,7 @@ function active_badge($is_active)
                                     <td class="font-medium">
                                         <div class="flex items-center gap-3">
                                             <div class="avatar placeholder">
-                                                <div class="bg-neutral text-neutral-content rounded-full w-8">
+                                                <div class="bg-neutral text-neutral-content rounded-full w-8 flex items-center justify-center">
                                                     <span>
                                                         <?php echo mb_substr($emp['first_name'], 0, 1); ?>
                                                     </span>

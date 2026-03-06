@@ -57,7 +57,6 @@ $pages = [
     "profile" =>        ["title" => "ข้อมูลส่วนตัว", "file" => "pages/profile.php", "auth_required" => true],
     "my_pets" =>        ["title" => "สัตว์เลี้ยงของฉัน", "file" => "pages/my_pets.php", "auth_required" => true],
     "booking_history" =>["title" => "ประวัติการจอง", "file" => "pages/booking_history.php", "auth_required" => true],
-    "active_stay" =>    ["title" => "ติดตามสถานะเข้าพัก (Live)", "file" => "pages/active_stay.php", "auth_required" => true],
 
     // --- Booking Engine ---
     "booking" =>        ["title" => "จองห้องพัก", "file" => "pages/booking.php", "auth_required" => true],
@@ -90,12 +89,6 @@ $pages = [
 - **Concept:** รวบรวมข้อมูลจาก `daily_updates` (ภาพและข้อความ) ของการจองทริปนั้นๆ
 - **Trigger:** ทำงานเมื่อการจองเปลี่ยนสถานะเป็น `checked_out`
 - **Output:** สร้างเป็นหน้าเว็บสรุปหรือ PDF ข้อมูลจะถูกบันทึก URL ไว้ที่ `booking_item_pets.report_card_url`
-
-### 6.2. ระบบกล้องวงจรปิดส่วนตัว (Private CCTV Link)
-
-- **Concept:** ให้ลูกค้าดูกล้องห้องพักของสัตว์เลี้ยงตัวเองได้แบบ Real-time (ในหน้า `active_stay`)
-- **Security Check:** ตรวจสอบว่า `customer_id` ตรงกัน, สถานะการจอง `bookings.status = 'checked_in'` เท่านั้น
-- **Action:** ดึง `cctv_url` จาก `rooms` มาแสดงผลผ่าน Iframe หากหมดสิทธิ์เข้าพัก ระบบต้องบล็อกลิงก์ทันที
 
 ### 6.3. ป้ายเตือนพฤติกรรมอันตราย (Behavioral Red Flags)
 
