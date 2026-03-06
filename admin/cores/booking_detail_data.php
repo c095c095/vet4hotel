@@ -126,15 +126,6 @@ $stmt = $pdo->prepare("
 $stmt->execute([':booking_id' => $booking_id]);
 $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// ─── 6. Transportation ───
-$stmt = $pdo->prepare("
-    SELECT * FROM pet_transportation
-    WHERE booking_id = :booking_id
-    ORDER BY scheduled_datetime ASC
-");
-$stmt->execute([':booking_id' => $booking_id]);
-$transportations = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
 // ─── 7. Total paid amount ───
 $stmt = $pdo->prepare("
     SELECT COALESCE(SUM(amount), 0) FROM payments 

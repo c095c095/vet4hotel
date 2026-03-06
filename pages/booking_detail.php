@@ -131,15 +131,8 @@ try {
     ");
     $stmt->execute([$booking_id]);
     $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    // 6. Transportation
-    $stmt = $pdo->prepare("
-        SELECT * FROM pet_transportation
-        WHERE booking_id = ?
-        ORDER BY scheduled_datetime ASC
-    ");
     $stmt->execute([$booking_id]);
-    $transports = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 } catch (PDOException $e) {
     header("Location: ?page=booking_history");
@@ -164,20 +157,6 @@ $payment_status_config = [
     'verified' => ['label' => 'ชำระแล้ว', 'badge' => 'badge-success'],
     'rejected' => ['label' => 'ถูกปฏิเสธ', 'badge' => 'badge-error'],
     'refunded' => ['label' => 'คืนเงินแล้ว', 'badge' => 'badge-info'],
-];
-
-$transport_type_labels = [
-    'pickup' => 'รับสัตว์เลี้ยง',
-    'dropoff' => 'ส่งสัตว์เลี้ยง',
-    'roundtrip' => 'รับ-ส่ง',
-];
-
-$transport_status_labels = [
-    'pending' => ['label' => 'รอดำเนินการ', 'badge' => 'badge-warning'],
-    'assigned' => ['label' => 'มอบหมายแล้ว', 'badge' => 'badge-info'],
-    'in_transit' => ['label' => 'กำลังเดินทาง', 'badge' => 'badge-accent'],
-    'completed' => ['label' => 'เสร็จสิ้น', 'badge' => 'badge-success'],
-    'cancelled' => ['label' => 'ยกเลิก', 'badge' => 'badge-error'],
 ];
 
 $sCfg = $status_config[$booking['status']] ?? $status_config['pending_payment'];
@@ -568,61 +547,6 @@ $latest_cout = !empty($items) ? max(array_column($items, 'check_out_date')) : nu
                                         <span class="text-xs text-base-content/40">× <?php echo $svc['quantity']; ?></span>
                                     <?php endif; ?>
                                 </span>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-            </div>
-        <?php endif; ?>
-
-        <!-- ═══ TRANSPORTATION ═══ -->
-        <?php if (!empty($transports)): ?>
-            <div class="card bg-base-100 shadow-md border border-base-200 overflow-hidden mb-6">
-                <div class="card-body p-5">
-                    <h3
-                        class="text-sm font-semibold text-base-content/60 uppercase tracking-wider mb-3 flex items-center gap-2">
-                        <i data-lucide="truck" class="size-4"></i> Pet Taxi
-                    </h3>
-                    <div class="space-y-2">
-                        <?php foreach ($transports as $tr):
-                            $trType = $transport_type_labels[$tr['transport_type']] ?? $tr['transport_type'];
-                            $trStatus = $transport_status_labels[$tr['status']] ?? ['label' => $tr['status'], 'badge' => 'badge-ghost'];
-                            ?>
-                            <div class="rounded-xl border border-base-200 bg-base-200/30 p-4">
-                                <div class="flex items-center justify-between mb-2">
-                                    <span class="font-medium text-sm text-base-content"><?php echo $trType; ?></span>
-                                    <span
-                                        class="badge <?php echo $trStatus['badge']; ?> badge-sm"><?php echo $trStatus['label']; ?></span>
-                                </div>
-                                <div class="text-xs text-base-content/60 space-y-1">
-                                    <div class="flex items-center gap-1.5">
-                                        <i data-lucide="map-pin" class="size-3"></i>
-                                        <?php echo sanitize($tr['address']); ?>
-                                    </div>
-                                    <div class="flex items-center gap-1.5">
-                                        <i data-lucide="clock" class="size-3"></i>
-                                        <?php echo thaiDateTime_d($tr['scheduled_datetime']); ?>
-                                    </div>
-                                    <?php if ($tr['distance_km']): ?>
-                                        <div class="flex items-center gap-1.5">
-                                            <i data-lucide="navigation" class="size-3"></i>
-                                            ระยะทาง <?php echo number_format($tr['distance_km'], 1); ?> กม.
-                                        </div>
-                                    <?php endif; ?>
-                                    <?php if ($tr['driver_name']): ?>
-                                        <div class="flex items-center gap-1.5">
-                                            <i data-lucide="user" class="size-3"></i>
-                                            <?php echo sanitize($tr['driver_name']); ?>
-                                            <?php if ($tr['driver_phone']): ?>
-                                                · <?php echo sanitize($tr['driver_phone']); ?>
-                                            <?php endif; ?>
-                                        </div>
-                                    <?php endif; ?>
-                                </div>
-                                <div class="text-right mt-2">
-                                    <span
-                                        class="font-bold text-primary text-sm">฿<?php echo number_format($tr['price']); ?></span>
-                                </div>
                             </div>
                         <?php endforeach; ?>
                     </div>

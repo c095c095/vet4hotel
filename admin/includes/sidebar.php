@@ -12,7 +12,6 @@ $nav_items = [
     ['page' => 'pets', 'label' => 'สัตว์เลี้ยง', 'icon' => 'paw-print'],
     ['page' => 'care_tasks', 'label' => 'งานดูแลรายวัน', 'icon' => 'clipboard-check'],
     ['page' => 'daily_updates', 'label' => 'อัปเดตรายวัน', 'icon' => 'camera'],
-    ['page' => 'pet_transportation', 'label' => 'บริการรับ-ส่ง', 'icon' => 'truck'],
     ['page' => 'payments', 'label' => 'การชำระเงิน', 'icon' => 'credit-card'],
     ['page' => 'refunds', 'label' => 'ขอคืนเงิน', 'icon' => 'banknote'],
     ['page' => 'services', 'label' => 'บริการเสริม', 'icon' => 'sparkles'],

@@ -14,9 +14,6 @@ $pages = [
     // --- Rooms ---
     "rooms" => ["title" => "จัดการห้องพัก", "file" => "pages/rooms.php"],
 
-    // --- Pet Transportation ---
-    "pet_transportation" => ["title" => "บริการรับ-ส่งสัตว์เลี้ยง", "file" => "pages/pet_transportation.php"],
-
     // --- Customers ---
     "customers" => ["title" => "จัดการลูกค้า", "file" => "pages/customers.php"],
 

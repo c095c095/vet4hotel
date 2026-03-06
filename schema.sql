@@ -319,24 +319,6 @@ CREATE TABLE `booking_services` (
   FOREIGN KEY (`pet_id`) REFERENCES `pets`(`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Pet Transportation (Pet Taxi)
-CREATE TABLE `pet_transportation` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `booking_id` int(11) NOT NULL,
-  `transport_type` enum('pickup', 'dropoff', 'roundtrip') NOT NULL,
-  `address` text NOT NULL,
-  `distance_km` decimal(5,2) DEFAULT NULL,
-  `price` decimal(10,2) NOT NULL,
-  `scheduled_datetime` datetime NOT NULL,
-  `driver_name` varchar(100) DEFAULT NULL,
-  `driver_phone` varchar(20) DEFAULT NULL,
-  `status` enum('pending', 'assigned', 'in_transit', 'completed', 'cancelled') DEFAULT 'pending',
-  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`booking_id`) REFERENCES `bookings`(`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
 -- ตารางอัปเดตสถานะรายวัน (จุดขายของโปรเจกต์)
 CREATE TABLE `daily_updates` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
