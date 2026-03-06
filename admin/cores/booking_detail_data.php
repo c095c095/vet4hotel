@@ -156,6 +156,45 @@ $booking_care_tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $types_stmt = $pdo->query("SELECT * FROM care_task_types WHERE is_active = 1 ORDER BY name ASC");
 $care_task_types = $types_stmt->fetchAll(PDO::FETCH_ASSOC);
 
+// ─── 10. Refunds for this booking ───
+$stmt = $pdo->prepare("
+    SELECT 
+        r.*,
+        p.payment_type,
+        p.amount AS original_payment_amount,
+        p.transaction_ref,
+        pc.name AS channel_name,
+        e.first_name AS processed_by_name,
+        e.last_name AS processed_by_last
+    FROM refunds r
+    JOIN payments p ON r.payment_id = p.id
+    LEFT JOIN payment_channels pc ON p.payment_channel_id = pc.id
+    LEFT JOIN employees e ON r.processed_by_employee_id = e.id
+    WHERE r.booking_id = :booking_id
+    ORDER BY r.created_at DESC
+");
+$stmt->execute([':booking_id' => $booking_id]);
+$booking_refunds = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// ─── 11. Payments eligible for refund (verified, not already refunded) ───
+$stmt = $pdo->prepare("
+    SELECT 
+        pay.id,
+        pay.payment_type,
+        pay.amount,
+        pay.status,
+        pay.transaction_ref,
+        pc.name AS channel_name,
+        COALESCE((SELECT SUM(rf.refund_amount) FROM refunds rf WHERE rf.payment_id = pay.id AND rf.status IN ('pending', 'processed')), 0) AS already_refunded
+    FROM payments pay
+    LEFT JOIN payment_channels pc ON pay.payment_channel_id = pc.id
+    WHERE pay.booking_id = :booking_id AND pay.status = 'verified'
+    HAVING (pay.amount - already_refunded) > 0
+    ORDER BY pay.created_at DESC
+");
+$stmt->execute([':booking_id' => $booking_id]);
+$refundable_payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 // ─── Status Config ───
 $status_config = [
     'pending_payment' => ['label' => 'รอชำระเงิน', 'class' => 'badge-warning', 'icon' => 'clock'],

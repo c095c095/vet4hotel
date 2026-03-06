@@ -132,6 +132,43 @@ try {
     $stmt->execute([$booking_id]);
     $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+    // 5.5 Refunds for this booking
+    $booking_refunds = [];
+    $stmt = $pdo->prepare("
+        SELECT 
+            r.*,
+            p.payment_type,
+            p.amount AS original_payment_amount,
+            pc.name AS channel_name
+        FROM refunds r
+        JOIN payments p ON r.payment_id = p.id
+        LEFT JOIN payment_channels pc ON p.payment_channel_id = pc.id
+        WHERE r.booking_id = ?
+        ORDER BY r.created_at DESC
+    ");
+    $stmt->execute([$booking_id]);
+    $booking_refunds = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // 5.6 Payments eligible for refund (only for cancelled bookings)
+    $refundable_payments = [];
+    if ($booking['status'] === 'cancelled') {
+        $stmt = $pdo->prepare("
+            SELECT 
+                pay.id,
+                pay.payment_type,
+                pay.amount,
+                pc.name AS channel_name,
+                COALESCE((SELECT SUM(rf.refund_amount) FROM refunds rf WHERE rf.payment_id = pay.id AND rf.status IN ('pending', 'processed')), 0) AS already_refunded
+            FROM payments pay
+            LEFT JOIN payment_channels pc ON pay.payment_channel_id = pc.id
+            WHERE pay.booking_id = ? AND pay.status = 'verified'
+            HAVING (pay.amount - already_refunded) > 0
+            ORDER BY pay.created_at DESC
+        ");
+        $stmt->execute([$booking_id]);
+        $refundable_payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     // 6. Daily Updates (สมุดพกสัตว์เลี้ยง)
     $daily_updates = [];
     if (in_array($booking['status'], ['checked_in', 'checked_out'])) {
@@ -642,6 +679,91 @@ $latest_cout = !empty($items) ? max(array_column($items, 'check_out_date')) : nu
             </div>
         </div>
 
+        <!-- ═══ REFUND STATUS ═══ -->
+        <?php if (!empty($booking_refunds) || !empty($refundable_payments)): ?>
+            <div class="card bg-base-100 shadow-md border border-base-200 overflow-hidden mb-6">
+                <div class="card-body p-5">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3
+                            class="text-sm font-semibold text-base-content/60 uppercase tracking-wider flex items-center gap-2">
+                            <i data-lucide="banknote" class="size-4 text-error"></i> สถานะการคืนเงิน
+                        </h3>
+                        <?php if (!empty($refundable_payments)): ?>
+                            <button class="btn btn-sm btn-outline btn-error gap-1.5"
+                                onclick="document.getElementById('modal-customer-refund').showModal()">
+                                <i data-lucide="plus" class="size-3.5"></i>
+                                ขอคืนเงิน
+                            </button>
+                        <?php endif; ?>
+                    </div>
+
+                    <?php if (!empty($booking_refunds)): ?>
+                        <div class="space-y-2.5">
+                            <?php foreach ($booking_refunds as $rf):
+                                $rf_pay_type = match ($rf['payment_type']) {
+                                    'deposit' => 'มัดจำ',
+                                    'full_payment' => 'ชำระเต็ม',
+                                    'balance_due' => 'ส่วนที่เหลือ',
+                                    'extra_charge' => 'เพิ่มเติม',
+                                    default => $rf['payment_type'],
+                                };
+                                $rf_status_cfg = match ($rf['status']) {
+                                    'pending' => ['label' => 'รอดำเนินการ', 'badge' => 'badge-warning', 'icon' => 'clock'],
+                                    'processed' => ['label' => 'คืนเงินแล้ว', 'badge' => 'badge-success', 'icon' => 'check-circle'],
+                                    'failed' => ['label' => 'ถูกปฏิเสธ', 'badge' => 'badge-error', 'icon' => 'x-circle'],
+                                    default => ['label' => 'ไม่ทราบ', 'badge' => 'badge-ghost', 'icon' => 'help-circle'],
+                                };
+                                ?>
+                                <div class="flex items-start gap-3 rounded-xl border border-base-200 bg-base-200/30 px-4 py-3">
+                                    <!-- Status icon -->
+                                    <div class="shrink-0 pt-0.5">
+                                        <div
+                                            class="w-9 h-9 rounded-full <?php echo $rf['status'] === 'processed' ? 'bg-success/10' : ($rf['status'] === 'failed' ? 'bg-error/10' : 'bg-warning/10'); ?> flex items-center justify-center">
+                                            <i data-lucide="<?php echo $rf_status_cfg['icon']; ?>"
+                                                class="size-4 <?php echo $rf['status'] === 'processed' ? 'text-success' : ($rf['status'] === 'failed' ? 'text-error' : 'text-warning'); ?>"></i>
+                                        </div>
+                                    </div>
+                                    <!-- Content -->
+                                    <div class="flex-1 min-w-0">
+                                        <div class="flex items-center justify-between flex-wrap gap-2">
+                                            <div>
+                                                <div class="font-semibold text-sm text-base-content flex items-center gap-2">
+                                                    ฿<?php echo number_format($rf['refund_amount'], 0); ?>
+                                                    <span class="badge <?php echo $rf_status_cfg['badge']; ?> badge-xs gap-1">
+                                                        <i data-lucide="<?php echo $rf_status_cfg['icon']; ?>" class="size-2.5"></i>
+                                                        <?php echo $rf_status_cfg['label']; ?>
+                                                    </span>
+                                                </div>
+                                                <div class="text-[10px] text-base-content/40 mt-0.5">
+                                                    จาก<?php echo $rf_pay_type; ?>
+                                                    (฿<?php echo number_format($rf['original_payment_amount'], 0); ?>)
+                                                    <?php if ($rf['channel_name']): ?>
+                                                        · <?php echo sanitize($rf['channel_name']); ?>
+                                                    <?php endif; ?>
+                                                    · <?php echo thaiDateTime_d($rf['created_at']); ?>
+                                                </div>
+                                            </div>
+                                            <span class="badge badge-neutral badge-sm badge-outline">โอนเงินคืน</span>
+                                        </div>
+                                        <?php if ($rf['reason']): ?>
+                                            <div class="text-xs text-base-content/50 mt-1.5 bg-base-200/60 rounded-lg px-3 py-2 italic">
+                                                "<?php echo sanitize($rf['reason']); ?>"
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php else: ?>
+                        <div class="text-center py-6 rounded-xl bg-base-200/40 border border-dashed border-base-300">
+                            <i data-lucide="banknote" class="size-8 text-base-content/15 mx-auto mb-2"></i>
+                            <p class="text-sm text-base-content/40">ยังไม่มีรายการขอคืนเงิน</p>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        <?php endif; ?>
+
         <!-- ═══ SPECIAL REQUESTS ═══ -->
         <?php if ($booking['special_requests']): ?>
             <div class="card bg-base-100 shadow-md border border-base-200 overflow-hidden mb-6">
@@ -824,6 +946,108 @@ $latest_cout = !empty($items) ? max(array_column($items, 'check_out_date')) : nu
         </a>
     </div>
 </section>
+
+<!-- ═══════════ CUSTOMER REQUEST REFUND MODAL ═══════════ -->
+<?php if (!empty($refundable_payments)): ?>
+    <dialog id="modal-customer-refund" class="modal modal-bottom sm:modal-middle">
+        <div class="modal-box bg-base-100 rounded-t-3xl sm:rounded-3xl p-0 overflow-hidden shadow-2xl max-w-md">
+            <div class="p-6 border-b border-base-200 flex items-center gap-3 bg-base-100/50">
+                <div class="w-10 h-10 rounded-full bg-error/10 flex items-center justify-center text-error shrink-0">
+                    <i data-lucide="banknote" class="size-5"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg text-base-content leading-tight">ขอคืนเงิน</h3>
+                    <p class="text-sm text-base-content/60 mt-0.5">เลือกรายการชำระเงินและระบุยอดที่ต้องการคืน</p>
+                </div>
+                <form method="dialog" class="ml-auto">
+                    <button
+                        class="btn btn-sm btn-circle btn-ghost text-base-content/50 hover:text-base-content hover:bg-base-200">
+                        <i data-lucide="x" class="size-4"></i>
+                    </button>
+                </form>
+            </div>
+
+            <form action="?action=refund" method="POST" class="p-6 space-y-4">
+                <input type="hidden" name="booking_id" value="<?php echo $booking_id; ?>">
+
+                <div class="form-control">
+                    <label class="label pt-0"><span class="label-text font-medium">เลือกรายการชำระเงิน <span
+                                class="text-error">*</span></span></label>
+                    <select name="payment_id" id="cust-refund-payment-select"
+                        class="select select-bordered w-full rounded-xl focus:outline-primary/50 focus:border-primary transition-colors"
+                        required onchange="updateCustRefundMax()">
+                        <option value="" disabled selected>-- เลือกรายการที่ต้องการคืนเงิน --</option>
+                        <?php foreach ($refundable_payments as $rp):
+                            $rp_type = match ($rp['payment_type']) {
+                                'deposit' => 'มัดจำ',
+                                'full_payment' => 'ชำระเต็ม',
+                                'balance_due' => 'ส่วนที่เหลือ',
+                                'extra_charge' => 'เพิ่มเติม',
+                                default => $rp['payment_type'],
+                            };
+                            $rp_remaining = $rp['amount'] - $rp['already_refunded'];
+                            ?>
+                            <option value="<?php echo $rp['id']; ?>" data-max="<?php echo $rp_remaining; ?>"
+                                data-original="<?php echo $rp['amount']; ?>">
+                                <?php echo $rp_type; ?> — ฿<?php echo number_format($rp['amount'], 2); ?>
+                                <?php if ($rp['already_refunded'] > 0): ?>
+                                    (คืนไปแล้ว ฿<?php echo number_format($rp['already_refunded'], 2); ?>)
+                                <?php endif; ?>
+                                <?php if ($rp['channel_name']): ?>
+                                    · <?php echo sanitize($rp['channel_name']); ?>
+                                <?php endif; ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <div class="form-control">
+                    <label class="label pt-0"><span class="label-text font-medium">ยอดเงินที่ต้องการคืน (฿) <span
+                                class="text-error">*</span></span></label>
+                    <input type="number" name="refund_amount" id="cust-refund-amount-input"
+                        class="input input-bordered w-full rounded-xl focus:outline-primary/50 focus:border-primary transition-colors"
+                        step="0.01" min="0.01" required placeholder="0.00">
+                    <label class="label"><span class="label-text-alt text-base-content/50"
+                            id="cust-refund-max-label">เลือกรายการชำระเงินก่อน</span></label>
+                </div>
+
+                <div class="form-control">
+                    <label class="label pt-0"><span class="label-text font-medium">เหตุผลการขอคืนเงิน <span
+                                class="text-error">*</span></span></label>
+                    <textarea name="reason"
+                        class="textarea textarea-bordered h-24 rounded-xl focus:outline-primary/50 focus:border-primary transition-colors w-full"
+                        placeholder="กรุณาระบุเหตุผล..." required></textarea>
+                </div>
+
+                <div class="modal-action mt-6">
+                    <button type="button" class="btn btn-ghost rounded-xl font-medium"
+                        onclick="document.getElementById('modal-customer-refund').close()">ยกเลิก</button>
+                    <button type="submit" class="btn btn-error rounded-xl font-medium gap-2 shadow-sm">
+                        <i data-lucide="banknote" class="size-4"></i> ส่งคำร้อง
+                    </button>
+                </div>
+            </form>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
+
+    <script>
+        function updateCustRefundMax() {
+            const select = document.getElementById('cust-refund-payment-select');
+            const input = document.getElementById('cust-refund-amount-input');
+            const label = document.getElementById('cust-refund-max-label');
+            const opt = select.options[select.selectedIndex];
+            if (opt && opt.dataset.max) {
+                const max = parseFloat(opt.dataset.max);
+                input.max = max;
+                input.value = max.toFixed(2);
+                label.textContent = 'คืนได้สูงสุด ฿' + max.toLocaleString('th-TH', { minimumFractionDigits: 2 });
+            }
+        }
+    </script>
+<?php endif; ?>
 
 <!-- Fade-in animation -->
 <style>
