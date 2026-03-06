@@ -94,6 +94,11 @@ $action_btn_config = [
 
         <!-- Status Action Buttons -->
         <div class="flex flex-wrap items-center justify-end gap-2">
+            <a href="?page=receipt&id=<?php echo $booking_id; ?>" target="_blank"
+                class="btn btn-sm btn-outline btn-primary gap-1.5 shadow-sm">
+                <i data-lucide="printer" class="size-4"></i>
+                พิมพ์ใบเสร็จ
+            </a>
             <?php if (!empty($available_actions)): ?>
                 <?php foreach ($available_actions as $action): ?>
                     <?php $btn = $action_btn_config[$action] ?? null;

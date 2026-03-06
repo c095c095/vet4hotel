@@ -45,7 +45,7 @@ $page_title = $pages[$current_page]['title'] . " | " . SITE_NAME;
 $page_file = $pages[$current_page]['file'];
 
 // Intercept pages that must process and redirect without outputting any HTML structure
-$intercept_pages = ['logout'];
+$intercept_pages = ['logout', 'receipt'];
 if (in_array($current_page, $intercept_pages)) {
     require_once $page_file;
     exit();

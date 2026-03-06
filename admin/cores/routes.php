@@ -10,6 +10,7 @@ $pages = [
     "bookings" => ["title" => "จัดการการจอง", "file" => "pages/bookings.php"],
     "booking_create" => ["title" => "สร้างการจองใหม่", "file" => "pages/booking_create.php"],
     "booking_detail" => ["title" => "รายละเอียดการจอง", "file" => "pages/booking_detail.php"],
+    "receipt" => ["title" => "ใบเสร็จ", "file" => "pages/receipt.php"],
 
     // --- Rooms ---
     "rooms" => ["title" => "จัดการห้องพัก", "file" => "pages/rooms.php"],

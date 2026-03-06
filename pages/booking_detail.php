@@ -324,6 +324,13 @@ $latest_cout = !empty($items) ? max(array_column($items, 'check_out_date')) : nu
                         ชำระเงิน
                     </a>
                 <?php endif; ?>
+                <?php if (in_array($booking['status'], ['confirmed', 'checked_in', 'checked_out'])): ?>
+                    <a href="?page=receipt&id=<?php echo $booking['id']; ?>" target="_blank"
+                        class="btn btn-outline btn-primary gap-2 flex-1 sm:flex-none">
+                        <i data-lucide="printer" class="size-4"></i>
+                        พิมพ์ใบเสร็จ
+                    </a>
+                <?php endif; ?>
             </div>
         </div>
 
