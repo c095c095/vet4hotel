@@ -97,7 +97,7 @@ $daily_timeline = [
 <!-- ═══════════════════════════════════════════════════════════════════ -->
 <!-- SECTION 1: EMOTIONAL HERO                                         -->
 <!-- ═══════════════════════════════════════════════════════════════════ -->
-<section class="relative min-h-[92vh] flex items-center overflow-hidden">
+<section class="relative min-h-screen xl:min-h-[850px] flex items-center pt-24 pb-32 overflow-hidden">
     <!-- Hero background image -->
     <div class="absolute inset-0" aria-hidden="true">
         <img src="assets/images/487456352_9682552058431752_5798845638060029487_n.jpg" alt=""
@@ -124,7 +124,7 @@ $daily_timeline = [
         </div>
     </div>
 
-    <div class="container mx-auto px-4 lg:px-8 relative z-10">
+    <div class="container mx-auto px-4 lg:px-8 relative z-10 mt-8 mb-12">
         <div class="max-w-3xl">
             <!-- Tagline pill -->
             <div
@@ -679,7 +679,7 @@ $daily_timeline = [
                 }
                 rafId = window.requestAnimationFrame(() => {
                     const scrolled = Math.min(window.scrollY, 320);
-                    heroImage.style.objectPosition = `center ${50 + scrolled * 0.03}%`;
+                    heroImage.style.objectPosition = `center ${40 + scrolled * 0.03}%`;
                     rafId = null;
                 });
             };
