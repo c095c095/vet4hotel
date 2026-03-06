@@ -280,7 +280,7 @@ foreach ($todays_updates as $upd) {
 
             <div class="form-control">
                 <label class="label"><span class="label-text font-medium">ประเภทการอัปเดต</span></label>
-                <select name="update_type_id" class="select select-bordered" required>
+                <select name="update_type_id" class="select select-bordered w-full" required>
                     <option value="" disabled selected>-- เลือกประเภท --</option>
                     <?php foreach ($update_types as $type): ?>
                         <option value="<?php echo $type['id']; ?>">
@@ -292,7 +292,7 @@ foreach ($todays_updates as $upd) {
 
             <div class="form-control">
                 <label class="label"><span class="label-text font-medium">ข้อความอัปเดต</span></label>
-                <textarea name="message" class="textarea textarea-bordered h-24"
+                <textarea name="message" class="textarea textarea-bordered h-24 w-full"
                     placeholder="พิมพ์ข้อความที่ต้องการแจ้งเจ้าของน้องๆ..." required></textarea>
             </div>
 

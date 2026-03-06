@@ -397,6 +397,13 @@ $latest_cout = !empty($items) ? max(array_column($items, 'check_out_date')) : nu
                         </div>
                     </div>
                 </div>
+                <!-- Day counting remark -->
+                <div
+                    class="px-5 py-2.5 bg-info/5 border-t border-info/10 flex items-center gap-2 text-xs text-base-content/50">
+                    <i data-lucide="info" class="size-3.5 text-info shrink-0"></i>
+                    <span>หมายเหตุ: จำนวนคืนนับจากวันเช็คอินถึงวันเช็คเอาท์ เช่น เช็คอิน 14 → เช็คเอาท์ 15 = 1
+                        คืน</span>
+                </div>
             </div>
         </div>
 

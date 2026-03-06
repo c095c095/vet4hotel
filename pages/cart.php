@@ -353,6 +353,14 @@ $net_total = $grand_subtotal - $discount_amount;
                                 class="font-medium text-base-content/60 group-hover:text-primary transition-colors">จองห้องเพิ่มเติม</span>
                         </div>
                     </a>
+
+                    <!-- Day counting remark -->
+                    <div
+                        class="flex items-start gap-2.5 text-xs text-base-content/50 bg-info/5 border border-info/15 rounded-xl px-4 py-3 mt-2">
+                        <i data-lucide="info" class="size-3.5 text-info shrink-0 mt-0.5"></i>
+                        <span>หมายเหตุ: จำนวนคืนนับจากวันเช็คอินถึงวันเช็คเอาท์ เช่น เช็คอิน 14 → เช็คเอาท์ 15 = 1
+                            คืน</span>
+                    </div>
                 </div>
 
                 <!-- RIGHT: Summary Sidebar -->
@@ -483,8 +491,7 @@ $net_total = $grand_subtotal - $discount_amount;
                                             placeholder="เช่น ต้องการอาหารพิเศษ, แพ้อะไรบ้าง ฯลฯ"></textarea>
                                     </div>
 
-                                    <button type="submit"
-                                        class="btn btn-primary btn-lg w-full gap-2 font-bold text-base ">
+                                    <button type="submit" class="btn btn-primary btn-lg w-full gap-2 font-bold text-base ">
                                         <i data-lucide="check-circle" class="size-5"></i>
                                         ยืนยันการจอง
                                     </button>

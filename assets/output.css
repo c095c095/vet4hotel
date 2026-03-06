@@ -4971,6 +4971,18 @@
   .border-info {
     border-color: var(--color-info);
   }
+  .border-info\/10 {
+    border-color: var(--color-info);
+    @supports (color: color-mix(in lab, red, red)) {
+      border-color: color-mix(in oklab, var(--color-info) 10%, transparent);
+    }
+  }
+  .border-info\/15 {
+    border-color: var(--color-info);
+    @supports (color: color-mix(in lab, red, red)) {
+      border-color: color-mix(in oklab, var(--color-info) 15%, transparent);
+    }
+  }
   .border-info\/20 {
     border-color: var(--color-info);
     @supports (color: color-mix(in lab, red, red)) {
@@ -5248,6 +5260,12 @@
   }
   .bg-info {
     background-color: var(--color-info);
+  }
+  .bg-info\/5 {
+    background-color: var(--color-info);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-info) 5%, transparent);
+    }
   }
   .bg-info\/10 {
     background-color: var(--color-info);

@@ -232,7 +232,7 @@ if (isset($_POST['confirm_booking'])) {
                     JOIN bookings b ON b.id = bi.booking_id
                     JOIN pets p ON p.id = bip.pet_id
                     WHERE bip.pet_id IN ($in)
-                      AND b.status NOT IN ('cancelled', 'rejected')
+                      AND b.status NOT IN ('cancelled', 'rejected', 'checked_out')
                       AND bi.check_in_date < ?
                       AND bi.check_out_date > ?
                     LIMIT 1

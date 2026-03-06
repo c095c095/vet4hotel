@@ -101,7 +101,7 @@ if ($check_in_date && $check_out_date && !empty($pets)) {
                 JOIN booking_items bi ON bi.id = bip.booking_item_id
                 JOIN bookings b ON b.id = bi.booking_id
                 WHERE bip.pet_id IN ($in)
-                  AND b.status NOT IN ('cancelled', 'rejected')
+                  AND b.status NOT IN ('cancelled', 'rejected', 'checked_out')
                   AND bi.check_in_date < ?
                   AND bi.check_out_date > ?
             ");
@@ -283,6 +283,20 @@ function estimate_total($room_types, $selected_room_type, $check_in_date, $check
                                             class="input input-bordered input-lg w-full bg-base-100 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all font-medium"
                                             min="<?php echo date('Y-m-d'); ?>"
                                             value="<?php echo sanitize($check_out_date); ?>" required>
+                                    </div>
+                                </div>
+
+                                <!-- Night count display (real-time) -->
+                                <div id="night-count-display" class="hidden mt-4 flex items-center justify-center gap-3 bg-primary/10 border border-primary/20 rounded-xl px-4 py-3 animate-in fade-in">
+                                    <i data-lucide="moon" class="size-5 text-primary"></i>
+                                    <span class="text-base font-bold text-primary" id="night-count-text">1 คืน</span>
+                                </div>
+
+                                <!-- Day counting remark -->
+                                <div class="mt-4 flex items-start gap-2.5 text-sm text-base-content/60 bg-info/5 border border-info/15 rounded-xl px-4 py-3">
+                                    <i data-lucide="info" class="size-4 text-info shrink-0 mt-0.5"></i>
+                                    <div>
+                                        การคิดค่าห้องพักจะนับตามจำนวน "คืน" ที่เข้าพัก เช่น เช็คอินวันที่ 14 → เช็คเอาท์วันที่ 15 = <strong class="text-base-content/80">1 คืน</strong>
                                     </div>
                                 </div>
                             </div>
@@ -712,6 +726,9 @@ function estimate_total($room_types, $selected_room_type, $check_in_date, $check
     const checkOutInput = document.getElementById('check_out_date');
 
     if (nextStep1 && checkInInput && checkOutInput) {
+        const nightCountDisplay = document.getElementById('night-count-display');
+        const nightCountText = document.getElementById('night-count-text');
+
         const validateStep1 = () => {
             if (checkInInput.value) {
                 // อัปเดต min ของวันเช็คเอาท์ ไม่ให้น้อยกว่าวันเช็คอิน + 1 วัน
@@ -729,6 +746,18 @@ function estimate_total($room_types, $selected_room_type, $check_in_date, $check
             }
             // เปิดปุ่มถ้ามีการเลือกทั้งวันเช็คอินและเช็คเอาท์
             nextStep1.disabled = !(checkInInput.value && checkOutInput.value);
+
+            // แสดงจำนวนคืนแบบ real-time
+            if (checkInInput.value && checkOutInput.value && nightCountDisplay && nightCountText) {
+                const cin = new Date(checkInInput.value);
+                const cout = new Date(checkOutInput.value);
+                const diffMs = cout - cin;
+                const nights = Math.max(1, Math.round(diffMs / 86400000));
+                nightCountText.textContent = nights + ' คืน';
+                nightCountDisplay.classList.remove('hidden');
+            } else if (nightCountDisplay) {
+                nightCountDisplay.classList.add('hidden');
+            }
         };
         checkInInput.addEventListener('change', validateStep1);
         checkOutInput.addEventListener('change', validateStep1);
